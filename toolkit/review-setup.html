@@ -211,13 +211,13 @@ async function buildProcess() {
     '"employee_explainer":"4-6 sentences written TO employees explaining the process - copy-pasteable into Slack or email",' +
     '"watch_for":["3 specific failure modes for a lean team running this for the first time"],' +
     '"when_to_upgrade":"2 sentences on what signal should prompt building something more formal"}\n\n' +
-    'Write for a non-HR audience. No jargon. Be honest about what is overkill at this stage.';
+    'Write for a non-HR audience. No jargon. Be honest about what is overkill. Keep ALL text fields SHORT - max 1-2 sentences each. Total response must be under 1500 tokens.';
 
   try {
     var response = await fetch('https://tsonsino-backend.vercel.app/api/chat', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({prompt: promptText, maxTokens: 2500})
+      body: JSON.stringify({prompt: promptText, maxTokens: 3500})
     });
     var data = await response.json();
     var text = data.text || '';
