@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Trinh Sonsino — HR Leader</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #0f0f0f; --ink-muted: #555; --ink-faint: #9a9a9a;
+    --rule: #e4e4e4; --pill-bg: #f0f0f0; --surface: #fff;
+    --accent: #2563eb; --accent-bg: #eff6ff;
+  }
+  body { font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.7; color: var(--ink); background: var(--surface); max-width: 800px; margin: 0 auto; padding: 0 28px 80px; }
+
+  nav { display: flex; justify-content: space-between; align-items: center; padding: 28px 0 20px; border-bottom: 1px solid var(--rule); margin-bottom: 68px; }
+  .nav-name { font-family: 'DM Serif Display', serif; font-size: 17px; }
+  .nav-links { display: flex; gap: 28px; list-style: none; }
+  .nav-links a { font-size: 12px; font-weight: 500; color: var(--ink-muted); text-decoration: none; letter-spacing: 0.05em; text-transform: uppercase; }
+  .nav-links a:hover { color: var(--ink); }
+
+  .hero { margin-bottom: 72px; }
+  .hero-eyebrow { font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 22px; }
+  .hero h1 { font-family: 'DM Serif Display', serif; font-size: clamp(36px, 5.5vw, 54px); line-height: 1.08; letter-spacing: -0.02em; margin-bottom: 28px; max-width: 620px; }
+  .hero h1 em { font-style: italic; color: var(--ink-muted); }
+  .hero-sub { font-size: 16px; color: var(--ink-muted); max-width: 540px; line-height: 1.75; margin-bottom: 38px; }
+  .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; }
+  .btn-primary { background: var(--ink); color: #fff; padding: 12px 26px; font-size: 14px; font-weight: 500; text-decoration: none; border-radius: 3px; }
+  .btn-primary:hover { opacity: 0.82; }
+  .btn-outline { background: transparent; color: var(--ink); padding: 12px 26px; font-size: 14px; font-weight: 500; text-decoration: none; border: 1px solid #ccc; border-radius: 3px; }
+  .btn-outline:hover { border-color: var(--ink); }
+
+  .differentiators { margin-bottom: 72px; }
+  .diff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; }
+  .diff-item { background: #fff; padding: 26px 28px; }
+  .diff-icon { font-size: 20px; margin-bottom: 12px; }
+  .diff-title { font-size: 14px; font-weight: 600; margin-bottom: 8px; line-height: 1.3; }
+  .diff-body { font-size: 13px; color: var(--ink-muted); line-height: 1.65; }
+
+  section { margin-bottom: 72px; }
+  .section-header { display: flex; align-items: baseline; gap: 16px; margin-bottom: 36px; padding-bottom: 14px; border-bottom: 1px solid var(--rule); }
+  .section-label { font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint); }
+  .section-title { font-family: 'DM Serif Display', serif; font-size: 24px; letter-spacing: -0.01em; }
+
+  /* ── TOOLKIT ── */
+  .toolkit-section { margin-bottom: 72px; }
+  .toolkit-intro { font-size: 15px; color: var(--ink-muted); max-width: 560px; line-height: 1.75; margin-bottom: 8px; }
+  .toolkit-live { font-size: 13px; color: var(--ink-faint); margin-bottom: 28px; }
+  .toolkit-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .toolkit-card { border: 1px solid var(--rule); border-radius: 8px; padding: 20px 22px; text-decoration: none; color: inherit; display: block; transition: border-color 0.15s, box-shadow 0.15s; }
+  .toolkit-card:hover { border-color: var(--ink); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .toolkit-card-num { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; }
+  .toolkit-card-title { font-size: 14px; font-weight: 600; margin-bottom: 6px; line-height: 1.3; }
+  .toolkit-card-desc { font-size: 12px; color: var(--ink-muted); line-height: 1.55; }
+  .toolkit-card-arrow { font-size: 12px; color: var(--accent); margin-top: 12px; font-weight: 500; }
+
+  .exp-item { display: grid; grid-template-columns: 148px 1fr; gap: 0 32px; margin-bottom: 40px; padding-bottom: 40px; border-bottom: 1px solid var(--rule); }
+  .exp-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .exp-meta { padding-top: 3px; }
+  .exp-dates { font-size: 12px; color: var(--ink-faint); font-weight: 500; margin-bottom: 4px; }
+  .exp-company { font-size: 12px; color: var(--ink-muted); font-weight: 500; line-height: 1.4; }
+  .exp-role { font-size: 16px; font-weight: 600; margin-bottom: 6px; line-height: 1.3; }
+  .exp-context { font-size: 12px; font-style: italic; color: var(--ink-faint); margin-bottom: 10px; }
+  .exp-desc { font-size: 14px; color: var(--ink-muted); line-height: 1.75; margin-bottom: 12px; }
+  .exp-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag { background: var(--pill-bg); color: var(--ink-muted); font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 20px; }
+
+  .catchafire-card { border: 1px solid var(--rule); border-radius: 8px; padding: 26px 28px; display: flex; gap: 24px; align-items: flex-start; margin-bottom: 72px; }
+  .cf-icon { width: 42px; height: 42px; background: #fef3c7; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+  .cf-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+  .cf-sub { font-size: 13px; color: var(--ink-muted); line-height: 1.65; margin-bottom: 12px; }
+  .cf-link { font-size: 13px; font-weight: 500; color: var(--accent); text-decoration: none; }
+  .cf-link:hover { text-decoration: underline; }
+
+  .skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .skill-group-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 12px; }
+  .skill-list { display: flex; flex-wrap: wrap; gap: 7px; }
+
+  .contact-block { background: var(--ink); color: #fff; border-radius: 8px; padding: 44px 40px; display: flex; justify-content: space-between; align-items: center; gap: 28px; flex-wrap: wrap; }
+  .contact-block h2 { font-family: 'DM Serif Display', serif; font-size: 26px; font-weight: 400; line-height: 1.25; margin-bottom: 10px; }
+  .btn-white { background: #fff; color: var(--ink); padding: 13px 28px; font-size: 14px; font-weight: 600; text-decoration: none; border-radius: 3px; white-space: nowrap; }
+
+  footer { margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--rule); display: flex; justify-content: space-between; font-size: 12px; color: var(--ink-faint); }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-name">Trinh Sonsino</span>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#toolkit">Toolkit</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <p class="hero-eyebrow">Global HR Business Partner · Organizational Change · HR Ops</p>
+  <h1>I go where the work<br/>is <em>hardest.</em></h1>
+  <p class="hero-sub">I partner with senior leaders to build people strategies that drive growth, navigate change, and strengthen leadership — across NAMER, EMEA, and APAC. My background spans both strategic HRBP work and hands-on HR operations, so I can work at the level the business needs.</p>
+  <div class="hero-ctas">
+    <a href="mailto:trinh.sonsino@gmail.com" class="btn-primary">Get in touch</a>
+    <a href="#experience" class="btn-outline">View my work</a>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div class="differentiators" id="about">
+  <div class="section-header">
+    <span class="section-label">About</span>
+    <span class="section-title">What I actually do</span>
+  </div>
+  <div class="diff-grid">
+    <div class="diff-item">
+      <div class="diff-icon">🏗️</div>
+      <div class="diff-title">Build what doesn't exist yet</div>
+      <div class="diff-body">HR policies, job architectures, HR tech stack — comfortable with the blank page and the pressure it brings.</div>
+    </div>
+    <div class="diff-item">
+      <div class="diff-icon">🤝</div>
+      <div class="diff-title">Work at the executive level</div>
+      <div class="diff-body">HRBP to CTOs, VPs of R&D, and SVPs. I speak the language of business outcomes, not just HR process — and I genuinely enjoy the relationship-building side of this work. The closer I am to the people I support, the better the outcomes for everyone.</div>
+    </div>
+    <div class="diff-item">
+      <div class="diff-icon">🌍</div>
+      <div class="diff-title">Operate across borders</div>
+      <div class="diff-body">HR across NAMER, EMEA, and APAC — multi-jurisdictional compliance, culturally nuanced employee relations, distributed team operations.</div>
+    </div>
+    <div class="diff-item">
+      <div class="diff-icon">📍</div>
+      <div class="diff-title">Thrive in ambiguity</div>
+      <div class="diff-body">Interim leadership, rapid growth, lean operator. No playbook, blank canvas — that's what gets me excited and brings out my best work.</div>
+    </div>
+  </div>
+</div>
+
+<!-- TOOLKIT -->
+<section id="toolkit" class="toolkit-section">
+  <div class="section-header">
+    <span class="section-label">AI Toolkit</span>
+    <span class="section-title">HR tools I built</span>
+  </div>
+  <p class="toolkit-intro">I built these because I've solved these problems manually for years. Now they run on AI.</p>
+  <p class="toolkit-live">These are live, working tools — click any to open.</p>
+  <div class="toolkit-grid">
+    <a href="toolkit/policy-roadmap.html" class="toolkit-card">
+      <div class="toolkit-card-num">Tool 01</div>
+      <div class="toolkit-card-title">Policy Roadmap Builder</div>
+      <div class="toolkit-card-desc">Input company stage, size, and locations — get a prioritized policy roadmap with Required / Defensive / Operational tags and draft policy content on demand.</div>
+      <div class="toolkit-card-arrow">Open →</div>
+    </a>
+    <a href="toolkit/manager-coach.html" class="toolkit-card">
+      <div class="toolkit-card-num">Tool 02</div>
+      <div class="toolkit-card-title">Manager Coach</div>
+      <div class="toolkit-card-desc">Describe a real situation — get structured coaching on how to approach it, what to say, what to avoid, and when to loop in HR first.</div>
+      <div class="toolkit-card-arrow">Open →</div>
+    </a>
+    <a href="toolkit/performance-review.html" class="toolkit-card">
+      <div class="toolkit-card-num">Tool 03</div>
+      <div class="toolkit-card-title">Performance Review</div>
+      <div class="toolkit-card-desc">Not a review writer — a thinking tool. Four prompts that make managers slow down and be specific. Then a structured draft, rating recommendation, and a flag if something doesn't add up.</div>
+      <div class="toolkit-card-arrow">Open →</div>
+    </a>
+    <a href="toolkit/calibration-prep.html" class="toolkit-card">
+      <div class="toolkit-card-num">Tool 04</div>
+      <div class="toolkit-card-title">Calibration Prep</div>
+      <div class="toolkit-card-desc">Paste proposed ratings and justifications — get distribution analysis, bias pattern flags, and the questions worth asking in the calibration room.</div>
+      <div class="toolkit-card-arrow">Open →</div>
+    </a>
+    <a href="toolkit/should-i-hire.html" class="toolkit-card">
+      <div class="toolkit-card-num">Tool 05</div>
+      <div class="toolkit-card-title">Should I Hire?</div>
+      <div class="toolkit-card-desc">Two modes: pressure-test a specific hire request, or start with a guided diagnostic if you're not sure what you need. Returns a clear recommendation and true cost picture.</div>
+      <div class="toolkit-card-arrow">Open →</div>
+    </a>
+    <a href="toolkit/new-hire-onboarding.html" class="toolkit-card">
+      <div class="toolkit-card-num">Tool 06</div>
+      <div class="toolkit-card-title">New Hire Onboarding</div>
+      <div class="toolkit-card-desc">Fill this out before day one — get a role-specific 30/60/90 plan, first-week schedule, and manager prep checklist tailored to the actual hire.</div>
+      <div class="toolkit-card-arrow">Open →</div>
+    </a>
+    <a href="toolkit/comp-structuring.html" class="toolkit-card">
+      <div class="toolkit-card-num">Tool 07</div>
+      <div class="toolkit-card-title">Comp Structuring</div>
+      <div class="toolkit-card-desc">Build a comp philosophy your team can stand behind, then structure a specific offer with internal equity analysis and a budget ask for finance.</div>
+      <div class="toolkit-card-arrow">Open →</div>
+    </a>
+    <a href="toolkit/review-setup.html" class="toolkit-card">
+      <div class="toolkit-card-num">Tool 08</div>
+      <div class="toolkit-card-title">Review Setup</div>
+      <div class="toolkit-card-desc">For founders and operators who own the people function without an HR background. Get a minimum viable review process — flexible, light, and honest about what matters at your stage.</div>
+      <div class="toolkit-card-arrow">Open →</div>
+    </a>
+    <a href="toolkit/headcount-planning.html" class="toolkit-card">
+      <div class="toolkit-card-num">Tool 09</div>
+      <div class="toolkit-card-title">Headcount Planning</div>
+      <div class="toolkit-card-desc">Reactive hiring is expensive hiring. Build an annual plan with quarterly breakdown, true cost view per role, and AI analysis that flags weak justifications and timing risks before they become problems.</div>
+      <div class="toolkit-card-arrow">Open →</div>
+    </a>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-header">
+    <span class="section-label">Experience</span>
+    <span class="section-title">The work behind the titles</span>
+  </div>
+
+  <div class="exp-item">
+    <div class="exp-meta">
+      <div class="exp-dates">Dec 2023 – Present</div>
+      <div class="exp-company">Independent · Bay Area</div>
+    </div>
+    <div>
+      <div class="exp-role">Family Sabbatical + HR Consulting</div>
+      <div class="exp-context">Time for family, with continued consulting on select engagements</div>
+      <div class="exp-desc">Consulting for SymphonyAI and GoodData on HR process optimization and people strategy. Staying active through pro bono HR work via Catchafire and staying close to how AI is reshaping workforce planning, recruiting, and HR operations.</div>
+      <div class="exp-tags">
+        <span class="tag">HR consulting</span>
+        <span class="tag">Process optimization</span>
+        <span class="tag">SaaS companies</span>
+        <span class="tag">Pro bono HR</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="exp-item">
+    <div class="exp-meta">
+      <div class="exp-dates">Sep 2021 – Nov 2023</div>
+      <div class="exp-company">Houzz, Inc. · Palo Alto</div>
+    </div>
+    <div>
+      <div class="exp-role">Senior HR Business Partner — Product &amp; Technology</div>
+      <div class="exp-context">600+ employees · US, UK, Israel, Taiwan · 7 SVP stakeholders</div>
+      <div class="exp-desc">Strategic HRBP for the global Product and Engineering organization. Designed the engineering job-leveling framework used across all regions, implemented VP-1 succession planning, and led performance calibration that cut inflated ratings by 50%. Steered and advised the HR Ops team on the development of an immigration policy, reducing related costs by 35%.</div>
+      <div class="exp-tags">
+        <span class="tag">Global HRBP</span>
+        <span class="tag">Job architecture</span>
+        <span class="tag">Succession planning</span>
+        <span class="tag">Performance calibration</span>
+        <span class="tag">Cost reduction</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="exp-item">
+    <div class="exp-meta">
+      <div class="exp-dates">Sep 2019 – Dec 2021</div>
+      <div class="exp-company">Independent · Bay Area</div>
+    </div>
+    <div>
+      <div class="exp-role">Independent HR Consultant — Startup Portfolio</div>
+      <div class="exp-context">Pre-seed to Series E · Multiple simultaneous engagements</div>
+      <div class="exp-desc">At Matterport (pre-IPO), served as HRBP to the CTO and VP of Hardware R&amp;D — building manager training programs and audited HR policies in preparation for IPO. At Premise Data as Interim HR Director, built HR infrastructure from scratch: scaled from 70 to 120+ employees, implemented Namely HRIS and Greenhouse ATS, and designed job leveling and comp bands for Engineering.</div>
+      <div class="exp-tags">
+        <span class="tag">IPO readiness</span>
+        <span class="tag">Interim HR Director</span>
+        <span class="tag">HRIS implementation</span>
+        <span class="tag">Org scaling</span>
+        <span class="tag">Comp design</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="exp-item">
+    <div class="exp-meta">
+      <div class="exp-dates">2017 – 2019</div>
+      <div class="exp-company">Pennsylvania State University</div>
+    </div>
+    <div>
+      <div class="exp-role">Full-Time Graduate Student</div>
+      <div class="exp-context">M.S. Human Resources &amp; Employee Relations</div>
+      <div class="exp-desc">Pursued graduate study full-time, focusing on organizational behavior, labor relations, employment law, and training &amp; development.</div>
+      <div class="exp-tags">
+        <span class="tag">Organizational behavior</span>
+        <span class="tag">Labor relations</span>
+        <span class="tag">Employment law</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="exp-item">
+    <div class="exp-meta">
+      <div class="exp-dates">Mar 2016 – Dec 2016</div>
+      <div class="exp-company">Adaptive Biotechnologies · South San Francisco</div>
+    </div>
+    <div>
+      <div class="exp-role">HRBP, HR Site Lead</div>
+      <div class="exp-context">Sole HR lead for California office</div>
+      <div class="exp-desc">Managed all local HR operations and partnered with corporate HQ on payroll and benefits. Led the managed closure of the California site — overseeing all workforce planning, compliance reviews, and communication logistics.</div>
+      <div class="exp-tags">
+        <span class="tag">Site HR leadership</span>
+        <span class="tag">Workforce planning</span>
+        <span class="tag">Compliance</span>
+        <span class="tag">Site closure</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="exp-item">
+    <div class="exp-meta">
+      <div class="exp-dates">May 2015 – Feb 2016</div>
+      <div class="exp-company">Arm, Inc. · Santa Clara</div>
+    </div>
+    <div>
+      <div class="exp-role">HR Consultant — HR Projects</div>
+      <div class="exp-context">Contract engagement</div>
+      <div class="exp-desc">Managed US open enrollment end-to-end. Designed a comprehensive LOA and ADA Job Accommodation program. Conducted compliance audits across CA and TX, and supported Engineering as Interim HRBP during a period of expansion.</div>
+      <div class="exp-tags">
+        <span class="tag">Benefits &amp; open enrollment</span>
+        <span class="tag">LOA/ADA program design</span>
+        <span class="tag">Compliance audit</span>
+        <span class="tag">Interim HRBP</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="exp-item">
+    <div class="exp-meta">
+      <div class="exp-dates">Apr 2014 – May 2015</div>
+      <div class="exp-company">Avaya, Inc. · Santa Clara</div>
+    </div>
+    <div>
+      <div class="exp-role">HRBP &amp; HR Manager — Hardware &amp; Engineering</div>
+      <div class="exp-context">2,000+ employees · Org-wide transformation</div>
+      <div class="exp-desc">Led end-to-end performance management for a 2,000+ person engineering organization during major cultural and structural change. Managed restructuring using talent mapping to protect critical roles, and built retention plans for high performers.</div>
+      <div class="exp-tags">
+        <span class="tag">Large-scale restructuring</span>
+        <span class="tag">Talent mapping</span>
+        <span class="tag">Retention strategy</span>
+        <span class="tag">Org transformation</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="exp-item">
+    <div class="exp-meta">
+      <div class="exp-dates">Mar 2011 – Apr 2014</div>
+      <div class="exp-company">Astreya Partners · Santa Clara</div>
+    </div>
+    <div>
+      <div class="exp-role">HR Business Partner — Technology</div>
+      <div class="exp-context">300+ employees · US, EMEA, APAC</div>
+      <div class="exp-desc">Global HRBP during rapid international expansion. Built a manager training program from scratch and redesigned onboarding end-to-end — cutting 6-month attrition by 33%.</div>
+      <div class="exp-tags">
+        <span class="tag">Global expansion</span>
+        <span class="tag">Manager enablement</span>
+        <span class="tag">Onboarding redesign</span>
+        <span class="tag">Attrition reduction</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CATCHAFIRE -->
+<div class="catchafire-card">
+  <div class="cf-icon">🌱</div>
+  <div>
+    <div class="cf-title">Pro bono HR consulting — Catchafire</div>
+    <div class="cf-sub">I volunteer strategic HR expertise to nonprofit organizations through Catchafire — working on hiring process design, policy development, and org structure. It keeps me engaged with real work and gives something back in the process.</div>
+    <a href="https://catchafire.org/profiles/447309/about/" class="cf-link" target="_blank">View my Catchafire profile →</a>
+  </div>
+</div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-header">
+    <span class="section-label">Skills</span>
+    <span class="section-title">What I bring to the table</span>
+  </div>
+  <div class="skills-grid">
+    <div>
+      <div class="skill-group-label">People &amp; Org Strategy</div>
+      <div class="skill-list">
+        <span class="tag">HR Business Partnership</span>
+        <span class="tag">Organizational Design</span>
+        <span class="tag">Change Management</span>
+        <span class="tag">Job Architecture &amp; Leveling</span>
+        <span class="tag">Succession Planning</span>
+        <span class="tag">Performance Management</span>
+        <span class="tag">Executive Coaching</span>
+        <span class="tag">Compensation Design</span>
+        <span class="tag">Workforce Planning</span>
+        <span class="tag">IPO Readiness</span>
+      </div>
+    </div>
+    <div>
+      <div class="skill-group-label">Operations &amp; Tools</div>
+      <div class="skill-list">
+        <span class="tag">HRIS Implementation</span>
+        <span class="tag">ATS Integration</span>
+        <span class="tag">Multi-jurisdiction Compliance</span>
+        <span class="tag">Global HR Operations</span>
+        <span class="tag">People Analytics</span>
+        <span class="tag">Namely</span>
+        <span class="tag">Greenhouse</span>
+        <span class="tag">Workday</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<div class="contact-block" id="contact">
+  <div>
+    <h2>If this sounds like<br/>what you need —</h2>
+    <p style="font-size:14px;color:rgba(255,255,255,0.65);max-width:360px;line-height:1.7;margin-top:10px;">I'm drawn to companies at an inflection point — scaling, transforming, or building something new. I'm returning from a family sabbatical and looking for my next full-time role. If that's where you are, I'd love to hear about it.</p>
+  </div>
+  <a href="mailto:trinh.sonsino@gmail.com" class="btn-white" style="display:inline-flex;align-items:center;gap:10px;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+    Let's talk
+  </a>
+</div>
+
+<footer>
+  <span>Trinh Sonsino · Global HR Business Partner</span>
+  <span>Pleasanton, CA · PHR · M.S. Human Resources, Penn State</span>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Comp Structuring · Trinh Sonsino HR Toolkit</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Inter',sans-serif;background:#fff;}.back-link{font-size:13px;color:#555;text-decoration:none;padding:16px 24px;display:inline-flex;align-items:center;gap:6px;border-bottom:1px solid #e4e4e4;width:100%;}.back-link:hover{color:#0f0f0f;}</style>
+</head>
+<body>
+<a href="../index.html" class="back-link">← Back to Trinh Sonsino</a>
+<div id="root"></div>
+<script type="text/babel">
+const {useState}=React;
+const INK="#0f0f0f",MUTED="#555",FAINT="#9a9a9a",RULE="#e4e4e4";
+const STAGES=[{id:"seed",label:"Seed / Pre-Series A",sub:"1–30 people"},{id:"seriesA",label:"Series A",sub:"30–80 people"},{id:"seriesB",label:"Series B–C",sub:"80–250 people"},{id:"late",label:"Late stage / Pre-IPO",sub:"250+ people"}];
+const MARKET_POSITIONS=[{id:"p25",label:"P25",sub:"Below market"},{id:"p50",label:"P50",sub:"At market"},{id:"p75",label:"P75",sub:"Above market"},{id:"unsure",label:"Not sure",sub:"Help me figure out"}];
+const TABS=[{id:"philosophy",label:"Comp Philosophy"},{id:"offer",label:"Offer Builder"}];
+const iStyle={width:"100%",boxSizing:"border-box",border:"1px solid #e4e4e4",borderRadius:6,padding:"11px 14px",fontSize:14,fontFamily:"inherit",color:"#0f0f0f",outline:"none",background:"#fff"};
+const lStyle={fontSize:12,fontWeight:500,color:MUTED,display:"block",marginBottom:6};
+const tcColors={disclose_bands:{bg:"#f0fdf4",border:"#bbf7d0",color:"#166534"},partial:{bg:"#fffbeb",border:"#fde68a",color:"#a16207"},internal_only:{bg:"#fafafa",border:"#e4e4e4",color:"#555"}};
+
+function Sublabel({text}){return <div style={{fontSize:11,fontWeight:600,letterSpacing:"0.1em",textTransform:"uppercase",color:FAINT,marginBottom:8}}>{text}</div>;}
+function PhilBlock({label,content,sub}){return <div style={{marginBottom:22}}><Sublabel text={label}/>{sub&&<div style={{fontSize:12,color:"#2563eb",fontWeight:500,marginBottom:6}}>{sub}</div>}<p style={{fontSize:14,color:MUTED,lineHeight:1.7,margin:0}}>{content}</p></div>;}
+
+function App(){
+const [activeTab,setActiveTab]=useState("philosophy");
+const [stage,setStage]=useState("seriesA");const [industry,setIndustry]=useState("");const [marketPosition,setMarketPosition]=useState("p50");const [locations,setLocations]=useState("");const [funded,setFunded]=useState("");const [philosophyContext,setPhilosophyContext]=useState("");
+const [role,setRole]=useState("");const [level,setLevel]=useState("");const [offerLocation,setOfferLocation]=useState("");const [teamMembers,setTeamMembers]=useState([{id:1,title:"",level:"",location:"",base:"",equity:"",tenure:""}]);const [candidateContext,setCandidateContext]=useState("");const [budgetConstraint,setBudgetConstraint]=useState("");
+const [philosophy,setPhilosophy]=useState(null);const [offer,setOffer]=useState(null);const [loadingPhil,setLoadingPhil]=useState(false);const [loadingOffer,setLoadingOffer]=useState(false);const [error,setError]=useState(null);const [copied,setCopied]=useState(false);
+const stageLabel=STAGES.find(s=>s.id===stage)?.label||stage;
+const marketLabel=MARKET_POSITIONS.find(m=>m.id===marketPosition)?.label||marketPosition;
+function updateM(id,field,val){setTeamMembers(ms=>ms.map(m=>m.id===id?{...m,[field]:val}:m));}
+
+async function callClaude(prompt,max=2500){
+const r=await fetch("https://tsonsino-backend.vercel.app/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:prompt,maxTokens:max})});
+const d=await r.json();return d.text;}
+
+async function generatePhilosophy(){
+setLoadingPhil(true);setError(null);setPhilosophy(null);
+try{const text=await callClaude(`You are a comp expert advising a fast-scaling startup. Build a practical comp philosophy.\n\nCompany: ${stageLabel}, ${industry||"?"} industry, market position intent: ${marketLabel}, locations: ${locations||"?"}, funding: ${funded||"?"}, context: ${philosophyContext||"none"}\n\nReturn ONLY valid JSON:\n{"headline":"one sharp sentence on comp stance","cash_philosophy":{"market_position":"recommended percentile and why","rationale":"2-3 sentences","by_function":"1-2 sentences on function variation"},"equity_philosophy":{"role":"2-3 sentences on equity's role at this stage","typical_ranges":"guidance on grant ranges by level","vesting":"standard structure guidance"},"benefits_stance":"2-3 sentences on table stakes vs differentiators","transparency_stance":{"recommendation":"disclose_bands|partial|internal_only","recommendation_label":"e.g. Post ranges in job descriptions","rationale":"2 sentences including CA/CO/NY/WA legal requirements if relevant"},"red_flags":["3-4 specific comp mistakes at this stage"],"manager_talking_points":["3-4 honest things to say to candidates"]}`);
+setPhilosophy(JSON.parse(text.replace(/```json|```/g,"").trim()));}
+catch(e){setError("Something went wrong. Try again.");}
+setLoadingPhil(false);}
+
+async function generateOffer(){
+const filledM=teamMembers.filter(m=>m.base.trim());if(!role.trim()||filledM.length===0)return;
+setLoadingOffer(true);setError(null);setOffer(null);
+try{const roster=filledM.map((m,i)=>`Team member ${i+1}: ${m.title||"similar role"} (${m.level||"?"}) · Location: ${m.location||"?"} · Base: $${m.base}${m.equity?` · Equity: ${m.equity}`:""}${m.tenure?` · Tenure: ${m.tenure}`:""}`).join("\n");
+const text=await callClaude(`You are a comp advisor. Analyze internal equity and recommend a specific offer range.\n\nRole: ${role}${level?` (${level})`:""}\nLocation: ${offerLocation||"?"}\nCandidate: ${candidateContext||"not provided"}\nBudget: ${budgetConstraint||"not specified"}\n\nTeam comp:\n${roster}\n\nReturn ONLY valid JSON:\n{"internal_equity_analysis":{"summary":"2-3 sentences on team comp picture","flags":[{"member":"name","flag":"short label","note":"1-2 sentences"}],"range_anchor":"anchor data point and why"},"offer_recommendation":{"base_range":{"low":"$amount","mid":"$amount","high":"$amount"},"range_rationale":"2-3 sentences","where_to_land":"specific guidance","equity_guidance":"2-3 sentences","total_comp_framing":"how to present honestly"},"budget_ask":{"ask_amount":"number or range","justification":"3-4 sentences verbatim for finance","if_pushback":"what to say if finance comes back lower"},"offer_red_flags":["2-3 things that could blow this offer up"],"disclaimer":"one sentence to verify market data"}\n\nInternal equity is most important. Flag pay equity problems. Be direct.`);
+setOffer(JSON.parse(text.replace(/```json|```/g,"").trim()));}
+catch(e){setError("Something went wrong. Try again.");}
+setLoadingOffer(false);}
+
+function copyContent(){
+let text="";
+if(activeTab==="philosophy"&&philosophy)text=`COMP PHILOSOPHY\n\n${philosophy.headline}\n\nCASH: ${philosophy.cash_philosophy.market_position}\n${philosophy.cash_philosophy.rationale}\n\nEQUITY: ${philosophy.equity_philosophy.role}\n\nBENEFITS: ${philosophy.benefits_stance}\n\nTRANSPARENCY: ${philosophy.transparency_stance.recommendation_label}\n${philosophy.transparency_stance.rationale}`;
+else if(activeTab==="offer"&&offer){const r=offer.offer_recommendation;text=`OFFER — ${role}\n\nBase: $${r.base_range.low} – $${r.base_range.high} (mid: $${r.base_range.mid})\n${r.range_rationale}\n\nWhere to land: ${r.where_to_land}\n\nBUDGET ASK\n${offer.budget_ask.justification}\n\nIf pushback: ${offer.budget_ask.if_pushback}`;}
+if(!text)return;const el=document.createElement("textarea");el.value=text;document.body.appendChild(el);el.select();document.execCommand("copy");document.body.removeChild(el);setCopied(true);setTimeout(()=>setCopied(false),2000);}
+
+return <div style={{fontFamily:"Inter,system-ui,sans-serif",background:"#fff",minHeight:"100vh",color:INK}}>
+<div style={{maxWidth:820,margin:"0 auto",padding:"40px 24px 80px"}}>
+<div style={{borderBottom:`1px solid ${RULE}`,paddingBottom:20,marginBottom:28}}>
+<div style={{fontSize:11,fontWeight:600,letterSpacing:"0.14em",textTransform:"uppercase",color:FAINT,marginBottom:10}}>HR Toolkit · 06</div>
+<h1 style={{fontFamily:"DM Serif Display,Georgia,serif",fontSize:34,lineHeight:1.15,margin:0}}>Comp Structuring</h1>
+<p style={{color:MUTED,fontSize:15,maxWidth:580,lineHeight:1.65,marginTop:12,marginBottom:0}}>Build a comp philosophy your team can stand behind — then structure a specific offer that's fair to the candidate and defensible to your existing team.</p>
+</div>
+<div style={{display:"flex",gap:0,marginBottom:28,border:`1px solid ${RULE}`,borderRadius:8,overflow:"hidden",width:"fit-content"}}>
+{TABS.map(t=><button key={t.id} onClick={()=>{setActiveTab(t.id);setError(null);}} style={{padding:"10px 24px",fontSize:13,fontWeight:500,border:"none",cursor:"pointer",background:activeTab===t.id?INK:"#fff",color:activeTab===t.id?"#fff":MUTED}}>{t.label}</button>)}
+</div>
+
+{activeTab==="philosophy"&&<div>
+<label style={lStyle}>Company stage</label>
+<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:18}}>{STAGES.map(s=><button key={s.id} onClick={()=>setStage(s.id)} style={{textAlign:"left",padding:"12px 16px",border:stage===s.id?`2px solid ${INK}`:`1px solid ${RULE}`,borderRadius:8,background:"#fff",cursor:"pointer"}}><div style={{fontWeight:600,fontSize:13,marginBottom:2}}>{s.label}</div><div style={{fontSize:12,color:FAINT}}>{s.sub}</div></button>)}</div>
+<label style={lStyle}>Market position</label>
+<div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:8,marginBottom:18}}>{MARKET_POSITIONS.map(m=><button key={m.id} onClick={()=>setMarketPosition(m.id)} style={{textAlign:"left",padding:"10px 12px",border:marketPosition===m.id?`2px solid ${INK}`:`1px solid ${RULE}`,borderRadius:8,background:"#fff",cursor:"pointer"}}><div style={{fontWeight:600,fontSize:13,marginBottom:2}}>{m.label}</div><div style={{fontSize:11,color:FAINT,lineHeight:1.3}}>{m.sub}</div></button>)}</div>
+<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:14}}>
+<div><label style={lStyle}>Industry</label><input value={industry} onChange={e=>setIndustry(e.target.value)} placeholder="e.g., B2B SaaS" style={iStyle}/></div>
+<div><label style={lStyle}>Funding raised</label><input value={funded} onChange={e=>setFunded(e.target.value)} placeholder="e.g., $12M Series A" style={iStyle}/></div>
+</div>
+<div style={{marginBottom:14}}><label style={lStyle}>Where do you hire?</label><input value={locations} onChange={e=>setLocations(e.target.value)} placeholder="e.g., SF Bay Area, NYC, remote US" style={iStyle}/></div>
+<div style={{marginBottom:24}}><label style={lStyle}>Anything else? <span style={{color:FAINT,fontWeight:400}}>(optional)</span></label><textarea value={philosophyContext} onChange={e=>setPhilosophyContext(e.target.value)} placeholder="e.g., Competing with Big Tech for eng talent. No formal bands yet." rows={2} style={{...iStyle,resize:"vertical"}}/></div>
+<button onClick={generatePhilosophy} disabled={loadingPhil} style={{background:INK,color:"#fff",border:"none",padding:"13px 28px",fontSize:14,fontWeight:500,borderRadius:4,cursor:loadingPhil?"wait":"pointer",opacity:loadingPhil?0.6:1}}>{loadingPhil?"Building your comp philosophy…":"Build comp philosophy"}</button>
+
+{philosophy&&<div style={{marginTop:32}}>
+<div style={{borderBottom:`1px solid ${RULE}`,paddingBottom:12,marginBottom:20,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+<div style={{display:"flex",alignItems:"baseline",gap:12}}><span style={{fontSize:11,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",color:FAINT}}>Philosophy</span><span style={{fontFamily:"DM Serif Display,Georgia,serif",fontSize:19}}>Your comp framework</span></div>
+<button onClick={copyContent} style={{border:"1px solid #ccc",background:"#fff",padding:"7px 14px",fontSize:12,fontWeight:500,borderRadius:4,cursor:"pointer"}}>{copied?"Copied ✓":"Copy"}</button>
+</div>
+<div style={{fontFamily:"DM Serif Display,Georgia,serif",fontSize:20,lineHeight:1.4,color:INK,marginBottom:24,fontStyle:"italic"}}>"{philosophy.headline}"</div>
+<PhilBlock label="Cash" content={philosophy.cash_philosophy.rationale} sub={`Recommended: ${philosophy.cash_philosophy.market_position}`}/>
+<PhilBlock label="By function" content={philosophy.cash_philosophy.by_function}/>
+<PhilBlock label="Equity" content={philosophy.equity_philosophy.role}/>
+<div style={{marginBottom:22}}><Sublabel text="Typical equity ranges"/><p style={{fontSize:14,color:MUTED,lineHeight:1.7,margin:0}}>{philosophy.equity_philosophy.typical_ranges}</p><p style={{fontSize:14,color:MUTED,lineHeight:1.7,margin:"8px 0 0"}}>{philosophy.equity_philosophy.vesting}</p></div>
+<PhilBlock label="Benefits" content={philosophy.benefits_stance}/>
+{(()=>{const tc=tcColors[philosophy.transparency_stance.recommendation]||tcColors.internal_only;return <div style={{marginBottom:24}}><Sublabel text="Pay transparency"/><div style={{background:tc.bg,border:`1px solid ${tc.border}`,borderRadius:8,padding:"12px 16px",marginBottom:8}}><div style={{fontWeight:600,fontSize:14,color:tc.color,marginBottom:4}}>{philosophy.transparency_stance.recommendation_label}</div><div style={{fontSize:13,color:MUTED,lineHeight:1.6}}>{philosophy.transparency_stance.rationale}</div></div></div>;})()}
+<div style={{marginBottom:24}}><Sublabel text="Watch out for"/>{philosophy.red_flags.map((f,i)=><div key={i} style={{display:"flex",gap:10,marginBottom:8,fontSize:14,color:MUTED,lineHeight:1.6}}><span style={{color:"#b91c1c",flexShrink:0}}>—</span><span>{f}</span></div>)}</div>
+<div><Sublabel text="What to say to candidates"/>{philosophy.manager_talking_points.map((p,i)=><div key={i} style={{background:"#fafafa",border:"1px solid #e4e4e4",borderRadius:6,padding:"10px 14px",marginBottom:8,fontSize:14,color:MUTED,lineHeight:1.6,fontStyle:"italic"}}>"{p}"</div>)}</div>
+</div>}
+</div>}
+
+{activeTab==="offer"&&<div>
+<div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:14,marginBottom:16}}>
+<div><label style={lStyle}>Role</label><input value={role} onChange={e=>setRole(e.target.value)} placeholder="e.g., Senior Engineer" style={iStyle}/></div>
+<div><label style={lStyle}>Level <span style={{color:FAINT,fontWeight:400}}>(optional)</span></label><input value={level} onChange={e=>setLevel(e.target.value)} placeholder="e.g., Senior, Staff" style={iStyle}/></div>
+<div><label style={lStyle}>Hire location</label><input value={offerLocation} onChange={e=>setOfferLocation(e.target.value)} placeholder="e.g., San Francisco, CA" style={iStyle}/></div>
+</div>
+<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:24}}>
+<div><label style={lStyle}>Candidate context <span style={{color:FAINT,fontWeight:400}}>(optional)</span></label><input value={candidateContext} onChange={e=>setCandidateContext(e.target.value)} placeholder="e.g., 8 yrs exp, coming from Stripe" style={iStyle}/></div>
+<div><label style={lStyle}>Budget constraint <span style={{color:FAINT,fontWeight:400}}>(optional)</span></label><input value={budgetConstraint} onChange={e=>setBudgetConstraint(e.target.value)} placeholder="e.g., Under $180K" style={iStyle}/></div>
+</div>
+<div style={{fontSize:11,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",color:FAINT,marginBottom:14}}>Existing team comp</div>
+{teamMembers.map((m,idx)=><div key={m.id} style={{border:`1px solid ${RULE}`,borderRadius:8,padding:"16px 18px",marginBottom:12}}>
+<div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}><span style={{fontSize:11,fontWeight:600,color:FAINT}}>TEAM MEMBER {idx+1}</span>{teamMembers.length>1&&<button onClick={()=>setTeamMembers(ms=>ms.filter(x=>x.id!==m.id))} style={{border:"none",background:"none",color:FAINT,fontSize:12,cursor:"pointer",textDecoration:"underline"}}>Remove</button>}</div>
+<div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10,marginBottom:10}}><input value={m.title} onChange={e=>updateM(m.id,"title",e.target.value)} placeholder="Title" style={iStyle}/><input value={m.level} onChange={e=>updateM(m.id,"level",e.target.value)} placeholder="Level" style={iStyle}/><input value={m.location} onChange={e=>updateM(m.id,"location",e.target.value)} placeholder="Location" style={iStyle}/></div>
+<div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10}}><input value={m.base} onChange={e=>updateM(m.id,"base",e.target.value)} placeholder="Base salary ($)" style={iStyle}/><input value={m.equity} onChange={e=>updateM(m.id,"equity",e.target.value)} placeholder="Equity (optional)" style={iStyle}/><input value={m.tenure} onChange={e=>updateM(m.id,"tenure",e.target.value)} placeholder="Tenure (optional)" style={iStyle}/></div>
+</div>)}
+<div style={{display:"flex",gap:12,marginBottom:28,flexWrap:"wrap"}}>
+<button onClick={()=>setTeamMembers(ms=>[...ms,{id:Date.now(),title:"",level:"",location:"",base:"",equity:"",tenure:""}])} style={{border:"1px solid #ccc",background:"#fff",color:INK,padding:"10px 18px",fontSize:13,fontWeight:500,borderRadius:4,cursor:"pointer"}}>+ Add team member</button>
+<button onClick={generateOffer} disabled={loadingOffer||!role.trim()||!teamMembers.some(m=>m.base.trim())} style={{background:INK,color:"#fff",border:"none",padding:"11px 26px",fontSize:14,fontWeight:500,borderRadius:4,cursor:loadingOffer?"wait":"pointer",opacity:loadingOffer||!role.trim()||!teamMembers.some(m=>m.base.trim())?0.6:1}}>{loadingOffer?"Analyzing comp…":"Build the offer"}</button>
+</div>
+
+{offer&&<div>
+<div style={{borderBottom:`1px solid ${RULE}`,paddingBottom:12,marginBottom:20,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+<div style={{display:"flex",alignItems:"baseline",gap:12}}><span style={{fontSize:11,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",color:FAINT}}>Offer</span><span style={{fontFamily:"DM Serif Display,Georgia,serif",fontSize:19}}>{role}</span></div>
+<button onClick={copyContent} style={{border:"1px solid #ccc",background:"#fff",padding:"7px 14px",fontSize:12,fontWeight:500,borderRadius:4,cursor:"pointer"}}>{copied?"Copied ✓":"Copy"}</button>
+</div>
+<div style={{marginBottom:24}}><Sublabel text="Internal equity"/><p style={{fontSize:14,color:MUTED,lineHeight:1.7,marginBottom:12}}>{offer.internal_equity_analysis.summary}</p>
+{offer.internal_equity_analysis.flags?.length>0&&<div style={{display:"grid",gap:8,marginBottom:12}}>{offer.internal_equity_analysis.flags.map((f,i)=><div key={i} style={{background:"#fffbeb",border:"1px solid #fde68a",borderRadius:6,padding:"10px 14px"}}><div style={{fontWeight:600,fontSize:13,color:"#a16207",marginBottom:3}}>{f.member} — {f.flag}</div><div style={{fontSize:13,color:"#78350f",lineHeight:1.6}}>{f.note}</div></div>)}</div>}
+<p style={{fontSize:13,color:FAINT,margin:0,lineHeight:1.6}}><strong style={{color:MUTED}}>Anchor:</strong> {offer.internal_equity_analysis.range_anchor}</p></div>
+{(()=>{const r=offer.offer_recommendation;return <div style={{marginBottom:24}}><Sublabel text="Recommended range"/>
+<div style={{display:"flex",gap:10,marginBottom:14,flexWrap:"wrap"}}>{[{label:"Floor",val:r.base_range.low,note:"minimum defensible"},{label:"Mid",val:r.base_range.mid,note:"target / anchor"},{label:"Ceiling",val:r.base_range.high,note:"for exceptional fit"}].map(b=><div key={b.label} style={{flex:"1 1 120px",border:`1px solid ${RULE}`,borderRadius:8,padding:"14px 16px",textAlign:"center"}}><div style={{fontSize:11,fontWeight:600,color:FAINT,textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:4}}>{b.label}</div><div style={{fontFamily:"DM Serif Display,Georgia,serif",fontSize:22,marginBottom:4}}>{b.val}</div><div style={{fontSize:11,color:FAINT}}>{b.note}</div></div>)}</div>
+<p style={{fontSize:14,color:MUTED,lineHeight:1.7,marginBottom:10}}>{r.range_rationale}</p>
+<p style={{fontSize:14,color:MUTED,lineHeight:1.7,marginBottom:10}}><strong style={{color:INK}}>Where to land:</strong> {r.where_to_land}</p>
+<p style={{fontSize:14,color:MUTED,lineHeight:1.7}}><strong style={{color:INK}}>Equity:</strong> {r.equity_guidance}</p></div>;})()}
+<div style={{background:"#fafafa",border:`1px solid ${RULE}`,borderRadius:8,padding:"18px 20px",marginBottom:24}}><div style={{fontWeight:600,fontSize:13,color:INK,marginBottom:6}}>Budget ask: {offer.budget_ask.ask_amount}</div><p style={{fontSize:14,color:MUTED,lineHeight:1.7,marginBottom:10}}>{offer.budget_ask.justification}</p><p style={{fontSize:13,color:FAINT,lineHeight:1.6,margin:0}}><strong style={{color:MUTED}}>If pushback:</strong> {offer.budget_ask.if_pushback}</p></div>
+{offer.offer_red_flags?.length>0&&<div style={{marginBottom:20}}><Sublabel text="Watch for"/>{offer.offer_red_flags.map((f,i)=><div key={i} style={{display:"flex",gap:10,marginBottom:8,fontSize:14,color:MUTED,lineHeight:1.6}}><span style={{color:"#b91c1c",flexShrink:0}}>—</span><span>{f}</span></div>)}</div>}
+<div style={{background:"#fffbeb",border:"1px solid #fde68a",borderRadius:8,padding:"12px 16px",fontSize:13,color:"#78350f",lineHeight:1.6}}>{offer.disclaimer}</div>
+</div>}
+</div>}
+
+{error&&<div style={{color:"#b91c1c",fontSize:13,marginTop:16}}>{error}</div>}
+<div style={{marginTop:60,paddingTop:20,borderTop:`1px solid ${RULE}`,fontSize:12,color:FAINT,display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:8}}>
+<span>Comp Structuring · HR Toolkit for lean, scaling teams</span>
+<a href="../index.html" style={{color:FAINT,textDecoration:"none"}}>Built by Trinh Sonsino</a>
+</div>
+</div></div>;}
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
