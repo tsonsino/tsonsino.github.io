@@ -289,7 +289,7 @@ async function generate() {
     document.getElementById('form-section').style.display = 'none';
     document.getElementById('output-section').style.display = 'block';
   } catch(e) {
-    document.getElementById('error-msg').textContent = 'Something went wrong. Try again.';
+    document.getElementById('error-msg').textContent = e.message && e.message.includes('high demand') ? 'Gemini is experiencing high demand right now. Wait a few seconds and try again.' : 'Something went wrong. Try again.';
     console.error(e);
   }
 

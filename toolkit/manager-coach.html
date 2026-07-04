@@ -139,7 +139,7 @@ async function callAPI(prompt, maxTokens) {
     body: JSON.stringify({prompt: prompt, maxTokens: maxTokens || 2000})
   });
   var data = await response.json();
-  if (!data.text) throw new Error(data.error || 'No response');
+  if (!data.text) throw new Error(data.error || 'No response'); if (data.error && data.error.includes('high demand')) throw new Error(data.error);
   return data.text;
 }
 
@@ -190,7 +190,7 @@ async function getCoaching() {
     renderCoaching(result);
     document.getElementById('coaching-output').style.display = 'block';
   } catch(e) {
-    document.getElementById('coach-error').textContent = 'Something went wrong. Try again.';
+    document.getElementById('coach-error').textContent = e.message && e.message.includes('high demand') ? 'Gemini is experiencing high demand right now. Wait a few seconds and try again.' : 'Something went wrong. Try again.';
     console.error(e);
   }
 
@@ -273,7 +273,7 @@ async function getGuide(id, label) {
       '<div class="guide-output">' + text + '</div>' +
       '<div style="margin-top:20px;"><button class="btn-secondary" onclick="document.getElementById(\'guide-output\').style.display=\'none\'">Close</button></div>';
   } catch(e) {
-    document.getElementById('guide-error').textContent = 'Something went wrong. Try again.';
+    document.getElementById('guide-error').textContent = e.message && e.message.includes('high demand') ? 'Gemini is experiencing high demand right now. Wait a few seconds and try again.' : 'Something went wrong. Try again.';
     document.getElementById('guide-output').style.display = 'none';
     console.error(e);
   }

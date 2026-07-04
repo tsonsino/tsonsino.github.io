@@ -249,7 +249,7 @@ async function generateReview() {
     renderOutput(result, empName, ratingLabel);
   } catch(e) {
     var errEl = document.getElementById('error-msg');
-    if (errEl) errEl.textContent = 'Something went wrong. Try again.';
+    if (errEl) errEl.textContent = e.message && e.message.includes('high demand') ? 'Gemini is experiencing high demand right now. Wait a few seconds and try again.' : 'Something went wrong. Try again.';
     console.error(e);
     if (btn) { btn.disabled = false; btn.textContent = 'Generate review →'; }
   }

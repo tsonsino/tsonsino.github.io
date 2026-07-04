@@ -248,11 +248,11 @@ async function analyzeKnow() {
       body: JSON.stringify({prompt: prompt, maxTokens: 2000})
     });
     var data = await response.json();
-    if (!data.text) throw new Error(data.error || 'No response');
+    if (!data.text) throw new Error(data.error || 'No response'); if (data.error && data.error.includes('high demand')) throw new Error(data.error);
     var result = JSON.parse(repairJSON(data.text));
     renderKnowOutput(result);
   } catch(e) {
-    document.getElementById('know-error').textContent = 'Something went wrong. Try again.';
+    document.getElementById('know-error').textContent = e.message && e.message.includes('high demand') ? 'Gemini is experiencing high demand right now. Wait a few seconds and try again.' : 'Something went wrong. Try again.';
     console.error(e);
     btn.disabled = false;
     btn.textContent = 'Challenge this headcount';
@@ -393,11 +393,11 @@ async function getDiagnosis() {
       body: JSON.stringify({prompt: prompt, maxTokens: 2000})
     });
     var data = await response.json();
-    if (!data.text) throw new Error(data.error || 'No response');
+    if (!data.text) throw new Error(data.error || 'No response'); if (data.error && data.error.includes('high demand')) throw new Error(data.error);
     var result = JSON.parse(repairJSON(data.text));
     renderUnsureOutput(result);
   } catch(e) {
-    document.getElementById('unsure-error').textContent = 'Something went wrong. Try again.';
+    document.getElementById('unsure-error').textContent = e.message && e.message.includes('high demand') ? 'Gemini is experiencing high demand right now. Wait a few seconds and try again.' : 'Something went wrong. Try again.';
     console.error(e);
     if (btn) { btn.disabled = false; btn.textContent = 'Get my diagnosis &rarr;'; }
   }

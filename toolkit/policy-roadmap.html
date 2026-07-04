@@ -148,13 +148,13 @@ async function buildRoadmap() {
     'Context: ' + (document.getElementById('notes').value || 'none') + '\n\n' +
     'Return ONLY valid JSON:\n' +
     '{"phases":[{"name":"Now","trigger":"specific trigger tied to real threshold","rationale":"1 sentence","policies":[{"name":"Policy name","type":"required|defensive|operational","why":"1 sentence","risk":"1 sentence"}]},{"name":"Next","trigger":"...","rationale":"...","policies":[...]},{"name":"Later","trigger":"...","rationale":"...","policies":[...]}]}\n\n' +
-    'Types: required=mandated by law, defensive=legal protection, operational=scales the org. 4-5 policies per phase. Triggers must be real events not arbitrary day counts. Account for state-specific compliance. Be specific and lean.';
+    'Types: required=mandated by law, defensive=legal protection, operational=scales the org. MAXIMUM 3 policies per phase, 3 phases total. Each why and risk field: ONE sentence only. Triggers must be real events. Be lean. Total response MUST be under 800 tokens.';
 
   try {
     var response = await fetch('https://tsonsino-backend.vercel.app/api/chat', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({prompt: promptText, maxTokens: 2500})
+      body: JSON.stringify({prompt: promptText, maxTokens: 4000})
     });
     var data = await response.json();
     var text = data.text || '';
@@ -170,7 +170,7 @@ async function buildRoadmap() {
     roadmapData = JSON.parse(cleaned);
     renderRoadmap(roadmapData);
   } catch(e) {
-    document.getElementById('error-msg').textContent = 'Something went wrong. Try again.';
+    document.getElementById('error-msg').textContent = e.message && e.message.includes('high demand') ? 'Gemini is experiencing high demand right now. Wait a few seconds and try again.' : 'Something went wrong. Try again.';
     console.error(e);
     btn.disabled = false;
     btn.textContent = 'Build the roadmap';

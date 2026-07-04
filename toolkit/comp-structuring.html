@@ -175,11 +175,11 @@ async function buildOffer() {
       body: JSON.stringify({prompt: prompt, maxTokens: 2000})
     });
     var data = await response.json();
-    if (!data.text) throw new Error(data.error || 'No response');
+    if (!data.text) throw new Error(data.error || 'No response'); if (data.error && data.error.includes('high demand')) throw new Error(data.error);
     var result = JSON.parse(repairJSON(data.text));
     renderOutput(result);
   } catch(e) {
-    document.getElementById('error-msg').textContent = 'Something went wrong. Try again.';
+    document.getElementById('error-msg').textContent = e.message && e.message.includes('high demand') ? 'Gemini is experiencing high demand right now. Wait a few seconds and try again.' : 'Something went wrong. Try again.';
     console.error(e);
     btn.disabled = false;
     btn.textContent = 'Structure the offer';

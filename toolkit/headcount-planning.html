@@ -476,7 +476,7 @@ async function getAnalysis() {
     var result = JSON.parse(cleaned);
     renderAnalysis(result);
   } catch(e) {
-    document.getElementById('error-msg').textContent = 'Something went wrong. Try again.';
+    document.getElementById('error-msg').textContent = e.message && e.message.includes('high demand') ? 'Gemini is experiencing high demand right now. Wait a few seconds and try again.' : 'Something went wrong. Try again.';
     console.error(e);
   }
 
