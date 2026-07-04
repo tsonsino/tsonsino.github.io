@@ -40,7 +40,20 @@ const d=await r.json();return d.text;}
 async function getCoaching(){
 if(!situation.trim())return;setLoading(true);setError(null);setCoaching(null);
 try{const text=await callClaude(`You are an experienced management coach at a fast-scaling company. A manager described a situation and needs practical coaching.\n\nSITUATION: ${situation}\nCONTEXT: ${context||"none"}\n\nFirst screen for escalation: harassment/discrimination allegations, medical/disability disclosures, threats/safety, legal claims, protected leave, pay equity complaints, protected class involvement - these need HR first.\n\nReturn ONLY valid JSON:\n{"escalate":true|false,"escalation_reason":"if true: warm 2-3 sentences on why HR first and what to do now. if false: null","framing":"2-3 sentences reframing what is really going on","steps":["3-5 concrete ordered steps"],"say":["2-4 example phrases they could actually use"],"avoid":["2-4 things NOT to say/do with brief why"],"watch_for":"1-2 sentences on what to pay attention to"}\n\nIf escalate is true, still fill in guidance for the manager role AFTER involving HR. Be practical and direct. No jargon. Keep ALL text fields to 1-2 sentences max. Total response under 800 tokens.`);
-setCoaching(JSON.parse(text.replace(/```json|```/g,"").trim()));}
+try{
+let cleaned=text.replace(/```json|```/g,"").trim();
+// Attempt to repair truncated JSON by closing open structures
+try{JSON.parse(cleaned);}catch(e){
+  // Count open braces/brackets and close them
+  let opens=0,openArr=0;
+  for(let c of cleaned){if(c==='{')opens++;else if(c==='}')opens--;else if(c==='[')openArr++;else if(c===']')openArr--;}
+  // Close any open string first
+  if(cleaned.match(/"[^"]*$/)){cleaned+='"';}
+  // Add missing closing brackets/braces
+  while(openArr>0){cleaned+=']';openArr--;}
+  while(opens>0){cleaned+='}';opens--;}
+}
+setCoaching(JSON.parse(cleaned));}
 catch(e){setError("Something went wrong. Try again.");}
 setLoading(false);}
 
