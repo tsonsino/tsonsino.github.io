@@ -502,7 +502,7 @@ function renderAnalysis(r) {
   if (r.flags && r.flags.length > 0) {
     html += '<div class="analysis-block"><div class="section-label">Flags</div>';
     r.flags.forEach(function(f) {
-      var ft = flagTypes[f.type] || {label:f.type,color:#555',bg:'#fafafa'};
+      var ft = flagTypes[f.type] || {label:f.type,color:'#555',bg:'#fafafa'};
       html += '<div class="flag-card"><div class="flag-row"><span class="flag-name">'+f.role+'</span><span class="flag-badge" style="background:'+ft.bg+';color:'+ft.color+'">'+ft.label+'</span></div><div class="flag-note">'+f.note+'</div></div>';
     });
     html += '</div>';
