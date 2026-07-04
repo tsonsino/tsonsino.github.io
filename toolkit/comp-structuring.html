@@ -2,152 +2,282 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Comp Structuring · Trinh Sonsino HR Toolkit</title>
+<title>Comp Structuring - Trinh Sonsino HR Toolkit</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Inter',sans-serif;background:#fff;}.back-link{font-size:13px;color:#555;text-decoration:none;padding:16px 24px;display:inline-flex;align-items:center;gap:6px;border-bottom:1px solid #e4e4e4;width:100%;}.back-link:hover{color:#0f0f0f;}</style>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;background:#fff;color:#0f0f0f;}
+.back-link{font-size:13px;color:#555;text-decoration:none;padding:16px 24px;display:inline-flex;align-items:center;gap:6px;border-bottom:1px solid #e4e4e4;width:100%;}
+.back-link:hover{color:#0f0f0f;}
+.wrap{max-width:780px;margin:0 auto;padding:40px 24px 80px;}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#9a9a9a;margin-bottom:10px;}
+h1{font-family:'DM Serif Display',serif;font-size:34px;line-height:1.15;margin:0;}
+.subtitle{color:#555;font-size:15px;max-width:540px;line-height:1.65;margin-top:12px;}
+.divider{border:none;border-top:1px solid #e4e4e4;margin:24px 0;}
+label{font-size:12px;font-weight:500;color:#555;display:block;margin-bottom:6px;}
+input,select,textarea{width:100%;box-sizing:border-box;border:1px solid #e4e4e4;border-radius:6px;padding:11px 14px;font-size:14px;font-family:inherit;color:#0f0f0f;outline:none;background:#fff;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+.mb16{margin-bottom:16px;}
+.mb24{margin-bottom:24px;}
+.btn-primary{background:#0f0f0f;color:#fff;border:none;padding:13px 28px;font-size:14px;font-weight:500;border-radius:4px;cursor:pointer;}
+.btn-primary:disabled{opacity:0.6;cursor:not-allowed;}
+.btn-secondary{border:1px solid #ccc;background:#fff;color:#555;padding:9px 16px;font-size:13px;font-weight:500;border-radius:4px;cursor:pointer;}
+.toggle-row{display:flex;gap:8px;flex-wrap:wrap;}
+.toggle-btn{padding:10px 14px;font-size:12px;font-weight:500;border:1px solid #e4e4e4;border-radius:6px;background:#fff;cursor:pointer;color:#0f0f0f;}
+.toggle-btn.active{border:2px solid #0f0f0f;}
+.section-label{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#9a9a9a;margin-bottom:8px;}
+.result-block{margin-bottom:28px;}
+.result-title{font-weight:600;font-size:15px;margin-bottom:6px;}
+.comp-band{display:flex;gap:0;border:1px solid #e4e4e4;border-radius:8px;overflow:hidden;margin-bottom:14px;}
+.comp-cell{flex:1;padding:14px 18px;border-right:1px solid #e4e4e4;text-align:center;}
+.comp-cell:last-child{border-right:none;}
+.comp-num{font-family:'DM Serif Display',serif;font-size:22px;line-height:1;margin-bottom:4px;}
+.comp-label{font-size:11px;color:#9a9a9a;}
+.equity-card{border:1px solid #e4e4e4;border-radius:8px;padding:14px 18px;margin-bottom:8px;}
+.equity-title{font-weight:600;font-size:13px;margin-bottom:4px;}
+.equity-body{font-size:13px;color:#555;line-height:1.65;}
+.risk-item{display:flex;gap:10px;margin-bottom:8px;font-size:14px;color:#555;line-height:1.65;}
+.risk-marker{color:#a16207;flex-shrink:0;}
+.pitch-box{background:#fafafa;border:1px solid #e4e4e4;border-radius:8px;padding:20px 24px;font-size:14px;color:#555;line-height:1.8;font-style:italic;}
+.finance-box{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:14px 18px;}
+.finance-label{font-size:11px;font-weight:600;color:#1d4ed8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;}
+.finance-body{font-size:14px;color:#1e3a6e;line-height:1.7;}
+.warning-box{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:12px 16px;font-size:13px;color:#78350f;line-height:1.6;margin-bottom:24px;}
+.copy-btn{border:1px solid #ccc;background:#fff;padding:7px 14px;font-size:12px;font-weight:500;border-radius:4px;cursor:pointer;}
+.error{color:#b91c1c;font-size:13px;margin-top:10px;}
+.footer{margin-top:60px;padding-top:20px;border-top:1px solid #e4e4e4;display:flex;justify-content:space-between;font-size:12px;color:#9a9a9a;}
+</style>
 </head>
 <body>
-<a href="../index.html" class="back-link">← Back to Trinh Sonsino</a>
-<div id="root"></div>
-<script type="text/babel">
-const {useState}=React;
-const INK="#0f0f0f",MUTED="#555",FAINT="#9a9a9a",RULE="#e4e4e4";
-const STAGES=[{id:"seed",label:"Seed / Pre-Series A",sub:"1-30 people"},{id:"seriesA",label:"Series A",sub:"30-80 people"},{id:"seriesB",label:"Series B-C",sub:"80-250 people"},{id:"late",label:"Late stage / Pre-IPO",sub:"250+ people"}];
-const MARKET_POSITIONS=[{id:"p25",label:"P25",sub:"Below market"},{id:"p50",label:"P50",sub:"At market"},{id:"p75",label:"P75",sub:"Above market"},{id:"unsure",label:"Not sure",sub:"Help me figure out"}];
-const TABS=[{id:"philosophy",label:"Comp Philosophy"},{id:"offer",label:"Offer Builder"}];
-const iStyle={width:"100%",boxSizing:"border-box",border:"1px solid #e4e4e4",borderRadius:6,padding:"11px 14px",fontSize:14,fontFamily:"inherit",color:"#0f0f0f",outline:"none",background:"#fff"};
-const lStyle={fontSize:12,fontWeight:500,color:MUTED,display:"block",marginBottom:6};
-const tcColors={disclose_bands:{bg:"#f0fdf4",border:"#bbf7d0",color:"#166534"},partial:{bg:"#fffbeb",border:"#fde68a",color:"#a16207"},internal_only:{bg:"#fafafa",border:"#e4e4e4",color:"#555"}};
+<a href="../index.html" class="back-link">&larr; Back to Trinh Sonsino</a>
+<div class="wrap">
+  <div class="eyebrow">HR Toolkit &middot; 07</div>
+  <h1>Comp Structuring</h1>
+  <p class="subtitle">Build a comp philosophy your team can stand behind, then structure a specific offer with internal equity analysis and a budget ask for finance.</p>
+  <hr class="divider"/>
 
-function Sublabel({text}){return <div style={{fontSize:11,fontWeight:600,letterSpacing:"0.1em",textTransform:"uppercase",color:FAINT,marginBottom:8}}>{text}</div>;}
-function PhilBlock({label,content,sub}){return <div style={{marginBottom:22}}><Sublabel text={label}/>{sub&&<div style={{fontSize:12,color:"#2563eb",fontWeight:500,marginBottom:6}}>{sub}</div>}<p style={{fontSize:14,color:MUTED,lineHeight:1.7,margin:0}}>{content}</p></div>;}
+  <div id="form-section">
+    <div class="grid2">
+      <div class="mb16"><label>Role title</label><input id="role" placeholder="e.g., Senior Product Designer"/></div>
+      <div class="mb16"><label>Level</label><input id="level" placeholder="e.g., IC4, Senior, L5"/></div>
+    </div>
+    <div class="grid2">
+      <div class="mb16"><label>Location / market</label><input id="location" placeholder="e.g., San Francisco, Remote US"/></div>
+      <div class="mb16"><label>Company stage</label>
+        <select id="stage">
+          <option>Seed / Series A</option>
+          <option selected>Series B / C</option>
+          <option>Late stage / Pre-IPO</option>
+          <option>Public</option>
+        </select>
+      </div>
+    </div>
+    <div class="mb16">
+      <label>Market target</label>
+      <div class="toggle-row" id="market-toggle">
+        <button class="toggle-btn" onclick="setToggle('market','25th',this)">25th (lean)</button>
+        <button class="toggle-btn active" onclick="setToggle('market','50th',this)">50th (market)</button>
+        <button class="toggle-btn" onclick="setToggle('market','75th',this)">75th (competitive)</button>
+        <button class="toggle-btn" onclick="setToggle('market','90th',this)">90th (top of market)</button>
+      </div>
+    </div>
+    <div class="mb16">
+      <label>Candidate situation</label>
+      <div class="toggle-row" id="candidate-toggle">
+        <button class="toggle-btn active" onclick="setToggle('candidate','new_hire',this)">New hire</button>
+        <button class="toggle-btn" onclick="setToggle('candidate','internal_promo',this)">Internal promo</button>
+        <button class="toggle-btn" onclick="setToggle('candidate','retention',this)">Retention risk</button>
+        <button class="toggle-btn" onclick="setToggle('candidate','counter',this)">Counter offer</button>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="mb16"><label>Candidate current / expected base ($k)</label><input id="candidate-base" placeholder="e.g., 175" type="number"/></div>
+      <div class="mb16"><label>Internal team base range ($k)</label><input id="team-range" placeholder="e.g., 160-210"/></div>
+    </div>
+    <div class="mb24">
+      <label>Anything else relevant? (optional)</label>
+      <textarea id="notes" rows="2" placeholder="e.g., Competing offer at $220k, strong performer, first eng hire in this region"></textarea>
+    </div>
+    <button class="btn-primary" id="build-btn" onclick="buildOffer()" disabled>Structure the offer</button>
+    <div id="error-msg" class="error"></div>
+  </div>
 
-function App(){
-const [activeTab,setActiveTab]=useState("philosophy");
-const [stage,setStage]=useState("seriesA");const [industry,setIndustry]=useState("");const [marketPosition,setMarketPosition]=useState("p50");const [locations,setLocations]=useState("");const [funded,setFunded]=useState("");const [philosophyContext,setPhilosophyContext]=useState("");
-const [role,setRole]=useState("");const [level,setLevel]=useState("");const [offerLocation,setOfferLocation]=useState("");const [teamMembers,setTeamMembers]=useState([{id:1,title:"",level:"",location:"",base:"",equity:"",tenure:""}]);const [candidateContext,setCandidateContext]=useState("");const [budgetConstraint,setBudgetConstraint]=useState("");
-const [philosophy,setPhilosophy]=useState(null);const [offer,setOffer]=useState(null);const [loadingPhil,setLoadingPhil]=useState(false);const [loadingOffer,setLoadingOffer]=useState(false);const [error,setError]=useState(null);const [copied,setCopied]=useState(false);
-const stageLabel=STAGES.find(s=>s.id===stage)?.label||stage;
-const marketLabel=MARKET_POSITIONS.find(m=>m.id===marketPosition)?.label||marketPosition;
-function updateM(id,field,val){setTeamMembers(ms=>ms.map(m=>m.id===id?{...m,[field]:val}:m));}
+  <div id="output-section" style="display:none;"></div>
 
-async function callClaude(prompt,max=2500){
-const r=await fetch("https://tsonsino-backend.vercel.app/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:prompt,maxTokens:max})});
-const d=await r.json();return d.text;}
-
-async function generatePhilosophy(){
-setLoadingPhil(true);setError(null);setPhilosophy(null);
-try{const text=await callClaude(`You are a comp expert advising a fast-scaling startup. Build a practical comp philosophy.\n\nCompany: ${stageLabel}, ${industry||"?"} industry, market position intent: ${marketLabel}, locations: ${locations||"?"}, funding: ${funded||"?"}, context: ${philosophyContext||"none"}\n\nReturn ONLY valid JSON:\n{"headline":"one sharp sentence on comp stance","cash_philosophy":{"market_position":"recommended percentile and why","rationale":"2-3 sentences","by_function":"1-2 sentences on function variation"},"equity_philosophy":{"role":"2-3 sentences on equity role at this stage","typical_ranges":"guidance on grant ranges by level","vesting":"standard structure guidance"},"benefits_stance":"2-3 sentences on table stakes vs differentiators","transparency_stance":{"recommendation":"disclose_bands|partial|internal_only","recommendation_label":"e.g. Post ranges in job descriptions","rationale":"2 sentences including CA/CO/NY/WA legal requirements if relevant"},"red_flags":["3-4 specific comp mistakes at this stage"],"manager_talking_points":["3-4 honest things to say to candidates"]}`);
-setPhilosophy(JSON.parse(text.replace(/```json|```/g,"").trim()));}
-catch(e){setError("Something went wrong. Try again.");}
-setLoadingPhil(false);}
-
-async function generateOffer(){
-const filledM=teamMembers.filter(m=>m.base.trim());if(!role.trim()||filledM.length===0)return;
-setLoadingOffer(true);setError(null);setOffer(null);
-try{const roster=filledM.map((m,i)=>`Team member ${i+1}: ${m.title||"similar role"} (${m.level||"?"}) · Location: ${m.location||"?"} · Base: $${m.base}${m.equity?` · Equity: ${m.equity}`:""}${m.tenure?` · Tenure: ${m.tenure}`:""}`).join("\n");
-const text=await callClaude(`You are a comp advisor. Analyze internal equity and recommend a specific offer range.\n\nRole: ${role}${level?` (${level})`:""}\nLocation: ${offerLocation||"?"}\nCandidate: ${candidateContext||"not provided"}\nBudget: ${budgetConstraint||"not specified"}\n\nTeam comp:\n${roster}\n\nReturn ONLY valid JSON:\n{"internal_equity_analysis":{"summary":"2-3 sentences on team comp picture","flags":[{"member":"name","flag":"short label","note":"1-2 sentences"}],"range_anchor":"anchor data point and why"},"offer_recommendation":{"base_range":{"low":"$amount","mid":"$amount","high":"$amount"},"range_rationale":"2-3 sentences","where_to_land":"specific guidance","equity_guidance":"2-3 sentences","total_comp_framing":"how to present honestly"},"budget_ask":{"ask_amount":"number or range","justification":"3-4 sentences verbatim for finance","if_pushback":"what to say if finance comes back lower"},"offer_red_flags":["2-3 things that could blow this offer up"],"disclaimer":"one sentence to verify market data"}\n\nInternal equity is most important. Flag pay equity problems. Be direct.`);
-setOffer(JSON.parse(text.replace(/```json|```/g,"").trim()));}
-catch(e){setError("Something went wrong. Try again.");}
-setLoadingOffer(false);}
-
-function copyContent(){
-let text="";
-if(activeTab==="philosophy"&&philosophy)text=`COMP PHILOSOPHY\n\n${philosophy.headline}\n\nCASH: ${philosophy.cash_philosophy.market_position}\n${philosophy.cash_philosophy.rationale}\n\nEQUITY: ${philosophy.equity_philosophy.role}\n\nBENEFITS: ${philosophy.benefits_stance}\n\nTRANSPARENCY: ${philosophy.transparency_stance.recommendation_label}\n${philosophy.transparency_stance.rationale}`;
-else if(activeTab==="offer"&&offer){const r=offer.offer_recommendation;text=`OFFER - ${role}\n\nBase: $${r.base_range.low} - $${r.base_range.high} (mid: $${r.base_range.mid})\n${r.range_rationale}\n\nWhere to land: ${r.where_to_land}\n\nBUDGET ASK\n${offer.budget_ask.justification}\n\nIf pushback: ${offer.budget_ask.if_pushback}`;}
-if(!text)return;const el=document.createElement("textarea");el.value=text;document.body.appendChild(el);el.select();document.execCommand("copy");document.body.removeChild(el);setCopied(true);setTimeout(()=>setCopied(false),2000);}
-
-return <div style={{fontFamily:"Inter,system-ui,sans-serif",background:"#fff",minHeight:"100vh",color:INK}}>
-<div style={{maxWidth:820,margin:"0 auto",padding:"40px 24px 80px"}}>
-<div style={{borderBottom:`1px solid ${RULE}`,paddingBottom:20,marginBottom:28}}>
-<div style={{fontSize:11,fontWeight:600,letterSpacing:"0.14em",textTransform:"uppercase",color:FAINT,marginBottom:10}}>HR Toolkit · 06</div>
-<h1 style={{fontFamily:"DM Serif Display,Georgia,serif",fontSize:34,lineHeight:1.15,margin:0}}>Comp Structuring</h1>
-<p style={{color:MUTED,fontSize:15,maxWidth:580,lineHeight:1.65,marginTop:12,marginBottom:0}}>Build a comp philosophy your team can stand behind - then structure a specific offer that's fair to the candidate and defensible to your existing team.</p>
-</div>
-<div style={{display:"flex",gap:0,marginBottom:28,border:`1px solid ${RULE}`,borderRadius:8,overflow:"hidden",width:"fit-content"}}>
-{TABS.map(t=><button key={t.id} onClick={()=>{setActiveTab(t.id);setError(null);}} style={{padding:"10px 24px",fontSize:13,fontWeight:500,border:"none",cursor:"pointer",background:activeTab===t.id?INK:"#fff",color:activeTab===t.id?"#fff":MUTED}}>{t.label}</button>)}
-</div>
-
-{activeTab==="philosophy"&&<div>
-<label style={lStyle}>Company stage</label>
-<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:18}}>{STAGES.map(s=><button key={s.id} onClick={()=>setStage(s.id)} style={{textAlign:"left",padding:"12px 16px",border:stage===s.id?`2px solid ${INK}`:`1px solid ${RULE}`,borderRadius:8,background:"#fff",cursor:"pointer"}}><div style={{fontWeight:600,fontSize:13,marginBottom:2}}>{s.label}</div><div style={{fontSize:12,color:FAINT}}>{s.sub}</div></button>)}</div>
-<label style={lStyle}>Market position</label>
-<div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:8,marginBottom:18}}>{MARKET_POSITIONS.map(m=><button key={m.id} onClick={()=>setMarketPosition(m.id)} style={{textAlign:"left",padding:"10px 12px",border:marketPosition===m.id?`2px solid ${INK}`:`1px solid ${RULE}`,borderRadius:8,background:"#fff",cursor:"pointer"}}><div style={{fontWeight:600,fontSize:13,marginBottom:2}}>{m.label}</div><div style={{fontSize:11,color:FAINT,lineHeight:1.3}}>{m.sub}</div></button>)}</div>
-<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:14}}>
-<div><label style={lStyle}>Industry</label><input value={industry} onChange={e=>setIndustry(e.target.value)} placeholder="e.g., B2B SaaS" style={iStyle}/></div>
-<div><label style={lStyle}>Funding raised</label><input value={funded} onChange={e=>setFunded(e.target.value)} placeholder="e.g., $12M Series A" style={iStyle}/></div>
-</div>
-<div style={{marginBottom:14}}><label style={lStyle}>Where do you hire?</label><input value={locations} onChange={e=>setLocations(e.target.value)} placeholder="e.g., SF Bay Area, NYC, remote US" style={iStyle}/></div>
-<div style={{marginBottom:24}}><label style={lStyle}>Anything else? <span style={{color:FAINT,fontWeight:400}}>(optional)</span></label><textarea value={philosophyContext} onChange={e=>setPhilosophyContext(e.target.value)} placeholder="e.g., Competing with Big Tech for eng talent. No formal bands yet." rows={2} style={{...iStyle,resize:"vertical"}}/></div>
-<button onClick={generatePhilosophy} disabled={loadingPhil} style={{background:INK,color:"#fff",border:"none",padding:"13px 28px",fontSize:14,fontWeight:500,borderRadius:4,cursor:loadingPhil?"wait":"pointer",opacity:loadingPhil?0.6:1}}>{loadingPhil?"Building your comp philosophy…":"Build comp philosophy"}</button>
-
-{philosophy&&<div style={{marginTop:32}}>
-<div style={{borderBottom:`1px solid ${RULE}`,paddingBottom:12,marginBottom:20,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-<div style={{display:"flex",alignItems:"baseline",gap:12}}><span style={{fontSize:11,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",color:FAINT}}>Philosophy</span><span style={{fontFamily:"DM Serif Display,Georgia,serif",fontSize:19}}>Your comp framework</span></div>
-<button onClick={copyContent} style={{border:"1px solid #ccc",background:"#fff",padding:"7px 14px",fontSize:12,fontWeight:500,borderRadius:4,cursor:"pointer"}}>{copied?"Copied ✓":"Copy"}</button>
-</div>
-<div style={{fontFamily:"DM Serif Display,Georgia,serif",fontSize:20,lineHeight:1.4,color:INK,marginBottom:24,fontStyle:"italic"}}>"{philosophy.headline}"</div>
-<PhilBlock label="Cash" content={philosophy.cash_philosophy.rationale} sub={`Recommended: ${philosophy.cash_philosophy.market_position}`}/>
-<PhilBlock label="By function" content={philosophy.cash_philosophy.by_function}/>
-<PhilBlock label="Equity" content={philosophy.equity_philosophy.role}/>
-<div style={{marginBottom:22}}><Sublabel text="Typical equity ranges"/><p style={{fontSize:14,color:MUTED,lineHeight:1.7,margin:0}}>{philosophy.equity_philosophy.typical_ranges}</p><p style={{fontSize:14,color:MUTED,lineHeight:1.7,margin:"8px 0 0"}}>{philosophy.equity_philosophy.vesting}</p></div>
-<PhilBlock label="Benefits" content={philosophy.benefits_stance}/>
-{(()=>{const tc=tcColors[philosophy.transparency_stance.recommendation]||tcColors.internal_only;return <div style={{marginBottom:24}}><Sublabel text="Pay transparency"/><div style={{background:tc.bg,border:`1px solid ${tc.border}`,borderRadius:8,padding:"12px 16px",marginBottom:8}}><div style={{fontWeight:600,fontSize:14,color:tc.color,marginBottom:4}}>{philosophy.transparency_stance.recommendation_label}</div><div style={{fontSize:13,color:MUTED,lineHeight:1.6}}>{philosophy.transparency_stance.rationale}</div></div></div>;})()}
-<div style={{marginBottom:24}}><Sublabel text="Watch out for"/>{philosophy.red_flags.map((f,i)=><div key={i} style={{display:"flex",gap:10,marginBottom:8,fontSize:14,color:MUTED,lineHeight:1.6}}><span style={{color:"#b91c1c",flexShrink:0}}>-</span><span>{f}</span></div>)}</div>
-<div><Sublabel text="What to say to candidates"/>{philosophy.manager_talking_points.map((p,i)=><div key={i} style={{background:"#fafafa",border:"1px solid #e4e4e4",borderRadius:6,padding:"10px 14px",marginBottom:8,fontSize:14,color:MUTED,lineHeight:1.6,fontStyle:"italic"}}>"{p}"</div>)}</div>
-</div>}
-</div>}
-
-{activeTab==="offer"&&<div>
-<div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:14,marginBottom:16}}>
-<div><label style={lStyle}>Role</label><input value={role} onChange={e=>setRole(e.target.value)} placeholder="e.g., Senior Engineer" style={iStyle}/></div>
-<div><label style={lStyle}>Level <span style={{color:FAINT,fontWeight:400}}>(optional)</span></label><input value={level} onChange={e=>setLevel(e.target.value)} placeholder="e.g., Senior, Staff" style={iStyle}/></div>
-<div><label style={lStyle}>Hire location</label><input value={offerLocation} onChange={e=>setOfferLocation(e.target.value)} placeholder="e.g., San Francisco, CA" style={iStyle}/></div>
-</div>
-<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:24}}>
-<div><label style={lStyle}>Candidate context <span style={{color:FAINT,fontWeight:400}}>(optional)</span></label><input value={candidateContext} onChange={e=>setCandidateContext(e.target.value)} placeholder="e.g., 8 yrs exp, coming from Stripe" style={iStyle}/></div>
-<div><label style={lStyle}>Budget constraint <span style={{color:FAINT,fontWeight:400}}>(optional)</span></label><input value={budgetConstraint} onChange={e=>setBudgetConstraint(e.target.value)} placeholder="e.g., Under $180K" style={iStyle}/></div>
-</div>
-<div style={{fontSize:11,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",color:FAINT,marginBottom:14}}>Existing team comp</div>
-{teamMembers.map((m,idx)=><div key={m.id} style={{border:`1px solid ${RULE}`,borderRadius:8,padding:"16px 18px",marginBottom:12}}>
-<div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}><span style={{fontSize:11,fontWeight:600,color:FAINT}}>TEAM MEMBER {idx+1}</span>{teamMembers.length>1&&<button onClick={()=>setTeamMembers(ms=>ms.filter(x=>x.id!==m.id))} style={{border:"none",background:"none",color:FAINT,fontSize:12,cursor:"pointer",textDecoration:"underline"}}>Remove</button>}</div>
-<div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10,marginBottom:10}}><input value={m.title} onChange={e=>updateM(m.id,"title",e.target.value)} placeholder="Title" style={iStyle}/><input value={m.level} onChange={e=>updateM(m.id,"level",e.target.value)} placeholder="Level" style={iStyle}/><input value={m.location} onChange={e=>updateM(m.id,"location",e.target.value)} placeholder="Location" style={iStyle}/></div>
-<div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10}}><input value={m.base} onChange={e=>updateM(m.id,"base",e.target.value)} placeholder="Base salary ($)" style={iStyle}/><input value={m.equity} onChange={e=>updateM(m.id,"equity",e.target.value)} placeholder="Equity (optional)" style={iStyle}/><input value={m.tenure} onChange={e=>updateM(m.id,"tenure",e.target.value)} placeholder="Tenure (optional)" style={iStyle}/></div>
-</div>)}
-<div style={{display:"flex",gap:12,marginBottom:28,flexWrap:"wrap"}}>
-<button onClick={()=>setTeamMembers(ms=>[...ms,{id:Date.now(),title:"",level:"",location:"",base:"",equity:"",tenure:""}])} style={{border:"1px solid #ccc",background:"#fff",color:INK,padding:"10px 18px",fontSize:13,fontWeight:500,borderRadius:4,cursor:"pointer"}}>+ Add team member</button>
-<button onClick={generateOffer} disabled={loadingOffer||!role.trim()||!teamMembers.some(m=>m.base.trim())} style={{background:INK,color:"#fff",border:"none",padding:"11px 26px",fontSize:14,fontWeight:500,borderRadius:4,cursor:loadingOffer?"wait":"pointer",opacity:loadingOffer||!role.trim()||!teamMembers.some(m=>m.base.trim())?0.6:1}}>{loadingOffer?"Analyzing comp…":"Build the offer"}</button>
+  <div class="footer">
+    <span>Comp Structuring &middot; HR Toolkit for lean, scaling teams</span>
+    <span>Built by Trinh Sonsino</span>
+  </div>
 </div>
 
-{offer&&<div>
-<div style={{borderBottom:`1px solid ${RULE}`,paddingBottom:12,marginBottom:20,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-<div style={{display:"flex",alignItems:"baseline",gap:12}}><span style={{fontSize:11,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",color:FAINT}}>Offer</span><span style={{fontFamily:"DM Serif Display,Georgia,serif",fontSize:19}}>{role}</span></div>
-<button onClick={copyContent} style={{border:"1px solid #ccc",background:"#fff",padding:"7px 14px",fontSize:12,fontWeight:500,borderRadius:4,cursor:"pointer"}}>{copied?"Copied ✓":"Copy"}</button>
-</div>
-<div style={{marginBottom:24}}><Sublabel text="Internal equity"/><p style={{fontSize:14,color:MUTED,lineHeight:1.7,marginBottom:12}}>{offer.internal_equity_analysis.summary}</p>
-{offer.internal_equity_analysis.flags?.length>0&&<div style={{display:"grid",gap:8,marginBottom:12}}>{offer.internal_equity_analysis.flags.map((f,i)=><div key={i} style={{background:"#fffbeb",border:"1px solid #fde68a",borderRadius:6,padding:"10px 14px"}}><div style={{fontWeight:600,fontSize:13,color:"#a16207",marginBottom:3}}>{f.member} - {f.flag}</div><div style={{fontSize:13,color:"#78350f",lineHeight:1.6}}>{f.note}</div></div>)}</div>}
-<p style={{fontSize:13,color:FAINT,margin:0,lineHeight:1.6}}><strong style={{color:MUTED}}>Anchor:</strong> {offer.internal_equity_analysis.range_anchor}</p></div>
-{(()=>{const r=offer.offer_recommendation;return <div style={{marginBottom:24}}><Sublabel text="Recommended range"/>
-<div style={{display:"flex",gap:10,marginBottom:14,flexWrap:"wrap"}}>{[{label:"Floor",val:r.base_range.low,note:"minimum defensible"},{label:"Mid",val:r.base_range.mid,note:"target / anchor"},{label:"Ceiling",val:r.base_range.high,note:"for exceptional fit"}].map(b=><div key={b.label} style={{flex:"1 1 120px",border:`1px solid ${RULE}`,borderRadius:8,padding:"14px 16px",textAlign:"center"}}><div style={{fontSize:11,fontWeight:600,color:FAINT,textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:4}}>{b.label}</div><div style={{fontFamily:"DM Serif Display,Georgia,serif",fontSize:22,marginBottom:4}}>{b.val}</div><div style={{fontSize:11,color:FAINT}}>{b.note}</div></div>)}</div>
-<p style={{fontSize:14,color:MUTED,lineHeight:1.7,marginBottom:10}}>{r.range_rationale}</p>
-<p style={{fontSize:14,color:MUTED,lineHeight:1.7,marginBottom:10}}><strong style={{color:INK}}>Where to land:</strong> {r.where_to_land}</p>
-<p style={{fontSize:14,color:MUTED,lineHeight:1.7}}><strong style={{color:INK}}>Equity:</strong> {r.equity_guidance}</p></div>;})()}
-<div style={{background:"#fafafa",border:`1px solid ${RULE}`,borderRadius:8,padding:"18px 20px",marginBottom:24}}><div style={{fontWeight:600,fontSize:13,color:INK,marginBottom:6}}>Budget ask: {offer.budget_ask.ask_amount}</div><p style={{fontSize:14,color:MUTED,lineHeight:1.7,marginBottom:10}}>{offer.budget_ask.justification}</p><p style={{fontSize:13,color:FAINT,lineHeight:1.6,margin:0}}><strong style={{color:MUTED}}>If pushback:</strong> {offer.budget_ask.if_pushback}</p></div>
-{offer.offer_red_flags?.length>0&&<div style={{marginBottom:20}}><Sublabel text="Watch for"/>{offer.offer_red_flags.map((f,i)=><div key={i} style={{display:"flex",gap:10,marginBottom:8,fontSize:14,color:MUTED,lineHeight:1.6}}><span style={{color:"#b91c1c",flexShrink:0}}>-</span><span>{f}</span></div>)}</div>}
-<div style={{background:"#fffbeb",border:"1px solid #fde68a",borderRadius:8,padding:"12px 16px",fontSize:13,color:"#78350f",lineHeight:1.6}}>{offer.disclaimer}</div>
-</div>}
-</div>}
+<script>
+var selected = {market: '50th', candidate: 'new_hire'};
 
-{error&&<div style={{color:"#b91c1c",fontSize:13,marginTop:16}}>{error}</div>}
-<div style={{marginTop:60,paddingTop:20,borderTop:`1px solid ${RULE}`,fontSize:12,color:FAINT,display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:8}}>
-<span>Comp Structuring · HR Toolkit for lean, scaling teams</span>
-<a href="../index.html" style={{color:FAINT,textDecoration:"none"}}>Built by Trinh Sonsino</a>
-</div>
-</div></div>;}
-ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+function setToggle(group, val, btn) {
+  selected[group] = val;
+  var container = document.getElementById(group + '-toggle');
+  container.querySelectorAll('.toggle-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+}
+
+// Enable button when role is filled
+document.getElementById('role').addEventListener('input', function() {
+  document.getElementById('build-btn').disabled = !this.value.trim();
+});
+
+function repairJSON(text) {
+  var cleaned = text.replace(/```json|```/g, '').trim();
+  try { JSON.parse(cleaned); return cleaned; } catch(e) {}
+  var opens = 0, openArr = 0;
+  for (var i = 0; i < cleaned.length; i++) {
+    if (cleaned[i] === '{') opens++;
+    else if (cleaned[i] === '}') opens--;
+    else if (cleaned[i] === '[') openArr++;
+    else if (cleaned[i] === ']') openArr--;
+  }
+  if (cleaned.match(/"[^"]*$/)) cleaned += '"';
+  while (openArr > 0) { cleaned += ']'; openArr--; }
+  while (opens > 0) { cleaned += '}'; opens--; }
+  return cleaned;
+}
+
+async function buildOffer() {
+  var btn = document.getElementById('build-btn');
+  btn.disabled = true;
+  btn.textContent = 'Structuring the offer...';
+  document.getElementById('error-msg').textContent = '';
+
+  var candidateLabels = {new_hire:'New hire', internal_promo:'Internal promotion', retention:'Retention risk', counter:'Counter offer'};
+
+  var prompt = 'You are an experienced compensation expert at a startup. Structure a specific offer and flag equity risks.\n\n' +
+    'Role: ' + document.getElementById('role').value + '\n' +
+    'Level: ' + (document.getElementById('level').value || 'not specified') + '\n' +
+    'Location: ' + (document.getElementById('location').value || 'not specified') + '\n' +
+    'Company stage: ' + document.getElementById('stage').value + '\n' +
+    'Market target: ' + selected.market + ' percentile\n' +
+    'Situation: ' + candidateLabels[selected.candidate] + '\n' +
+    'Candidate current/expected base: $' + (document.getElementById('candidate-base').value || '?') + 'k\n' +
+    'Internal team base range: ' + (document.getElementById('team-range').value || 'not provided') + '\n' +
+    'Notes: ' + (document.getElementById('notes').value || 'none') + '\n\n' +
+    'Return ONLY valid JSON. Keep all text SHORT - 1-2 sentences max:\n' +
+    '{"base_band":{"low":0,"mid":0,"high":0,"recommendation":0,"rationale":"1 sentence"},' +
+    '"equity_analysis":{"internal_equity":"1-2 sentences on fit within team range","risks":["1-2 specific risks if any"]},' +
+    '"total_comp":{"base":0,"equity_note":"1 sentence on equity package","bonus_note":"1 sentence or null"},' +
+    '"candidate_pitch":"2-3 sentences positioning the offer",' +
+    '"finance_ask":"2-3 sentences - business case for finance approval",' +
+    '"watch_for":["1-2 things to monitor after offer"]}\n\n' +
+    'All dollar values in thousands. Be specific. Total response under 600 tokens.';
+
+  try {
+    var response = await fetch('https://tsonsino-backend.vercel.app/api/chat', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({prompt: prompt, maxTokens: 2000})
+    });
+    var data = await response.json();
+    if (!data.text) throw new Error(data.error || 'No response');
+    var result = JSON.parse(repairJSON(data.text));
+    renderOutput(result);
+  } catch(e) {
+    document.getElementById('error-msg').textContent = 'Something went wrong. Try again.';
+    console.error(e);
+    btn.disabled = false;
+    btn.textContent = 'Structure the offer';
+  }
+}
+
+function renderOutput(r) {
+  var html = '';
+
+  // Base band
+  var b = r.base_band;
+  if (b) {
+    html += '<div class="result-block"><div class="section-label">Base salary band</div>';
+    html += '<div class="comp-band">';
+    html += '<div class="comp-cell"><div class="comp-num">$'+b.low+'k</div><div class="comp-label">Low</div></div>';
+    html += '<div class="comp-cell" style="background:#fafafa;"><div class="comp-num">$'+b.mid+'k</div><div class="comp-label">Mid</div></div>';
+    html += '<div class="comp-cell"><div class="comp-num">$'+b.high+'k</div><div class="comp-label">High</div></div>';
+    if (b.recommendation) html += '<div class="comp-cell" style="background:#0f0f0f;"><div class="comp-num" style="color:#fff;">$'+b.recommendation+'k</div><div class="comp-label" style="color:#9a9a9a;">Recommended</div></div>';
+    html += '</div>';
+    if (b.rationale) html += '<p style="font-size:13px;color:#555;line-height:1.65;">'+b.rationale+'</p>';
+    html += '</div>';
+  }
+
+  // Equity analysis
+  var eq = r.equity_analysis;
+  if (eq) {
+    html += '<div class="result-block"><div class="section-label">Internal equity check</div>';
+    if (eq.internal_equity) html += '<p style="font-size:14px;color:#555;line-height:1.7;margin-bottom:10px;">'+eq.internal_equity+'</p>';
+    if (eq.risks && eq.risks.length) {
+      eq.risks.forEach(function(risk) {
+        html += '<div class="risk-item"><span class="risk-marker">-</span><span>'+risk+'</span></div>';
+      });
+    }
+    html += '</div>';
+  }
+
+  // Total comp
+  var tc = r.total_comp;
+  if (tc) {
+    html += '<div class="result-block"><div class="section-label">Total comp picture</div>';
+    if (tc.base) html += '<p style="font-size:14px;color:#555;margin-bottom:8px;">Base: <strong>$'+tc.base+'k</strong></p>';
+    if (tc.equity_note) html += '<p style="font-size:13px;color:#555;line-height:1.65;margin-bottom:6px;">'+tc.equity_note+'</p>';
+    if (tc.bonus_note) html += '<p style="font-size:13px;color:#555;line-height:1.65;">'+tc.bonus_note+'</p>';
+    html += '</div>';
+  }
+
+  // Candidate pitch
+  if (r.candidate_pitch) {
+    html += '<div class="result-block">';
+    html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">';
+    html += '<div class="section-label" style="margin:0;">How to pitch this offer</div>';
+    html += '<button class="copy-btn" onclick="copyText(\''+encodeURIComponent(r.candidate_pitch)+'\')">Copy</button></div>';
+    html += '<div class="pitch-box">"'+r.candidate_pitch+'"</div>';
+    html += '</div>';
+  }
+
+  // Finance ask
+  if (r.finance_ask) {
+    html += '<div class="result-block"><div class="finance-box">';
+    html += '<div class="finance-label">Finance approval ask</div>';
+    html += '<div class="finance-body">'+r.finance_ask+'</div>';
+    html += '</div></div>';
+  }
+
+  // Watch for
+  if (r.watch_for && r.watch_for.length) {
+    html += '<div class="result-block"><div class="section-label">Watch for after offer</div>';
+    r.watch_for.forEach(function(w) {
+      html += '<div class="risk-item"><span class="risk-marker">-</span><span>'+w+'</span></div>';
+    });
+    html += '</div>';
+  }
+
+  html += '<div class="warning-box">Comp data varies by source and changes quarterly. Always validate against current market data before finalizing.</div>';
+  html += '<button class="btn-secondary" onclick="reset()">Start over</button>';
+
+  var out = document.getElementById('output-section');
+  out.innerHTML = html;
+  out.style.display = 'block';
+  document.getElementById('form-section').style.display = 'none';
+}
+
+function copyText(encoded) {
+  var text = decodeURIComponent(encoded);
+  var el = document.createElement('textarea');
+  el.value = text;
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
+}
+
+function reset() {
+  document.getElementById('output-section').style.display = 'none';
+  document.getElementById('form-section').style.display = 'block';
+  document.getElementById('build-btn').disabled = false;
+  document.getElementById('build-btn').textContent = 'Structure the offer';
+}
 </script>
 </body>
 </html>

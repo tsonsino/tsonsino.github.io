@@ -2,87 +2,459 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Headcount Challenge · Trinh Sonsino HR Toolkit</title>
+<title>Should I Hire? - Trinh Sonsino HR Toolkit</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Inter',sans-serif;background:#fff;}.back-link{font-size:13px;color:#555;text-decoration:none;padding:16px 24px;display:inline-flex;align-items:center;gap:6px;border-bottom:1px solid #e4e4e4;width:100%;}.back-link:hover{color:#0f0f0f;}</style>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;background:#fff;color:#0f0f0f;}
+.back-link{font-size:13px;color:#555;text-decoration:none;padding:16px 24px;display:inline-flex;align-items:center;gap:6px;border-bottom:1px solid #e4e4e4;width:100%;}
+.back-link:hover{color:#0f0f0f;}
+.wrap{max-width:780px;margin:0 auto;padding:40px 24px 80px;}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#9a9a9a;margin-bottom:10px;}
+h1{font-family:'DM Serif Display',serif;font-size:34px;line-height:1.15;margin:0;}
+.subtitle{color:#555;font-size:15px;max-width:560px;line-height:1.65;margin-top:12px;}
+.divider{border:none;border-top:1px solid #e4e4e4;margin:24px 0;}
+label{font-size:12px;font-weight:500;color:#555;display:block;margin-bottom:6px;}
+input,textarea{width:100%;box-sizing:border-box;border:1px solid #e4e4e4;border-radius:6px;padding:11px 14px;font-size:14px;font-family:inherit;color:#0f0f0f;outline:none;background:#fff;}
+.mb16{margin-bottom:16px;}
+.mb20{margin-bottom:20px;}
+.mb28{margin-bottom:28px;}
+.btn-primary{background:#0f0f0f;color:#fff;border:none;padding:13px 28px;font-size:14px;font-weight:500;border-radius:4px;cursor:pointer;}
+.btn-primary:disabled{opacity:0.6;cursor:not-allowed;}
+.btn-secondary{border:1px solid #ccc;background:#fff;color:#555;padding:9px 16px;font-size:13px;font-weight:500;border-radius:4px;cursor:pointer;}
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.mode-card{text-align:left;padding:24px 26px;border:1px solid #e4e4e4;border-radius:8px;background:#fff;cursor:pointer;}
+.mode-card:hover{border-color:#0f0f0f;}
+.mode-title{font-weight:600;font-size:16px;margin-bottom:8px;}
+.mode-desc{font-size:13px;color:#555;line-height:1.6;}
+.mode-cta{font-size:12px;color:#2563eb;margin-top:12px;font-weight:500;}
+.work-shape-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.shape-card{text-align:left;padding:12px 16px;border:1px solid #e4e4e4;border-radius:8px;background:#fff;cursor:pointer;}
+.shape-card.active{border:2px solid #0f0f0f;}
+.shape-title{font-weight:600;font-size:13px;margin-bottom:2px;}
+.shape-sub{font-size:12px;color:#9a9a9a;}
+.hours-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.hours-btn{padding:10px 16px;font-size:13px;font-weight:500;border:1px solid #e4e4e4;border-radius:20px;background:#fff;cursor:pointer;color:#0f0f0f;}
+.hours-btn.active{border:2px solid #0f0f0f;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+.progress-bar{display:flex;gap:6px;margin-bottom:32px;}
+.progress-seg{flex:1;height:4px;border-radius:2px;cursor:pointer;}
+.prompt-num{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#9a9a9a;margin-bottom:8px;}
+.prompt-q{font-family:'DM Serif Display',serif;font-size:20px;line-height:1.45;color:#0f0f0f;margin-bottom:10px;max-width:580px;}
+.prompt-why{font-size:12px;color:#9a9a9a;line-height:1.55;margin-bottom:18px;}
+.answered-list{margin-top:32px;border-top:1px solid #e4e4e4;padding-top:20px;}
+.answered-label{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#9a9a9a;margin-bottom:12px;}
+.answered-item{display:flex;gap:12px;align-items:flex-start;padding:10px 14px;border-radius:6px;cursor:pointer;margin-bottom:6px;border:1px solid transparent;}
+.answered-item.active-item{background:#fafafa;border-color:#e4e4e4;}
+.answered-dot{width:20px;height:20px;border-radius:50%;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:600;}
+.answered-title{font-size:13px;font-weight:600;margin-bottom:2px;}
+.answered-preview{font-size:12px;color:#9a9a9a;line-height:1.5;}
+.section-label{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#9a9a9a;margin-bottom:8px;}
+.verdict-box{border-radius:10px;padding:22px 26px;margin-bottom:28px;}
+.verdict-label{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;}
+.verdict-title{font-family:'DM Serif Display',serif;font-size:26px;margin-bottom:10px;}
+.result-block{margin-bottom:28px;}
+.q-card{background:#fafafa;border:1px solid #e4e4e4;border-radius:6px;padding:12px 16px;margin-bottom:8px;font-size:14px;color:#555;line-height:1.6;}
+.error{color:#b91c1c;font-size:13px;margin-top:10px;}
+.footer{margin-top:60px;padding-top:20px;border-top:1px solid #e4e4e4;display:flex;justify-content:space-between;font-size:12px;color:#9a9a9a;}
+</style>
 </head>
 <body>
-<a href="../index.html" class="back-link">← Back to Trinh Sonsino</a>
-<div id="root"></div>
-<script type="text/babel">
-const {useState}=React;
-const INK="#0f0f0f",MUTED="#555",FAINT="#9a9a9a",RULE="#e4e4e4";
-const WORK_SHAPES=[{id:"ongoing",label:"Ongoing function",sub:"This work will exist indefinitely"},{id:"project",label:"Project with an end",sub:"Clear deliverable, then it's done"},{id:"surge",label:"Temporary surge",sub:"Spike in existing work, will normalize"},{id:"unsure",label:"Honestly not sure",sub:"It just feels like too much"}];
-const HOURS=[{id:"full",label:"40+ hrs/week, sustained"},{id:"most",label:"25-40 hrs/week"},{id:"partial",label:"10-25 hrs/week"},{id:"scattered",label:"Hard to say - it's scattered"}];
-const iStyle={width:"100%",boxSizing:"border-box",border:"1px solid #e4e4e4",borderRadius:6,padding:"11px 14px",fontSize:14,fontFamily:"inherit",color:"#0f0f0f",outline:"none",background:"#fff"};
-const lStyle={fontSize:12,fontWeight:500,color:MUTED,display:"block",marginBottom:6};
-const verdictColors={fte:{bg:"#f0fdf4",border:"#bbf7d0",color:"#166534"},contractor:{bg:"#eff6ff",border:"#bfdbfe",color:"#1d4ed8"},fixed_term:{bg:"#eff6ff",border:"#bfdbfe",color:"#1d4ed8"},absorb:{bg:"#fffbeb",border:"#fde68a",color:"#a16207"},fix_process:{bg:"#fffbeb",border:"#fde68a",color:"#a16207"},need_more_info:{bg:"#fafafa",border:"#e4e4e4",color:"#555"}};
+<a href="../index.html" class="back-link">&larr; Back to Trinh Sonsino</a>
+<div class="wrap">
+  <div class="eyebrow">HR Toolkit &middot; 05</div>
+  <h1>Should I Hire?</h1>
+  <p class="subtitle">Two modes: if you know what role you want, pressure-test whether it is the right call. If you are not sure what you need yet, start with a guided diagnostic.</p>
+  <hr class="divider"/>
 
-function Block({label,content}){if(!content)return null;return <div style={{marginBottom:28}}><div style={{fontSize:11,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",color:FAINT,marginBottom:10}}>{label}</div><p style={{fontSize:14,color:MUTED,lineHeight:1.75,margin:0}}>{content}</p></div>;}
+  <!-- Mode selector -->
+  <div id="mode-section">
+    <div class="mode-grid">
+      <div class="mode-card" onclick="showKnow()">
+        <div class="mode-title">I know what I want to hire</div>
+        <div class="mode-desc">You have a role in mind. Let us pressure-test whether it is the right call - FTE, contractor, absorb, or something else.</div>
+        <div class="mode-cta">Challenge the req &rarr;</div>
+      </div>
+      <div class="mode-card" onclick="showUnsure()">
+        <div class="mode-title">I am not sure what I need</div>
+        <div class="mode-desc">Your team is struggling but you are not sure if hiring is the answer. Start here for a guided diagnostic of what is actually going on.</div>
+        <div class="mode-cta">Start the diagnostic &rarr;</div>
+      </div>
+    </div>
+  </div>
 
-function App(){
-const [role,setRole]=useState("");const [why,setWhy]=useState("");const [workShape,setWorkShape]=useState("");const [hours,setHours]=useState("");const [absorption,setAbsorption]=useState("");const [teamLocation,setTeamLocation]=useState("");const [hireLocation,setHireLocation]=useState("");const [budget,setBudget]=useState("");const [noHire,setNoHire]=useState("");const [verdict,setVerdict]=useState(null);const [loading,setLoading]=useState(false);const [error,setError]=useState(null);
-const ready=role.trim()&&why.trim()&&workShape&&hours;
+  <!-- Know mode -->
+  <div id="know-section" style="display:none;">
+    <button onclick="showMode()" style="border:none;background:none;color:#9a9a9a;font-size:13px;cursor:pointer;text-decoration:underline;margin-bottom:24px;">&larr; Back</button>
+    <div class="mb16"><label>What role do you want to hire?</label><input id="k-role" placeholder="e.g., Senior Product Designer"/></div>
+    <div class="mb16"><label>Why do you need this person? Be specific about the work.</label><textarea id="k-why" rows="3" placeholder="e.g., Design requests from 3 product teams are bottlenecked on our one designer. Two launches slipped last quarter waiting on design."></textarea></div>
+    <label>What is the shape of the work?</label>
+    <div class="work-shape-grid" id="work-shape-grid"></div>
+    <label>How much work is it, really?</label>
+    <div class="hours-row" id="hours-row"></div>
+    <div class="mb16"><label>Could anyone on the existing team absorb it?</label><textarea id="k-absorption" rows="2" placeholder="e.g., Maybe - our mid-level designer has asked for more scope, but she is at capacity until March."></textarea></div>
+    <div class="grid2">
+      <div><label>Where does the current team sit?</label><input id="k-team-loc" placeholder="e.g., SF hub + 3 remote in PT/MT"/></div>
+      <div><label>Where would this hire be?</label><input id="k-hire-loc" placeholder="e.g., Open to remote US, or NYC"/></div>
+    </div>
+    <div class="mb16"><label>Budget context (optional)</label><input id="k-budget" placeholder="e.g., ~$160K budgeted"/></div>
+    <div class="mb28"><label>What actually happens if you do not hire?</label><textarea id="k-nohire" rows="2" placeholder="The most revealing question. What breaks, what slips, what is the real cost of waiting?"></textarea></div>
+    <button class="btn-primary" id="know-btn" onclick="analyzeKnow()" disabled>Challenge this headcount</button>
+    <div id="know-error" class="error"></div>
+    <div id="know-output" style="display:none;margin-top:32px;"></div>
+  </div>
 
-async function analyze(){
-if(!ready)return;setLoading(true);setError(null);setVerdict(null);
-try{
-const shapeLabel=WORK_SHAPES.find(w=>w.id===workShape)?.label||workShape;
-const hoursLabel=HOURS.find(h=>h.id===hours)?.label||hours;
-const r=await fetch("https://tsonsino-backend.vercel.app/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({maxTokens:2000,prompt:`You are a seasoned HRBP and finance-minded advisor at a lean startup. A manager wants to hire. Challenge the request rigorously but fairly - find the honest answer: sometimes hire, often something else.\n\nTHE REQUEST:\n- Role: ${role}\n- Why: ${why}\n- Work shape: ${shapeLabel}\n- Volume: ${hoursLabel}\n- Could team absorb? ${absorption||"not answered"}\n- Team location: ${teamLocation||"not specified"}\n- Hire location: ${hireLocation||"not specified"}\n- Budget: ${budget||"not specified"}\n- If do not hire: ${noHire||"not answered"}\n\nReturn ONLY valid JSON:\n{"verdict":"fte|contractor|fixed_term|absorb|fix_process|need_more_info","verdict_label":"human label","confidence":"high|moderate|low","reasoning":"3-5 sentences referencing their answers","location_analysis":"2-4 sentences on cost/collaboration/compliance for location","cost_picture":"2-3 sentences on true cost of recommended path vs FTE default (1.25-1.4x salary + equity + overhead)","challenge_questions":["2-4 questions finance will ask"],"if_recommended_path":"3-4 sentences: if FTE, justification for finance; if other, concrete alternative plan","revisit_trigger":"one sentence: specific signal to revisit this decision"}\n\nRules: Be honest not contrarian. Weight vague answers heavily as signals. Flag collaboration issues or cost savings for location. FTE true cost = 1.25-1.4x salary + equity + overhead.`}))});
-const d=await r.json();const text=d.text;
-setVerdict(JSON.parse(text.replace(/```json|```/g,"").trim()));}
-catch(e){setError("Something went wrong. Try again.");}
-setLoading(false);}
+  <!-- Unsure mode -->
+  <div id="unsure-section" style="display:none;">
+    <button onclick="showMode()" style="border:none;background:none;color:#9a9a9a;font-size:13px;cursor:pointer;text-decoration:underline;margin-bottom:24px;">&larr; Back</button>
+    <div id="unsure-prompts"></div>
+    <div id="unsure-error" class="error"></div>
+    <div id="unsure-output" style="display:none;margin-top:32px;"></div>
+  </div>
 
-return <div style={{fontFamily:"Inter,system-ui,sans-serif",background:"#fff",minHeight:"100vh",color:INK}}>
-<div style={{maxWidth:780,margin:"0 auto",padding:"40px 24px 80px"}}>
-<div style={{borderBottom:`1px solid ${RULE}`,paddingBottom:20,marginBottom:28}}>
-<div style={{fontSize:11,fontWeight:600,letterSpacing:"0.14em",textTransform:"uppercase",color:FAINT,marginBottom:10}}>HR Toolkit · 04</div>
-<h1 style={{fontFamily:"DM Serif Display,Georgia,serif",fontSize:34,lineHeight:1.15,margin:0}}>Headcount Challenge</h1>
-<p style={{color:MUTED,fontSize:15,maxWidth:580,lineHeight:1.65,marginTop:12,marginBottom:0}}>"I need to hire someone" is a hypothesis, not a decision. Answer honestly and get the recommendation a good HRBP would give you.</p>
+  <div class="footer">
+    <span>Should I Hire? &middot; HR Toolkit for lean, scaling teams</span>
+    <span>Built by Trinh Sonsino</span>
+  </div>
 </div>
 
-<div style={{marginBottom:20}}>
-<label style={lStyle}>What role do you want to hire?</label>
-<input value={role} onChange={e=>setRole(e.target.value)} placeholder="e.g., Senior Product Designer" style={{...iStyle,marginBottom:16}}/>
-<label style={lStyle}>Why do you need this person? Be specific about the work.</label>
-<textarea value={why} onChange={e=>setWhy(e.target.value)} placeholder="e.g., Design requests from 3 product teams are bottlenecked on our one designer." rows={3} style={{...iStyle,resize:"vertical",marginBottom:20}}/>
-<label style={lStyle}>What's the shape of the work?</label>
-<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:20}}>{WORK_SHAPES.map(w=><button key={w.id} onClick={()=>setWorkShape(w.id)} style={{textAlign:"left",padding:"12px 16px",border:workShape===w.id?`2px solid ${INK}`:`1px solid ${RULE}`,borderRadius:8,background:"#fff",cursor:"pointer"}}><div style={{fontWeight:600,fontSize:13,marginBottom:2}}>{w.label}</div><div style={{fontSize:12,color:FAINT}}>{w.sub}</div></button>)}</div>
-<label style={lStyle}>How much work is it, really?</label>
-<div style={{display:"flex",gap:8,marginBottom:20,flexWrap:"wrap"}}>{HOURS.map(h=><button key={h.id} onClick={()=>setHours(h.id)} style={{padding:"10px 16px",fontSize:13,fontWeight:500,border:hours===h.id?`2px solid ${INK}`:`1px solid ${RULE}`,borderRadius:20,background:"#fff",cursor:"pointer",color:INK}}>{h.label}</button>)}</div>
-<label style={lStyle}>Could anyone on the existing team absorb some or all of it? <span style={{color:FAINT,fontWeight:400}}>(be honest)</span></label>
-<textarea value={absorption} onChange={e=>setAbsorption(e.target.value)} placeholder="e.g., Maybe - our mid-level designer has asked for more scope, but she's at capacity until March." rows={2} style={{...iStyle,resize:"vertical",marginBottom:20}}/>
-<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:20}}>
-<div><label style={lStyle}>Where does the current team sit?</label><input value={teamLocation} onChange={e=>setTeamLocation(e.target.value)} placeholder="e.g., SF hub + 3 remote in PT/MT" style={iStyle}/></div>
-<div><label style={lStyle}>Where would this hire be?</label><input value={hireLocation} onChange={e=>setHireLocation(e.target.value)} placeholder="e.g., Open to remote US, or NYC" style={iStyle}/></div>
-</div>
-<div style={{marginBottom:20}}><label style={lStyle}>Budget context <span style={{color:FAINT,fontWeight:400}}>(optional)</span></label><input value={budget} onChange={e=>setBudget(e.target.value)} placeholder="e.g., ~$160K budgeted" style={iStyle}/></div>
-<label style={lStyle}>What actually happens if you don't hire?</label>
-<textarea value={noHire} onChange={e=>setNoHire(e.target.value)} placeholder="The most revealing question. What breaks, what slips, what's the real cost of waiting?" rows={2} style={{...iStyle,resize:"vertical",marginBottom:24}}/>
-<button onClick={analyze} disabled={loading||!ready} style={{background:INK,color:"#fff",border:"none",padding:"13px 28px",fontSize:14,fontWeight:500,borderRadius:4,cursor:loading?"wait":"pointer",opacity:loading||!ready?0.6:1}}>{loading?"Pressure-testing the request…":"Challenge this headcount"}</button>
-{error&&<div style={{color:"#b91c1c",fontSize:13,marginTop:10}}>{error}</div>}
-</div>
+<script>
+var workShape = '';
+var workHours = '';
+var unsureStep = 0;
+var unsureAnswers = {team:'', pain:'', business:'', tried:''};
 
-{verdict&&<div style={{marginTop:24}}>
-{(()=>{const vc=verdictColors[verdict.verdict]||verdictColors.need_more_info;return <div style={{background:vc.bg,border:`1px solid ${vc.border}`,borderRadius:10,padding:"22px 26px",marginBottom:28}}><div style={{fontSize:11,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",color:vc.color,marginBottom:6}}>Recommendation · {verdict.confidence} confidence</div><div style={{fontFamily:"DM Serif Display,Georgia,serif",fontSize:26,color:vc.color,marginBottom:10}}>{verdict.verdict_label}</div><div style={{fontSize:14,color:INK,lineHeight:1.7}}>{verdict.reasoning}</div></div>;})()}
-<Block label="Location check" content={verdict.location_analysis}/>
-<Block label="The cost picture" content={verdict.cost_picture}/>
-{verdict.challenge_questions?.length>0&&<div style={{marginBottom:28}}><div style={{fontSize:11,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",color:FAINT,marginBottom:10}}>Before this goes to finance</div><div style={{display:"grid",gap:8}}>{verdict.challenge_questions.map((q,i)=><div key={i} style={{background:"#fafafa",border:`1px solid ${RULE}`,borderRadius:6,padding:"12px 16px",fontSize:14,color:MUTED,lineHeight:1.6}}>{q}</div>)}</div></div>}
-<Block label="The path forward" content={verdict.if_recommended_path}/>
-<Block label="When to revisit" content={verdict.revisit_trigger}/>
-</div>}
+var workShapes = [
+  {id:'ongoing', label:'Ongoing function', sub:'This work will exist indefinitely'},
+  {id:'project', label:'Project with an end', sub:'Clear deliverable, then it is done'},
+  {id:'surge', label:'Temporary surge', sub:'Spike in existing work, will normalize'},
+  {id:'unsure', label:'Honestly not sure', sub:'It just feels like too much'}
+];
 
-<div style={{marginTop:60,paddingTop:20,borderTop:`1px solid ${RULE}`,fontSize:12,color:FAINT,display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:8}}>
-<span>Headcount Challenge · HR Toolkit for lean, scaling teams</span>
-<a href="../index.html" style={{color:FAINT,textDecoration:"none"}}>Built by Trinh Sonsino</a>
-</div>
-</div></div>;}
-ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+var hoursOptions = ['40+ hrs/week, sustained', '25-40 hrs/week', '10-25 hrs/week', 'Hard to say - it is scattered'];
+
+var unsurePrompts = [
+  {id:'team', label:'Your team today', question:'Describe what your team does and who is on it right now.', placeholder:'e.g., 4 engineers building our payments infrastructure. 2 senior, 2 mid-level. We own everything from checkout to reconciliation.', why:'Before knowing if you need to hire, you need a clear picture of what you have.'},
+  {id:'pain', label:'The actual pain', question:'What is breaking, slipping, or not getting done? Be specific - not "we are busy" but what is actually falling through the cracks.', placeholder:'e.g., We have 3 projects queued that we have not started. The mobile checkout redesign has slipped 2 quarters.', why:'Vague pain leads to vague solutions. Naming the specific problem often reveals whether it is a people problem or something else.'},
+  {id:'business', label:'What the business needs', question:'What does your team need to deliver in the next 6 months, and what is currently standing in the way?', placeholder:'e.g., We need to ship the new API by Q3 for a key enterprise customer. Right now we do not have anyone with the infrastructure experience to lead it.', why:'Hiring should follow business need, not just workload.'},
+  {id:'tried', label:'What you have already tried', question:'Have you tried redistributing work, changing priorities, or addressing process issues? What happened?', placeholder:'e.g., We deprioritized 2 projects last quarter but the remaining ones still are not getting done.', why:'If the problem persists after redistribution and process fixes, it is more likely a genuine capacity gap.'}
+];
+
+var verdictColors = {
+  fte:{bg:'#f0fdf4',border:'#bbf7d0',color:'#166534'},
+  contractor:{bg:'#eff6ff',border:'#bfdbfe',color:'#1d4ed8'},
+  fixed_term:{bg:'#eff6ff',border:'#bfdbfe',color:'#1d4ed8'},
+  absorb:{bg:'#fffbeb',border:'#fde68a',color:'#a16207'},
+  fix_process:{bg:'#fffbeb',border:'#fde68a',color:'#a16207'},
+  need_more_info:{bg:'#fafafa',border:'#e4e4e4',color:'#555'}
+};
+
+// Render work shapes
+document.getElementById('work-shape-grid').innerHTML = workShapes.map(function(w) {
+  return '<div class="shape-card" id="shape-'+w.id+'" onclick="setShape(\''+w.id+'\')">' +
+    '<div class="shape-title">'+w.label+'</div><div class="shape-sub">'+w.sub+'</div></div>';
+}).join('');
+
+// Render hours
+document.getElementById('hours-row').innerHTML = hoursOptions.map(function(h, i) {
+  return '<button class="hours-btn" id="hours-'+i+'" onclick="setHours(\''+h+'\',this)">'+h+'</button>';
+}).join('');
+
+function setShape(id) {
+  workShape = id;
+  document.querySelectorAll('.shape-card').forEach(function(c){c.classList.remove('active');});
+  document.getElementById('shape-'+id).classList.add('active');
+  checkKnowReady();
+}
+
+function setHours(val, btn) {
+  workHours = val;
+  document.querySelectorAll('.hours-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  checkKnowReady();
+}
+
+function checkKnowReady() {
+  var role = document.getElementById('k-role').value.trim();
+  var why = document.getElementById('k-why').value.trim();
+  document.getElementById('know-btn').disabled = !(role && why && workShape && workHours);
+}
+
+document.getElementById('k-role').addEventListener('input', checkKnowReady);
+document.getElementById('k-why').addEventListener('input', checkKnowReady);
+
+function showMode() {
+  document.getElementById('mode-section').style.display = 'block';
+  document.getElementById('know-section').style.display = 'none';
+  document.getElementById('unsure-section').style.display = 'none';
+}
+
+function showKnow() {
+  document.getElementById('mode-section').style.display = 'none';
+  document.getElementById('know-section').style.display = 'block';
+}
+
+function showUnsure() {
+  document.getElementById('mode-section').style.display = 'none';
+  document.getElementById('unsure-section').style.display = 'block';
+  unsureStep = 0;
+  unsureAnswers = {team:'', pain:'', business:'', tried:''};
+  renderUnsurePrompt();
+}
+
+function repairJSON(text) {
+  var cleaned = text.replace(/```json|```/g, '').trim();
+  try { JSON.parse(cleaned); return cleaned; } catch(e) {}
+  var opens = 0, openArr = 0;
+  for (var i = 0; i < cleaned.length; i++) {
+    if (cleaned[i] === '{') opens++;
+    else if (cleaned[i] === '}') opens--;
+    else if (cleaned[i] === '[') openArr++;
+    else if (cleaned[i] === ']') openArr--;
+  }
+  if (cleaned.match(/"[^"]*$/)) cleaned += '"';
+  while (openArr > 0) { cleaned += ']'; openArr--; }
+  while (opens > 0) { cleaned += '}'; opens--; }
+  return cleaned;
+}
+
+async function analyzeKnow() {
+  var btn = document.getElementById('know-btn');
+  btn.disabled = true;
+  btn.textContent = 'Pressure-testing...';
+  document.getElementById('know-error').textContent = '';
+  document.getElementById('know-output').style.display = 'none';
+
+  var shapeLabel = workShapes.find(function(w){return w.id===workShape;}).label;
+
+  var prompt = 'You are a seasoned HRBP and finance advisor. A manager wants to hire. Challenge the request rigorously but fairly.\n\n' +
+    'Role: ' + document.getElementById('k-role').value + '\n' +
+    'Why: ' + document.getElementById('k-why').value + '\n' +
+    'Work shape: ' + shapeLabel + '\n' +
+    'Volume: ' + workHours + '\n' +
+    'Team absorption: ' + (document.getElementById('k-absorption').value || 'not answered') + '\n' +
+    'Team location: ' + (document.getElementById('k-team-loc').value || 'not specified') + '\n' +
+    'Hire location: ' + (document.getElementById('k-hire-loc').value || 'not specified') + '\n' +
+    'Budget: ' + (document.getElementById('k-budget').value || 'not specified') + '\n' +
+    'If do not hire: ' + (document.getElementById('k-nohire').value || 'not answered') + '\n\n' +
+    'Return ONLY valid JSON. Keep ALL text fields SHORT - 1-2 sentences max:\n' +
+    '{"verdict":"fte|contractor|fixed_term|absorb|fix_process|need_more_info","verdict_label":"human label","confidence":"high|moderate|low","reasoning":"2-3 sentences","location_analysis":"1-2 sentences on cost/collaboration/compliance","cost_picture":"1-2 sentences on true cost","challenge_questions":["2-3 questions finance will ask"],"if_recommended_path":"2-3 sentences on path forward","revisit_trigger":"one sentence on signal to revisit"}\n\n' +
+    'FTE true cost = 1.25-1.4x salary + equity + overhead. Be honest. Total response under 600 tokens.';
+
+  try {
+    var response = await fetch('https://tsonsino-backend.vercel.app/api/chat', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({prompt: prompt, maxTokens: 2000})
+    });
+    var data = await response.json();
+    if (!data.text) throw new Error(data.error || 'No response');
+    var result = JSON.parse(repairJSON(data.text));
+    renderKnowOutput(result);
+  } catch(e) {
+    document.getElementById('know-error').textContent = 'Something went wrong. Try again.';
+    console.error(e);
+    btn.disabled = false;
+    btn.textContent = 'Challenge this headcount';
+  }
+}
+
+function renderKnowOutput(r) {
+  var vc = verdictColors[r.verdict] || verdictColors.need_more_info;
+  var html = '';
+
+  html += '<div class="verdict-box" style="background:'+vc.bg+';border:1px solid '+vc.border+'">';
+  html += '<div class="verdict-label" style="color:'+vc.color+'">Recommendation &middot; '+r.confidence+' confidence</div>';
+  html += '<div class="verdict-title" style="color:'+vc.color+'">'+r.verdict_label+'</div>';
+  html += '<p style="font-size:14px;color:#0f0f0f;line-height:1.7;">'+r.reasoning+'</p>';
+  html += '</div>';
+
+  if (r.location_analysis) {
+    html += '<div class="result-block"><div class="section-label">Location check</div><p style="font-size:14px;color:#555;line-height:1.7;">'+r.location_analysis+'</p></div>';
+  }
+  if (r.cost_picture) {
+    html += '<div class="result-block"><div class="section-label">The cost picture</div><p style="font-size:14px;color:#555;line-height:1.7;">'+r.cost_picture+'</p></div>';
+  }
+  if (r.challenge_questions && r.challenge_questions.length) {
+    html += '<div class="result-block"><div class="section-label">Before this goes to finance</div>';
+    r.challenge_questions.forEach(function(q){ html += '<div class="q-card">'+q+'</div>'; });
+    html += '</div>';
+  }
+  if (r.if_recommended_path) {
+    html += '<div class="result-block"><div class="section-label">The path forward</div><p style="font-size:14px;color:#555;line-height:1.7;">'+r.if_recommended_path+'</p></div>';
+  }
+  if (r.revisit_trigger) {
+    html += '<div class="result-block"><div class="section-label">When to revisit</div><p style="font-size:14px;color:#555;line-height:1.7;">'+r.revisit_trigger+'</p></div>';
+  }
+  html += '<button class="btn-secondary" onclick="resetKnow()">Start over</button>';
+
+  var out = document.getElementById('know-output');
+  out.innerHTML = html;
+  out.style.display = 'block';
+}
+
+function resetKnow() {
+  document.getElementById('know-output').style.display = 'none';
+  workShape = '';
+  workHours = '';
+  document.querySelectorAll('.shape-card').forEach(function(c){c.classList.remove('active');});
+  document.querySelectorAll('.hours-btn').forEach(function(b){b.classList.remove('active');});
+}
+
+function renderUnsurePrompt() {
+  var p = unsurePrompts[unsureStep];
+  var allAnswered = unsurePrompts.every(function(pr){return unsureAnswers[pr.id].trim().length > 20;});
+  var isLast = unsureStep === unsurePrompts.length - 1;
+
+  var progressHTML = '<div class="progress-bar">';
+  unsurePrompts.forEach(function(pr, i) {
+    var bg = unsureAnswers[pr.id].trim().length > 20 ? '#0f0f0f' : (i === unsureStep ? '#888' : '#e4e4e4');
+    progressHTML += '<div class="progress-seg" style="background:'+bg+'" onclick="goUnsureStep('+i+')"></div>';
+  });
+  progressHTML += '</div>';
+
+  var answeredHTML = '<div class="answered-list"><div class="answered-label">Your answers so far</div>';
+  unsurePrompts.forEach(function(pr, i) {
+    var done = unsureAnswers[pr.id].trim().length > 20;
+    var isActive = i === unsureStep;
+    answeredHTML += '<div class="answered-item'+(isActive?' active-item':'')+'" onclick="goUnsureStep('+i+')">';
+    answeredHTML += '<div class="answered-dot" style="background:'+(done?'#0f0f0f':'#e4e4e4')+'">'+(done?'v':(i+1))+'</div>';
+    answeredHTML += '<div><div class="answered-title">'+pr.label+'</div>';
+    if (unsureAnswers[pr.id].trim()) {
+      answeredHTML += '<div class="answered-preview">'+unsureAnswers[pr.id].substring(0,80)+(unsureAnswers[pr.id].length>80?'...':'')+'</div>';
+    } else {
+      answeredHTML += '<div class="answered-preview" style="color:#e4e4e4;">Not answered yet</div>';
+    }
+    answeredHTML += '</div></div>';
+  });
+  answeredHTML += '</div>';
+
+  var navHTML = '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-top:4px;">';
+  navHTML += '<div></div><div style="display:flex;gap:10px;">';
+  if (unsureStep > 0) navHTML += '<button class="btn-secondary" onclick="goUnsureStep('+(unsureStep-1)+')">&larr; Previous</button>';
+  if (!isLast) {
+    var hasAnswer = unsureAnswers[p.id].trim().length > 0;
+    navHTML += '<button class="btn-primary" onclick="goUnsureStep('+(unsureStep+1)+')" '+(hasAnswer?'':'disabled')+'>Next &rarr;</button>';
+  } else {
+    navHTML += '<button class="btn-primary" id="diagnose-btn" onclick="getDiagnosis()" '+(allAnswered?'':'disabled')+'>Get my diagnosis &rarr;</button>';
+  }
+  navHTML += '</div></div>';
+
+  document.getElementById('unsure-prompts').innerHTML =
+    progressHTML +
+    '<div class="prompt-num">'+(unsureStep+1)+' of '+unsurePrompts.length+' &middot; '+p.label+'</div>' +
+    '<p class="prompt-q">'+p.question+'</p>' +
+    '<p class="prompt-why">'+p.why+'</p>' +
+    '<textarea rows="5" placeholder="'+p.placeholder+'" style="resize:vertical;margin-bottom:20px;" oninput="updateUnsureAnswer(\''+p.id+'\',this.value)">'+unsureAnswers[p.id]+'</textarea>' +
+    navHTML + answeredHTML;
+}
+
+function updateUnsureAnswer(id, val) {
+  unsureAnswers[id] = val;
+  // Update progress bars
+  var segs = document.querySelectorAll('.progress-seg');
+  unsurePrompts.forEach(function(pr, i) {
+    if (segs[i]) segs[i].style.background = unsureAnswers[pr.id].trim().length > 20 ? '#0f0f0f' : (i === unsureStep ? '#888' : '#e4e4e4');
+  });
+  // Update buttons
+  var allAnswered = unsurePrompts.every(function(pr){return unsureAnswers[pr.id].trim().length > 20;});
+  var diagBtn = document.getElementById('diagnose-btn');
+  if (diagBtn) diagBtn.disabled = !allAnswered;
+}
+
+function goUnsureStep(i) {
+  unsureStep = i;
+  renderUnsurePrompt();
+}
+
+async function getDiagnosis() {
+  var btn = document.getElementById('diagnose-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Diagnosing...'; }
+  document.getElementById('unsure-error').textContent = '';
+  document.getElementById('unsure-output').style.display = 'none';
+
+  var answersText = unsurePrompts.map(function(p) {
+    return p.label + ':\n' + unsureAnswers[p.id];
+  }).join('\n\n');
+
+  var prompt = 'You are an experienced HRBP coaching a manager who is not sure what they need. Diagnose what is actually going on.\n\n' +
+    'Manager answers:\n' + answersText + '\n\n' +
+    'Return ONLY valid JSON. Keep ALL text fields SHORT - 1-2 sentences max:\n' +
+    '{"diagnosis":"2-3 sentences on what is actually going on","is_hiring_answer":true,"hiring_confidence":"high|moderate|low","what_to_do":"2-3 sentences of specific guidance",' +
+    '"if_hiring":{"role_suggestion":"what type of role","timing":"when to hire","what_not_to_hire":"one sentence common mistake"},' +
+    '"if_not_hiring":{"try_first":"2 specific things to try before hiring","revisit_when":"specific signal to revisit"},' +
+    '"for_leadership":"2 sentences the manager can use to explain the situation to leadership"}\n\n' +
+    'Be direct. Total response under 600 tokens.';
+
+  try {
+    var response = await fetch('https://tsonsino-backend.vercel.app/api/chat', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({prompt: prompt, maxTokens: 2000})
+    });
+    var data = await response.json();
+    if (!data.text) throw new Error(data.error || 'No response');
+    var result = JSON.parse(repairJSON(data.text));
+    renderUnsureOutput(result);
+  } catch(e) {
+    document.getElementById('unsure-error').textContent = 'Something went wrong. Try again.';
+    console.error(e);
+    if (btn) { btn.disabled = false; btn.textContent = 'Get my diagnosis &rarr;'; }
+  }
+}
+
+function renderUnsureOutput(r) {
+  var isHire = r.is_hiring_answer;
+  var vc = isHire ? {bg:'#f0fdf4',border:'#bbf7d0',color:'#166534'} : {bg:'#fffbeb',border:'#fde68a',color:'#a16207'};
+
+  var html = '';
+  html += '<div class="verdict-box" style="background:'+vc.bg+';border:1px solid '+vc.border+'">';
+  html += '<div class="verdict-label" style="color:'+vc.color+'">Diagnosis &middot; '+r.hiring_confidence+' confidence</div>';
+  html += '<div class="verdict-title" style="color:'+vc.color+'">'+(isHire?'Yes - this looks like a hiring need':'Not yet - try these first')+'</div>';
+  html += '<p style="font-size:14px;color:#0f0f0f;line-height:1.7;">'+r.diagnosis+'</p>';
+  html += '</div>';
+
+  html += '<div class="result-block"><div class="section-label">What to do next</div><p style="font-size:14px;color:#555;line-height:1.7;">'+r.what_to_do+'</p></div>';
+
+  if (isHire && r.if_hiring) {
+    html += '<div class="result-block"><div class="section-label">If you hire</div>';
+    html += '<div style="border:1px solid #e4e4e4;border-radius:8px;padding:16px 18px;">';
+    html += '<p style="font-size:14px;margin-bottom:8px;"><strong>Role to consider:</strong> <span style="color:#555;">'+r.if_hiring.role_suggestion+'</span></p>';
+    html += '<p style="font-size:14px;margin-bottom:8px;"><strong>Timing:</strong> <span style="color:#555;">'+r.if_hiring.timing+'</span></p>';
+    html += '<div style="font-size:13px;color:#a16207;background:#fffbeb;border:1px solid #fde68a;border-radius:6px;padding:8px 12px;"><strong>Avoid:</strong> '+r.if_hiring.what_not_to_hire+'</div>';
+    html += '</div></div>';
+  }
+
+  if (!isHire && r.if_not_hiring) {
+    html += '<div class="result-block"><div class="section-label">Try these first</div>';
+    html += '<div style="border:1px solid #e4e4e4;border-radius:8px;padding:16px 18px;">';
+    html += '<p style="font-size:14px;color:#555;line-height:1.7;margin-bottom:10px;">'+r.if_not_hiring.try_first+'</p>';
+    html += '<p style="font-size:13px;color:#1d4ed8;background:#eff6ff;border:1px solid #bfdbfe;border-radius:6px;padding:8px 12px;"><strong>Revisit hiring when:</strong> '+r.if_not_hiring.revisit_when+'</p>';
+    html += '</div></div>';
+  }
+
+  if (r.for_leadership) {
+    html += '<div style="background:#fafafa;border:1px solid #e4e4e4;border-radius:8px;padding:16px 18px;">';
+    html += '<div class="section-label" style="margin-bottom:8px;">How to explain this to leadership</div>';
+    html += '<p style="font-size:14px;color:#555;line-height:1.7;font-style:italic;">"'+r.for_leadership+'"</p>';
+    html += '</div>';
+  }
+
+  html += '<div style="margin-top:24px;"><button class="btn-secondary" onclick="resetUnsure()">Start over</button></div>';
+
+  var out = document.getElementById('unsure-output');
+  out.innerHTML = html;
+  out.style.display = 'block';
+  document.getElementById('unsure-prompts').style.display = 'none';
+}
+
+function resetUnsure() {
+  unsureStep = 0;
+  unsureAnswers = {team:'', pain:'', business:'', tried:''};
+  document.getElementById('unsure-output').style.display = 'none';
+  document.getElementById('unsure-prompts').style.display = 'block';
+  renderUnsurePrompt();
+}
 </script>
 </body>
 </html>
