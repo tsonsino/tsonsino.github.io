@@ -10,16 +10,16 @@
 <style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Inter',sans-serif;background:#fff;}.back-link{font-size:13px;color:#555;text-decoration:none;padding:16px 24px;display:inline-flex;align-items:center;gap:6px;border-bottom:1px solid #e4e4e4;width:100%;}.back-link:hover{color:#0f0f0f;}</style>
 </head>
 <body>
-<a href="../index.html" class="back-link">← Back to Trinh Sonsino</a>
+<a href="../index.html" class="back-link">←lt;- Back to Trinh Sonsino</a>
 <div id="root"></div>
 <script type="text/babel">
 const {useState}=React;
 const INK="#0f0f0f",MUTED="#555",FAINT="#9a9a9a",RULE="#e4e4e4",ACCENT="#2563eb";
 const QUARTERS=["Q1","Q2","Q3","Q4"];
 const FUNCTIONS=["Engineering","Product","Design","Sales","Marketing","Customer Success","Operations","Finance","HR / People","Legal","Other"];
-const LEVELS=["IC — Junior","IC — Mid","IC — Senior","IC — Staff / Principal","Manager","Director","VP / Head of","C-Suite"];
+const LEVELS=["IC - Junior","IC - Mid","IC - Senior","IC - Staff / Principal","Manager","Director","VP / Head of","C-Suite"];
 const PRIORITIES=[{id:"critical",label:"Critical",color:"#b91c1c",bg:"#fef2f2",sub:"Blocks the business without it"},{id:"important",label:"Important",color:"#a16207",bg:"#fffbeb",sub:"Needed for planned growth"},{id:"planned",label:"Planned",color:"#1d4ed8",bg:"#eff6ff",sub:"Part of the roadmap"}];
-const RAMP_MONTHS={"IC — Junior":3,"IC — Mid":2,"IC — Senior":2,"IC — Staff / Principal":3,"Manager":3,"Director":4,"VP / Head of":4,"C-Suite":6};
+const RAMP_MONTHS={"IC - Junior":3,"IC - Mid":2,"IC - Senior":2,"IC - Staff / Principal":3,"Manager":3,"Director":4,"VP / Head of":4,"C-Suite":6};
 const flagTypes={weak_justification:{label:"Weak justification",color:"#b91c1c",bg:"#fef2f2"},timing_risk:{label:"Timing risk",color:"#a16207",bg:"#fffbeb"},cost_concern:{label:"Cost concern",color:"#a16207",bg:"#fffbeb"},dependency:{label:"Dependency",color:"#1d4ed8",bg:"#eff6ff"},missing_role:{label:"Missing role",color:"#555",bg:"#f0f0f0"},priority_question:{label:"Priority question",color:"#a16207",bg:"#fffbeb"}};
 const iStyle={width:"100%",boxSizing:"border-box",border:"1px solid #e4e4e4",borderRadius:6,padding:"11px 14px",fontSize:14,fontFamily:"inherit",color:"#0f0f0f",outline:"none",background:"#fff"};
 const lStyle={fontSize:12,fontWeight:500,color:MUTED,display:"block",marginBottom:6};
@@ -34,9 +34,9 @@ function ABlock({label,content}){if(!content)return null;return <div style={{mar
 
 function App(){
 const [year,setYear]=useState(new Date().getFullYear()+1);const [company,setCompany]=useState("");const [currentHC,setCurrentHC]=useState("");const [revenueGoal,setRevenueGoal]=useState("");const [roles,setRoles]=useState([]);const [showForm,setShowForm]=useState(false);const [analysis,setAnalysis]=useState(null);const [loading,setLoading]=useState(false);const [error,setError]=useState(null);const [copied,setCopied]=useState(false);
-const [form,setForm]=useState({id:null,title:"",function:"",level:"IC — Mid",quarter:"Q1",base:"",goal:"",impact:"",priority:"important"});
+const [form,setForm]=useState({id:null,title:"",function:"",level:"IC - Mid",quarter:"Q1",base:"",goal:"",impact:"",priority:"important"});
 
-function resetForm(){setForm({id:null,title:"",function:"",level:"IC — Mid",quarter:"Q1",base:"",goal:"",impact:"",priority:"important"});setShowForm(false);}
+function resetForm(){setForm({id:null,title:"",function:"",level:"IC - Mid",quarter:"Q1",base:"",goal:"",impact:"",priority:"important"});setShowForm(false);}
 function saveRole(){if(!form.title.trim()||!form.function)return;if(form.id){setRoles(rs=>rs.map(r=>r.id===form.id?{...form}:r));}else{setRoles(rs=>[...rs,{...form,id:Date.now()}]);}resetForm();}
 function editRole(role){setForm({...role});setShowForm(true);}
 function deleteRole(id){setRoles(rs=>rs.filter(r=>r.id!==id));}
@@ -49,16 +49,16 @@ const byFunction=FUNCTIONS.map(f=>({f,roles:roles.filter(r=>r.function===f)})).f
 async function generateAnalysis(){
 if(roles.length===0)return;setLoading(true);setError(null);setAnalysis(null);
 try{
-const planSummary=roles.map(r=>{const cost=calcTrueCost(parseFloat(r.base)*1000,r.level);return `${r.quarter} — ${r.title} (${r.function}, ${r.level}) | Priority: ${r.priority} | Base: $${r.base||"?"}k | First-year true cost: $${cost?Math.round(cost.firstYearCost/1000)+"k":"unknown"} | Business goal: ${r.goal||"not specified"} | Impact if not hired: ${r.impact||"not specified"}`;}).join("\n");
-const resp=await fetch("https://tsonsino-backend.vercel.app/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({maxTokens:2000,prompt:`You are an experienced HR and finance advisor reviewing a startup's annual headcount plan. Give honest, specific feedback — flag risks, spot gaps, challenge weak justifications.\n\nCompany: ${company||"not specified"}\nCurrent HC: ${currentHC||"not specified"}\nRevenue goal ${year}: ${revenueGoal||"not specified"}\nTotal roles: ${roles.length}\nBase commitment: $${Math.round(totalBase)}k\nFirst-year true cost: $${Math.round(totalFirstYear/1000)}k\n\nPlan:\n${planSummary}\n\nReturn ONLY valid JSON:\n{"overall_read":"3-4 sentences honest assessment — realistic, aggressive, conservative? Does timing make sense?","financial_reality":"2-3 sentences on what this truly costs vs what it looks like on paper","flags":[{"role":"role title","type":"weak_justification|timing_risk|cost_concern|dependency|missing_role|priority_question","note":"1-2 sentences on specific concern"}],"sequencing_advice":"2-3 sentences on quarterly sequencing — are critical roles coming online at right time?","missing_roles":"1-2 sentences on obvious gaps — only if genuinely obvious","questions_for_leadership":["3-5 questions leadership should answer before board approval — specific to THIS plan"],"green_lights":["1-3 things that look well-thought-out — specific not generic. Empty array if nothing stands out"]}\n\nBe direct. Weak justifications must be flagged. Q1 hire with 3-month ramp doesn't contribute until Q2.`}))});
+const planSummary=roles.map(r=>{const cost=calcTrueCost(parseFloat(r.base)*1000,r.level);return `${r.quarter} - ${r.title} (${r.function}, ${r.level}) | Priority: ${r.priority} | Base: $${r.base||"?"}k | First-year true cost: $${cost?Math.round(cost.firstYearCost/1000)+"k":"unknown"} | Business goal: ${r.goal||"not specified"} | Impact if not hired: ${r.impact||"not specified"}`;}).join("\n");
+const resp=await fetch("https://tsonsino-backend.vercel.app/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({maxTokens:2000,prompt:`You are an experienced HR and finance advisor reviewing a startup's annual headcount plan. Give honest, specific feedback - flag risks, spot gaps, challenge weak justifications.\n\nCompany: ${company||"not specified"}\nCurrent HC: ${currentHC||"not specified"}\nRevenue goal ${year}: ${revenueGoal||"not specified"}\nTotal roles: ${roles.length}\nBase commitment: $${Math.round(totalBase)}k\nFirst-year true cost: $${Math.round(totalFirstYear/1000)}k\n\nPlan:\n${planSummary}\n\nReturn ONLY valid JSON:\n{"overall_read":"3-4 sentences honest assessment - realistic, aggressive, conservative? Does timing make sense?","financial_reality":"2-3 sentences on what this truly costs vs what it looks like on paper","flags":[{"role":"role title","type":"weak_justification|timing_risk|cost_concern|dependency|missing_role|priority_question","note":"1-2 sentences on specific concern"}],"sequencing_advice":"2-3 sentences on quarterly sequencing - are critical roles coming online at right time?","missing_roles":"1-2 sentences on obvious gaps - only if genuinely obvious","questions_for_leadership":["3-5 questions leadership should answer before board approval - specific to THIS plan"],"green_lights":["1-3 things that look well-thought-out - specific not generic. Empty array if nothing stands out"]}\n\nBe direct. Weak justifications must be flagged. Q1 hire with 3-month ramp doesn't contribute until Q2.`}))});
 const d=await resp.json();const text=d.text;
 setAnalysis(JSON.parse(text.replace(/```json|```/g,"").trim()));}
 catch(e){setError("Something went wrong. Try again.");}
 setLoading(false);}
 
 function copyPlan(){
-const lines=[`HEADCOUNT PLAN ${year}`,`Company: ${company||"—"} | Current HC: ${currentHC||"—"} | Revenue goal: ${revenueGoal||"—"}`,`Total roles: ${roles.length} | Base: $${Math.round(totalBase)}k | First-year true cost: $${Math.round(totalFirstYear/1000)}k`,"",
-...QUARTERS.map(q=>{const qr=roles.filter(r=>r.quarter===q);if(!qr.length)return null;return[`\n${q}`,...qr.map(r=>`  • ${r.title} (${r.function}, ${r.level}) — ${r.priority} | Base: $${r.base||"?"}k`)].join("\n");}).filter(Boolean)];
+const lines=[`HEADCOUNT PLAN ${year}`,`Company: ${company||"-"} | Current HC: ${currentHC||"-"} | Revenue goal: ${revenueGoal||"-"}`,`Total roles: ${roles.length} | Base: $${Math.round(totalBase)}k | First-year true cost: $${Math.round(totalFirstYear/1000)}k`,"",
+...QUARTERS.map(q=>{const qr=roles.filter(r=>r.quarter===q);if(!qr.length)return null;return[`\n${q}`,...qr.map(r=>`  • ${r.title} (${r.function}, ${r.level}) - ${r.priority} | Base: $${r.base||"?"}k`)].join("\n");}).filter(Boolean)];
 const el=document.createElement("textarea");el.value=lines.join("\n");document.body.appendChild(el);el.select();document.execCommand("copy");document.body.removeChild(el);setCopied(true);setTimeout(()=>setCopied(false),2000);}
 
 return <div style={{fontFamily:"Inter,system-ui,sans-serif",background:"#fff",minHeight:"100vh",color:INK}}>
@@ -66,7 +66,7 @@ return <div style={{fontFamily:"Inter,system-ui,sans-serif",background:"#fff",mi
 <div style={{borderBottom:`1px solid ${RULE}`,paddingBottom:20,marginBottom:28}}>
 <div style={{fontSize:11,fontWeight:600,letterSpacing:"0.14em",textTransform:"uppercase",color:FAINT,marginBottom:10}}>HR Toolkit · 09</div>
 <h1 style={{fontFamily:"DM Serif Display,Georgia,serif",fontSize:34,lineHeight:1.15,margin:0}}>Headcount Planning</h1>
-<p style={{color:MUTED,fontSize:15,maxWidth:600,lineHeight:1.7,marginTop:12,marginBottom:0}}>Reactive hiring is expensive hiring. This tool forces intentionality before urgency hits — every role needs a business justification and a true cost view before it becomes a req.</p>
+<p style={{color:MUTED,fontSize:15,maxWidth:600,lineHeight:1.7,marginTop:12,marginBottom:0}}>Reactive hiring is expensive hiring. This tool forces intentionality before urgency hits - every role needs a business justification and a true cost view before it becomes a req.</p>
 </div>
 
 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 80px",gap:12,marginBottom:28}}>
@@ -82,10 +82,10 @@ return <div style={{fontFamily:"Inter,system-ui,sans-serif",background:"#fff",mi
 
 <div style={{marginBottom:28}}>
 <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
-<div style={{fontSize:11,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",color:FAINT}}>Annual plan — {year}</div>
+<div style={{fontSize:11,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",color:FAINT}}>Annual plan - {year}</div>
 <div style={{display:"flex",gap:10}}>
 {roles.length>0&&<button onClick={copyPlan} style={{border:"1px solid #ccc",background:"#fff",padding:"8px 14px",fontSize:12,fontWeight:500,borderRadius:4,cursor:"pointer"}}>{copied?"Copied ✓":"Copy plan"}</button>}
-<button onClick={()=>{setShowForm(true);setForm({id:null,title:"",function:"",level:"IC — Mid",quarter:"Q1",base:"",goal:"",impact:"",priority:"important"});}} style={{background:INK,color:"#fff",border:"none",padding:"8px 16px",fontSize:12,fontWeight:500,borderRadius:4,cursor:"pointer"}}>+ Add role</button>
+<button onClick={()=>{setShowForm(true);setForm({id:null,title:"",function:"",level:"IC - Mid",quarter:"Q1",base:"",goal:"",impact:"",priority:"important"});}} style={{background:INK,color:"#fff",border:"none",padding:"8px 16px",fontSize:12,fontWeight:500,borderRadius:4,cursor:"pointer"}}>+ Add role</button>
 </div>
 </div>
 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:10}}>
@@ -106,7 +106,7 @@ qRoles.map(r=>{const pr=PRIORITIES.find(p=>p.id===r.priority);return <div key={r
 </div>}
 
 {roles.some(r=>r.base)&&<div style={{border:`1px solid ${RULE}`,borderRadius:8,padding:"18px 20px",marginBottom:28}}>
-<div style={{fontSize:11,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",color:FAINT,marginBottom:14}}>True cost breakdown — what leadership needs to see</div>
+<div style={{fontSize:11,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",color:FAINT,marginBottom:14}}>True cost breakdown - what leadership needs to see</div>
 <div style={{display:"grid",gap:8}}>
 {roles.filter(r=>r.base).map(r=>{const cost=calcTrueCost(parseFloat(r.base)*1000,r.level);if(!cost)return null;return <div key={r.id} style={{display:"grid",gridTemplateColumns:"1fr 80px 80px 80px 80px",gap:8,fontSize:12,alignItems:"center",padding:"8px 0",borderBottom:`1px solid ${RULE}`}}><div><span style={{fontWeight:600}}>{r.title}</span> <span style={{color:FAINT}}>({r.quarter})</span></div><div style={{textAlign:"right",color:MUTED}}>${r.base}k<div style={{fontSize:10,color:FAINT}}>base</div></div><div style={{textAlign:"right",color:MUTED}}>${Math.round(cost.recruiting/1000)}k<div style={{fontSize:10,color:FAINT}}>recruiting</div></div><div style={{textAlign:"right",color:MUTED}}>${Math.round(cost.rampCost/1000)}k<div style={{fontSize:10,color:FAINT}}>ramp cost</div></div><div style={{textAlign:"right",fontWeight:600,color:"#a16207"}}>${Math.round(cost.firstYearCost/1000)}k<div style={{fontSize:10,color:FAINT}}>year 1 total</div></div></div>;})}
 <div style={{display:"grid",gridTemplateColumns:"1fr 80px 80px 80px 80px",gap:8,fontSize:12,alignItems:"center",padding:"10px 0 0"}}><div style={{fontWeight:600}}>TOTAL</div><div style={{textAlign:"right",fontWeight:600}}>${Math.round(totalBase)}k</div><div/><div/><div style={{textAlign:"right",fontWeight:700,color:"#a16207"}}>${Math.round(totalFirstYear/1000)}k</div></div>
@@ -148,7 +148,7 @@ qRoles.map(r=>{const pr=PRIORITIES.find(p=>p.id===r.priority);return <div key={r
 <div><label style={lStyle}>Base salary ($k)</label><input value={form.base} onChange={e=>setForm(f=>({...f,base:e.target.value}))} placeholder="e.g., 160" style={iStyle}/></div>
 </div>
 <div><label style={lStyle}>Priority</label><div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8}}>{PRIORITIES.map(p=><button key={p.id} onClick={()=>setForm(f=>({...f,priority:p.id}))} style={{textAlign:"left",padding:"10px 12px",border:form.priority===p.id?`2px solid ${p.color}`:`1px solid ${RULE}`,borderRadius:8,background:form.priority===p.id?p.bg:"#fff",cursor:"pointer"}}><div style={{fontWeight:600,fontSize:12,color:p.color,marginBottom:2}}>{p.label}</div><div style={{fontSize:11,color:FAINT,lineHeight:1.3}}>{p.sub}</div></button>)}</div></div>
-<div><label style={lStyle}>What business goal does this role support?</label><textarea value={form.goal} onChange={e=>setForm(f=>({...f,goal:e.target.value}))} placeholder="e.g., Hit $3M ARR by Q3 — this role owns the mid-market sales pipeline we don't currently have capacity for." rows={2} style={{...iStyle,resize:"vertical"}}/></div>
+<div><label style={lStyle}>What business goal does this role support?</label><textarea value={form.goal} onChange={e=>setForm(f=>({...f,goal:e.target.value}))} placeholder="e.g., Hit $3M ARR by Q3 - this role owns the mid-market sales pipeline we don't currently have capacity for." rows={2} style={{...iStyle,resize:"vertical"}}/></div>
 <div><label style={lStyle}>What's the cost of NOT hiring?</label><textarea value={form.impact} onChange={e=>setForm(f=>({...f,impact:e.target.value}))} placeholder="e.g., Product launches continue to slip 4–6 weeks because eng is bottlenecked." rows={2} style={{...iStyle,resize:"vertical"}}/></div>
 </div>
 <div style={{display:"flex",gap:10,marginTop:24,justifyContent:"flex-end"}}>
