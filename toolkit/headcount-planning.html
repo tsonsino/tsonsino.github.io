@@ -304,7 +304,7 @@ function render() {
     document.getElementById('cost-section').style.display = 'block';
     var costHTML = '<div class="cost-row" style="font-size:11px;color:#9a9a9a;font-weight:600;"><div>Role</div><div style="text-align:right;">Base</div><div style="text-align:right;">Recruiting</div><div style="text-align:right;">Ramp</div><div style="text-align:right;">Year 1 Total</div></div>';
     rolesWithBase.forEach(function(r) {
-      var c = calcCost(parseFloat(r.base), r.level);
+      var c = calcCost(parseFloat(r.base)*1000, r.level);
       if (!c) return;
       costHTML += '<div class="cost-row"><div><strong>'+r.title+'</strong> <span style="color:#9a9a9a;">('+r.quarter+')</span></div>'+
         '<div class="cost-cell">$'+r.base+'k</div>'+
@@ -429,7 +429,6 @@ function copyPlan() {
   document.body.removeChild(el);
 }
 
-// Intercepts and parses stream protocol data lines safely back into your UI JSON structure
 async function getAnalysis() {
   var btn = document.querySelector('#analysis-section .btn-analyze') || document.querySelector('.btn-analyze');
   if (btn) { btn.disabled=true; btn.textContent='Analyzing the plan...'; }
@@ -441,7 +440,7 @@ async function getAnalysis() {
   var goal = document.getElementById('revenue-goal').value;
 
   var planSummary = roles.map(function(r){
-    var c = calcCost(parseFloat(r.base), r.level);
+    var c = calcCost(parseFloat(r.base)*1000, r.level);
     return r.quarter+' - '+r.title+' ('+r.function+', '+r.level+') | Priority: '+r.priority+' | Base: $'+(r.base||'?')+'k | First-year true cost: $'+(c?Math.round(c.firstYear/1000)+'k':'unknown')+' | Business goal: '+(r.goal||'not specified')+' | Impact if not hired: '+(r.impact||'not specified');
   }).join('\n');
 
@@ -461,27 +460,12 @@ async function getAnalysis() {
     var response = await fetch('https://tsonsino-backend.vercel.app/api/chat', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({prompt: promptText})
+      body: JSON.stringify({prompt: promptText, maxTokens: 2000})
     });
-    
-    if (!response.ok) throw new Error('Backend failed to respond.');
-
-    var reader = response.body.getReader();
-    var decoder = new TextDecoder();
-    var done = false;
-    var rawText = '';
-
-    while (!done) {
-      var chunkResult = await reader.read();
-      done = chunkResult.done;
-      var chunk = decoder.decode(chunkResult.value, { stream: !done });
-      
-      var cleanChunk = chunk.replace(/^\d+:"/gm, '').replace(/"$/gm, '').replace(/\\n/g, '\n');
-      rawText += cleanChunk;
-    }
-
-    var cleanJSONText = rawText.replace(/```json|```/g,'').trim();
-    var result = JSON.parse(cleanJSONText);
+    var data = await response.json();
+    var text = data.text || '';
+    if (!text) throw new Error(data.error || 'No response');
+    var result = JSON.parse(text.replace(/```json|```/g,'').trim());
     renderAnalysis(result);
   } catch(e) {
     document.getElementById('error-msg').textContent = 'Something went wrong. Try again.';

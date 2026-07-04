@@ -1,146 +1,277 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Policy Roadmap Builder · Trinh Sonsino HR Toolkit</title>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Policy Roadmap Builder - Trinh Sonsino HR Toolkit</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Inter', sans-serif; background: #fff; }
-  .back-link { font-family: 'Inter', sans-serif; font-size: 13px; color: #555; text-decoration: none; padding: 16px 24px; display: inline-flex; align-items: center; gap: 6px; border-bottom: 1px solid #e4e4e4; width: 100%; }
-  .back-link:hover { color: #0f0f0f; }
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;background:#fff;color:#0f0f0f;}
+.back-link{font-size:13px;color:#555;text-decoration:none;padding:16px 24px;display:inline-flex;align-items:center;gap:6px;border-bottom:1px solid #e4e4e4;width:100%;}
+.back-link:hover{color:#0f0f0f;}
+.wrap{max-width:860px;margin:0 auto;padding:40px 24px 80px;}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#9a9a9a;margin-bottom:10px;}
+h1{font-family:'DM Serif Display',serif;font-size:34px;line-height:1.15;margin:0;}
+.subtitle{color:#555;font-size:15px;max-width:560px;line-height:1.65;margin-top:12px;}
+.divider{border:none;border-top:1px solid #e4e4e4;margin:24px 0;}
+label{font-size:12px;font-weight:500;color:#555;display:block;margin-bottom:6px;}
+input,select{width:100%;box-sizing:border-box;border:1px solid #e4e4e4;border-radius:6px;padding:11px 14px;font-size:14px;font-family:inherit;color:#0f0f0f;outline:none;background:#fff;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.mb14{margin-bottom:14px;}
+.mb20{margin-bottom:20px;}
+.stage-grid{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;}
+.stage-card{flex:1 1 180px;text-align:left;padding:14px 16px;border:1px solid #e4e4e4;border-radius:8px;background:#fff;cursor:pointer;}
+.stage-card.active{border:2px solid #0f0f0f;}
+.stage-name{font-weight:600;font-size:14px;margin-bottom:3px;}
+.stage-sub{font-size:12px;color:#9a9a9a;}
+.btn-primary{background:#0f0f0f;color:#fff;border:none;padding:13px 28px;font-size:14px;font-weight:500;border-radius:4px;cursor:pointer;}
+.btn-primary:disabled{opacity:0.7;cursor:wait;}
+.btn-secondary{border:1px solid #ccc;background:#fff;color:#555;padding:9px 16px;font-size:13px;font-weight:500;border-radius:4px;cursor:pointer;}
+.btn-sm{border:1px solid #ccc;background:#fff;padding:7px 14px;font-size:13px;font-weight:500;border-radius:4px;cursor:pointer;}
+.legend{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:24px;font-size:12px;color:#555;}
+.badge{font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:20px;white-space:nowrap;}
+.phase-block{margin-bottom:32px;}
+.phase-title{font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:4px;}
+.phase-trigger{font-size:12px;color:#9a9a9a;font-weight:500;}
+.phase-rationale{font-size:13px;color:#555;margin:8px 0 14px;line-height:1.6;}
+.policy-card{border:1px solid #e4e4e4;border-radius:8px;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:10px;}
+.policy-card.active-card{border:2px solid #0f0f0f;}
+.policy-left{flex:1 1 340px;}
+.policy-name-row{display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap;}
+.policy-name{font-weight:600;font-size:14px;}
+.policy-why{font-size:13px;color:#555;line-height:1.55;margin-bottom:4px;}
+.policy-risk{font-size:12px;color:#9a9a9a;line-height:1.5;}
+.draft-btn{border:1px solid #ccc;background:#fff;color:#0f0f0f;padding:9px 16px;font-size:13px;font-weight:500;border-radius:4px;cursor:pointer;white-space:nowrap;}
+.law-box{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:14px 18px;font-size:13px;color:#78350f;line-height:1.6;margin-bottom:8px;}
+.draft-section{margin-top:8px;}
+.draft-header{border-bottom:1px solid #e4e4e4;padding-bottom:12px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:10px;}
+.draft-label{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#9a9a9a;}
+.draft-title{font-family:'DM Serif Display',serif;font-size:20px;}
+.draft-box{white-space:pre-wrap;font-family:'Inter',sans-serif;font-size:14px;line-height:1.7;color:#555;background:#fafafa;border:1px solid #e4e4e4;border-radius:8px;padding:24px 28px;margin:0;}
+.draft-note{font-size:12px;color:#9a9a9a;margin-top:12px;line-height:1.6;}
+.error{color:#b91c1c;font-size:13px;margin-top:10px;}
+.footer{margin-top:60px;padding-top:20px;border-top:1px solid #e4e4e4;display:flex;justify-content:space-between;font-size:12px;color:#9a9a9a;}
 </style>
 </head>
 <body>
-<a href="../index.html" class="back-link">← Back to Trinh Sonsino</a>
-<div id="root"></div>
-<script type="text/babel">
-const { useState } = React;
-const INK="#0f0f0f",MUTED="#555",FAINT="#9a9a9a",RULE="#e4e4e4",ACCENT="#2563eb";
-const STAGES=[{id:"startup",label:"Startup",sub:"Seed – Series A · 10–50 people"},{id:"growth",label:"Growth",sub:"Series B – C · 50–200 people"},{id:"scaling",label:"Scaling",sub:"200–500 people"}];
-const WORK_MODELS=["Fully remote","Hybrid","Primarily on-site"];
+<a href="../index.html" class="back-link">&larr; Back to Trinh Sonsino</a>
+<div class="wrap">
+  <div class="eyebrow">HR Toolkit &middot; 01</div>
+  <h1>Policy Roadmap Builder</h1>
+  <p class="subtitle">For lean People teams at fast-scaling companies. Tell it where the company is - it tells you which policies to build now, which can wait, and drafts them on demand.</p>
+  <hr class="divider"/>
 
-function TypeBadge({type}){const s={required:{bg:"#fef2f2",color:"#b91c1c",label:"Required"},defensive:{bg:"#fffbeb",color:"#a16207",label:"Defensive"},operational:{bg:"#f0f0f0",color:"#555",label:"Operational"}}[type]||{bg:"#f0f0f0",color:"#555",label:type};return <span style={{background:s.bg,color:s.color,fontSize:10,fontWeight:600,letterSpacing:"0.05em",textTransform:"uppercase",padding:"3px 8px",borderRadius:20,whiteSpace:"nowrap"}}>{s.label}</span>;}
+  <div id="form-section">
+    <div style="font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#9a9a9a;margin-bottom:14px;">Company profile</div>
 
-function App(){
-const [stage,setStage]=useState("growth");
-const [headcount,setHeadcount]=useState("");
-const [industry,setIndustry]=useState("");
-const [workModel,setWorkModel]=useState("Hybrid");
-const [locations,setLocations]=useState("");
-const [notes,setNotes]=useState("");
-const [roadmap,setRoadmap]=useState(null);
-const [loadingRoadmap,setLoadingRoadmap]=useState(false);
-const [error,setError]=useState(null);
-const [selectedPolicy,setSelectedPolicy]=useState(null);
-const [draft,setDraft]=useState(null);
-const [loadingDraft,setLoadingDraft]=useState(false);
-const [copied,setCopied]=useState(false);
-const stageObj=STAGES.find(s=>s.id===stage);
+    <label>Company stage</label>
+    <div class="stage-grid" id="stage-grid"></div>
 
-async function callClaude(prompt,maxTokens=1000){
-const r=await fetch("https://tsonsino-backend.vercel.app/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:prompt,maxTokens:maxTokens})});
-const d=await r.json();return d.text;}
+    <div class="grid2">
+      <div class="mb14"><label>Current headcount</label><input id="headcount" placeholder="e.g., 85"/></div>
+      <div class="mb14"><label>Industry</label><input id="industry" placeholder="e.g., B2B SaaS"/></div>
+    </div>
+    <div class="grid2">
+      <div class="mb14"><label>Work model</label>
+        <select id="work-model">
+          <option>Fully remote</option><option selected>Hybrid</option><option>Primarily on-site</option>
+        </select>
+      </div>
+      <div class="mb14"><label>Locations / states</label><input id="locations" placeholder="e.g., CA, NY, remote in 12 states"/></div>
+    </div>
+    <div class="mb20"><label>Anything else? (optional)</label><input id="notes" placeholder="e.g., just closed Series B, doubling eng team"/></div>
 
-async function generateRoadmap(){
-setLoadingRoadmap(true);setError(null);setRoadmap(null);setSelectedPolicy(null);setDraft(null);
-try{const prompt=`You are an expert HR advisor. Based on this company profile, produce a prioritized policy roadmap.\n\nCompany profile:\n- Stage: ${stageObj.label} (${stageObj.sub})\n- Headcount: ${headcount||"not specified"}\n- Industry: ${industry||"not specified"}\n- Work model: ${workModel}\n- Locations: ${locations||"not specified"}\n- Context: ${notes||"none"}\n\nReturn ONLY valid JSON:\n{"phases":[{"name":"Now","trigger":"specific trigger phrase tied to a real event or threshold","rationale":"one sentence","policies":[{"name":"Policy name","type":"required|defensive|operational","why":"one sentence","risk":"one sentence"}]},{"name":"Next","trigger":"...","rationale":"...","policies":[...]},{"name":"Later","trigger":"...","rationale":"...","policies":[...]}]}\n\nPolicy types: required=mandated by law, defensive=legal protection, operational=scales the org. Phase triggers must be tied to real events (headcount milestones, new-state hiring, fundraise), not arbitrary day counts. 4-6 policies per phase. Account for state-specific compliance. Be specific and lean.`;
-const text=await callClaude(prompt,2500);
-setRoadmap(JSON.parse(text.replace(/```json|```/g,"").trim()));}
-catch(e){setError("Something went wrong. Try again.");}
-setLoadingRoadmap(false);}
+    <button class="btn-primary" id="build-btn" onclick="buildRoadmap()" disabled>Build the roadmap</button>
+    <div id="error-msg" class="error"></div>
+  </div>
 
-async function generateDraft(policy){
-setSelectedPolicy(policy);setLoadingDraft(true);setDraft(null);setCopied(false);
-try{const prompt=`Draft a practical policy for this company. Company: ${stageObj.label}, ${headcount||"?"} employees, ${industry||"?"}, ${workModel}, locations: ${locations||"?"}.\n\nPolicy: ${policy.name}\nWhy it matters: ${policy.why}\n\nWrite in plain text with CAPS headings. Include: PURPOSE, SCOPE, POLICY, PROCEDURES (if relevant), REVIEW WITH COUNSEL (state-specific flags). Keep it tight and usable.`;
-const text=await callClaude(prompt,2000);setDraft(text);}
-catch(e){setDraft("Something went wrong. Try again.");}
-setLoadingDraft(false);}
+  <div id="output-section" style="display:none;"></div>
+  <div id="draft-section" class="draft-section" style="display:none;"></div>
 
-function copyDraft(){if(!draft)return;const el=document.createElement("textarea");el.value=draft;document.body.appendChild(el);el.select();document.execCommand("copy");document.body.removeChild(el);setCopied(true);setTimeout(()=>setCopied(false),2000);}
-
-const phaseAccents={Now:"#0f0f0f",Next:"#555",Later:"#9a9a9a"};
-const iStyle={width:"100%",boxSizing:"border-box",border:"1px solid #e4e4e4",borderRadius:6,padding:"11px 14px",fontSize:14,fontFamily:"inherit",color:"#0f0f0f",outline:"none",background:"#fff"};
-
-return <div style={{fontFamily:"Inter,system-ui,sans-serif",background:"#fff",minHeight:"100vh",color:INK}}>
-<div style={{maxWidth:860,margin:"0 auto",padding:"40px 24px 80px"}}>
-<div style={{borderBottom:`1px solid ${RULE}`,paddingBottom:20,marginBottom:36}}>
-<div style={{fontSize:11,fontWeight:600,letterSpacing:"0.14em",textTransform:"uppercase",color:FAINT,marginBottom:10}}>HR Toolkit · 01</div>
-<h1 style={{fontFamily:"DM Serif Display,Georgia,serif",fontSize:34,lineHeight:1.15,margin:0}}>Policy Roadmap Builder</h1>
-<p style={{color:MUTED,fontSize:15,maxWidth:560,lineHeight:1.65,marginTop:12,marginBottom:0}}>For lean People teams at fast-scaling companies. Tell it where the company is — it tells you which policies to build now, which can wait, and drafts them on demand.</p>
+  <div class="footer">
+    <span>Policy Roadmap Builder &middot; HR Toolkit for lean, scaling teams</span>
+    <span>Built by Trinh Sonsino</span>
+  </div>
 </div>
 
-<div style={{marginBottom:32}}>
-<div style={{fontSize:11,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",color:FAINT,marginBottom:14}}>Company profile</div>
-<div style={{display:"flex",gap:10,marginBottom:18,flexWrap:"wrap"}}>
-{STAGES.map(s=><button key={s.id} onClick={()=>setStage(s.id)} style={{flex:"1 1 180px",textAlign:"left",padding:"14px 16px",border:stage===s.id?`2px solid ${INK}`:`1px solid ${RULE}`,borderRadius:8,background:"#fff",cursor:"pointer"}}><div style={{fontWeight:600,fontSize:14,marginBottom:3}}>{s.label}</div><div style={{fontSize:12,color:FAINT}}>{s.sub}</div></button>)}
-</div>
-<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:14}}>
-<div><label style={{fontSize:12,fontWeight:500,color:MUTED,display:"block",marginBottom:6}}>Current headcount</label><input value={headcount} onChange={e=>setHeadcount(e.target.value)} placeholder="e.g., 85" style={iStyle}/></div>
-<div><label style={{fontSize:12,fontWeight:500,color:MUTED,display:"block",marginBottom:6}}>Industry</label><input value={industry} onChange={e=>setIndustry(e.target.value)} placeholder="e.g., B2B SaaS" style={iStyle}/></div>
-</div>
-<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:14}}>
-<div><label style={{fontSize:12,fontWeight:500,color:MUTED,display:"block",marginBottom:6}}>Work model</label><select value={workModel} onChange={e=>setWorkModel(e.target.value)} style={{...iStyle,height:42}}>{WORK_MODELS.map(m=><option key={m}>{m}</option>)}</select></div>
-<div><label style={{fontSize:12,fontWeight:500,color:MUTED,display:"block",marginBottom:6}}>Locations / states</label><input value={locations} onChange={e=>setLocations(e.target.value)} placeholder="e.g., CA, NY, remote in 12 states" style={iStyle}/></div>
-</div>
-<div style={{marginBottom:20}}><label style={{fontSize:12,fontWeight:500,color:MUTED,display:"block",marginBottom:6}}>Anything else? <span style={{color:FAINT,fontWeight:400}}>(optional)</span></label><input value={notes} onChange={e=>setNotes(e.target.value)} placeholder="e.g., just closed Series B, doubling eng team" style={iStyle}/></div>
-<button onClick={generateRoadmap} disabled={loadingRoadmap} style={{background:INK,color:"#fff",border:"none",padding:"13px 28px",fontSize:14,fontWeight:500,borderRadius:4,cursor:loadingRoadmap?"wait":"pointer",opacity:loadingRoadmap?0.7:1}}>{loadingRoadmap?"Building your roadmap…":"Build the roadmap"}</button>
-{error&&<div style={{color:"#b91c1c",fontSize:13,marginTop:10}}>{error}</div>}
-</div>
+<script>
+var selectedStage = '';
+var roadmapData = null;
+var activePolicyName = '';
 
-{roadmap&&<div>
-<div style={{borderBottom:`1px solid ${RULE}`,paddingBottom:12,marginBottom:16,display:"flex",alignItems:"baseline",gap:12}}>
-<span style={{fontSize:11,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",color:FAINT}}>Roadmap</span>
-<span style={{fontFamily:"DM Serif Display,Georgia,serif",fontSize:20}}>What to build, in order</span>
-</div>
-<div style={{display:"flex",gap:18,flexWrap:"wrap",marginBottom:24,fontSize:12,color:MUTED}}>
-<span style={{display:"flex",alignItems:"center",gap:6}}><TypeBadge type="required"/> Mandated by law</span>
-<span style={{display:"flex",alignItems:"center",gap:6}}><TypeBadge type="defensive"/> Legal protection</span>
-<span style={{display:"flex",alignItems:"center",gap:6}}><TypeBadge type="operational"/> Scales the org</span>
-</div>
-{roadmap.phases.map(phase=><div key={phase.name} style={{marginBottom:32}}>
-<div style={{display:"flex",alignItems:"baseline",gap:10,marginBottom:4,flexWrap:"wrap"}}>
-<span style={{fontFamily:"DM Serif Display,Georgia,serif",fontSize:22,color:phaseAccents[phase.name]||INK}}>{phase.name}</span>
-<span style={{fontSize:12,color:FAINT,fontWeight:500}}>{phase.trigger||phase.timeframe}</span>
-</div>
-<p style={{fontSize:13,color:MUTED,margin:"0 0 14px",lineHeight:1.6}}>{phase.rationale}</p>
-<div style={{display:"grid",gap:10}}>
-{phase.policies.map(p=><div key={p.name} style={{border:selectedPolicy?.name===p.name?`2px solid ${INK}`:`1px solid ${RULE}`,borderRadius:8,padding:"14px 18px",display:"flex",justifyContent:"space-between",alignItems:"center",gap:16,flexWrap:"wrap"}}>
-<div style={{flex:"1 1 340px"}}>
-<div style={{display:"flex",alignItems:"center",gap:8,marginBottom:4,flexWrap:"wrap"}}><span style={{fontWeight:600,fontSize:14}}>{p.name}</span>{p.type&&<TypeBadge type={p.type}/>}</div>
-<div style={{fontSize:13,color:MUTED,lineHeight:1.55,marginBottom:4}}>{p.why}</div>
-<div style={{fontSize:12,color:FAINT,lineHeight:1.5}}><span style={{fontWeight:600}}>If missing:</span> {p.risk}</div>
-</div>
-<button onClick={()=>generateDraft(p)} disabled={loadingDraft} style={{border:"1px solid #ccc",background:"#fff",color:INK,padding:"9px 16px",fontSize:13,fontWeight:500,borderRadius:4,cursor:loadingDraft?"wait":"pointer",whiteSpace:"nowrap"}}>{loadingDraft&&selectedPolicy?.name===p.name?"Drafting…":"Draft this policy"}</button>
-</div>)}
-</div>
-</div>)}
-<div style={{background:"#fffbeb",border:"1px solid #fde68a",borderRadius:8,padding:"14px 18px",fontSize:13,color:"#78350f",lineHeight:1.6,marginBottom:8}}>
-<strong>A note on employment law:</strong> requirements vary by state and change frequently — California in particular updates its employment laws almost every year. Always verify current requirements with each state's labor agency or employment counsel before finalizing any policy.
-</div>
-</div>}
+var stages = [
+  {id:'startup', label:'Startup', sub:'Seed - Series A / 10-50 people'},
+  {id:'growth', label:'Growth', sub:'Series B - C / 50-200 people'},
+  {id:'scaling', label:'Scaling', sub:'200-500 people'}
+];
 
-{(loadingDraft||draft)&&<div style={{marginTop:8}}>
-<div style={{borderBottom:`1px solid ${RULE}`,paddingBottom:12,marginBottom:20,display:"flex",justifyContent:"space-between",alignItems:"baseline",flexWrap:"wrap",gap:10}}>
-<div style={{display:"flex",alignItems:"baseline",gap:12}}><span style={{fontSize:11,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",color:FAINT}}>Draft</span><span style={{fontFamily:"DM Serif Display,Georgia,serif",fontSize:20}}>{selectedPolicy?.name}</span></div>
-{draft&&<button onClick={copyDraft} style={{border:"1px solid #ccc",background:"#fff",padding:"7px 14px",fontSize:13,fontWeight:500,borderRadius:4,cursor:"pointer"}}>{copied?"Copied ✓":"Copy draft"}</button>}
-</div>
-{loadingDraft?<div style={{color:FAINT,fontSize:14,padding:"24px 0"}}>Writing the draft…</div>:
-<pre style={{whiteSpace:"pre-wrap",fontFamily:"Inter,system-ui,sans-serif",fontSize:14,lineHeight:1.7,color:MUTED,background:"#fafafa",border:`1px solid ${RULE}`,borderRadius:8,padding:"24px 28px",margin:0}}>{draft}</pre>}
-{draft&&<p style={{fontSize:12,color:FAINT,marginTop:12,lineHeight:1.6}}>This is a starting draft — always review with employment counsel before publishing.</p>}
-</div>}
+var badgeStyles = {
+  required: {bg:'#fef2f2', color:'#b91c1c', label:'Required'},
+  defensive: {bg:'#fffbeb', color:'#a16207', label:'Defensive'},
+  operational: {bg:'#f0f0f0', color:'#555', label:'Operational'}
+};
 
-<div style={{marginTop:60,paddingTop:20,borderTop:`1px solid ${RULE}`,fontSize:12,color:FAINT,display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:8}}>
-<span>Policy Roadmap Builder · HR Toolkit for lean, scaling teams</span>
-<a href="../index.html" style={{color:FAINT,textDecoration:"none"}}>Built by Trinh Sonsino</a>
-</div>
-</div></div>;}
+var phaseColors = {Now:'#0f0f0f', Next:'#555', Later:'#9a9a9a'};
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+// Render stages
+document.getElementById('stage-grid').innerHTML = stages.map(function(s) {
+  return '<div class="stage-card" id="stage-'+s.id+'" onclick="setStage(\''+s.id+'\')"><div class="stage-name">'+s.label+'</div><div class="stage-sub">'+s.sub+'</div></div>';
+}).join('');
+
+function setStage(id) {
+  selectedStage = id;
+  stages.forEach(function(s){ document.getElementById('stage-'+s.id).classList.remove('active'); });
+  document.getElementById('stage-'+id).classList.add('active');
+  document.getElementById('build-btn').disabled = false;
+}
+
+function makeBadge(type) {
+  var s = badgeStyles[type] || {bg:'#f0f0f0', color:'#555', label: type};
+  return '<span class="badge" style="background:'+s.bg+';color:'+s.color+'">'+s.label+'</span>';
+}
+
+async function buildRoadmap() {
+  var btn = document.getElementById('build-btn');
+  btn.disabled = true;
+  btn.textContent = 'Building your roadmap...';
+  document.getElementById('error-msg').textContent = '';
+  document.getElementById('draft-section').style.display = 'none';
+
+  var stageObj = stages.find(function(s){return s.id===selectedStage;});
+
+  var promptText = 'You are an expert HR advisor. Based on this company profile, produce a prioritized policy roadmap.\n\n' +
+    'Company: ' + stageObj.label + ' (' + stageObj.sub + ')\n' +
+    'Headcount: ' + (document.getElementById('headcount').value || 'not specified') + '\n' +
+    'Industry: ' + (document.getElementById('industry').value || 'not specified') + '\n' +
+    'Work model: ' + document.getElementById('work-model').value + '\n' +
+    'Locations: ' + (document.getElementById('locations').value || 'not specified') + '\n' +
+    'Context: ' + (document.getElementById('notes').value || 'none') + '\n\n' +
+    'Return ONLY valid JSON:\n' +
+    '{"phases":[{"name":"Now","trigger":"specific trigger tied to real threshold","rationale":"1 sentence","policies":[{"name":"Policy name","type":"required|defensive|operational","why":"1 sentence","risk":"1 sentence"}]},{"name":"Next","trigger":"...","rationale":"...","policies":[...]},{"name":"Later","trigger":"...","rationale":"...","policies":[...]}]}\n\n' +
+    'Types: required=mandated by law, defensive=legal protection, operational=scales the org. 4-5 policies per phase. Triggers must be real events not arbitrary day counts. Account for state-specific compliance. Be specific and lean.';
+
+  try {
+    var response = await fetch('https://tsonsino-backend.vercel.app/api/chat', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({prompt: promptText, maxTokens: 2500})
+    });
+    var data = await response.json();
+    var text = data.text || '';
+    if (!text) throw new Error(data.error || 'No response');
+    roadmapData = JSON.parse(text.replace(/```json|```/g,'').trim());
+    renderRoadmap(roadmapData);
+  } catch(e) {
+    document.getElementById('error-msg').textContent = 'Something went wrong. Try again.';
+    console.error(e);
+    btn.disabled = false;
+    btn.textContent = 'Build the roadmap';
+  }
+}
+
+function renderRoadmap(data) {
+  var html = '';
+
+  // Header
+  html += '<div style="border-bottom:1px solid #e4e4e4;padding-bottom:12px;margin-bottom:16px;display:flex;align-items:baseline;gap:12px;">';
+  html += '<span style="font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#9a9a9a;">Roadmap</span>';
+  html += '<span style="font-family:DM Serif Display,serif;font-size:20px;">What to build, in order</span></div>';
+
+  // Legend
+  html += '<div class="legend">';
+  html += '<span style="display:flex;align-items:center;gap:6px;">'+makeBadge('required')+' Mandated by law</span>';
+  html += '<span style="display:flex;align-items:center;gap:6px;">'+makeBadge('defensive')+' Legal protection</span>';
+  html += '<span style="display:flex;align-items:center;gap:6px;">'+makeBadge('operational')+' Scales the org</span>';
+  html += '</div>';
+
+  // Phases
+  data.phases.forEach(function(phase) {
+    var color = phaseColors[phase.name] || '#0f0f0f';
+    html += '<div class="phase-block">';
+    html += '<div style="display:flex;align-items:baseline;gap:10px;margin-bottom:4px;">';
+    html += '<span class="phase-title" style="color:'+color+'">'+phase.name+'</span>';
+    html += '<span class="phase-trigger">'+( phase.trigger || phase.timeframe || '')+'</span></div>';
+    html += '<p class="phase-rationale">'+phase.rationale+'</p>';
+
+    (phase.policies || []).forEach(function(p) {
+      html += '<div class="policy-card" id="pcard-'+encodeURIComponent(p.name)+'">';
+      html += '<div class="policy-left">';
+      html += '<div class="policy-name-row"><span class="policy-name">'+p.name+'</span>'+makeBadge(p.type)+'</div>';
+      html += '<div class="policy-why">'+p.why+'</div>';
+      html += '<div class="policy-risk"><strong>If missing:</strong> '+p.risk+'</div>';
+      html += '</div>';
+      html += '<button class="draft-btn" onclick="draftPolicy(\''+encodeURIComponent(JSON.stringify(p))+'\')">Draft this policy</button>';
+      html += '</div>';
+    });
+    html += '</div>';
+  });
+
+  // Law disclaimer
+  html += '<div class="law-box"><strong>A note on employment law:</strong> requirements vary by state and change frequently - California in particular updates its employment laws almost every year. Always verify current requirements with each state\'s labor agency or employment counsel before finalizing any policy.</div>';
+
+  document.getElementById('output-section').innerHTML = html;
+  document.getElementById('output-section').style.display = 'block';
+  document.getElementById('form-section').style.display = 'none';
+  document.getElementById('build-btn').disabled = false;
+  document.getElementById('build-btn').textContent = 'Build the roadmap';
+}
+
+async function draftPolicy(encodedPolicy) {
+  var policy = JSON.parse(decodeURIComponent(encodedPolicy));
+  activePolicyName = policy.name;
+
+  // Highlight active card
+  document.querySelectorAll('.policy-card').forEach(function(c){c.classList.remove('active-card');});
+  var card = document.getElementById('pcard-'+encodeURIComponent(policy.name));
+  if (card) card.classList.add('active-card');
+
+  var stageObj = stages.find(function(s){return s.id===selectedStage;});
+  var draftSection = document.getElementById('draft-section');
+  draftSection.style.display = 'block';
+  draftSection.innerHTML = '<div class="draft-header"><div><span class="draft-label">Draft</span> <span class="draft-title">&nbsp;'+policy.name+'</span></div></div><div style="color:#9a9a9a;font-size:14px;padding:24px 0;">Writing the draft...</div>';
+  draftSection.scrollIntoView({behavior:'smooth'});
+
+  var promptText = 'Draft a practical policy for this company. This is a starting draft the HR leader will review with counsel - write it clean and professional.\n\n' +
+    'Company: ' + stageObj.label + ', ' + (document.getElementById('headcount').value || '?') + ' employees, ' +
+    (document.getElementById('industry').value || '?') + ', ' + document.getElementById('work-model').value + ', locations: ' +
+    (document.getElementById('locations').value || '?') + '\n\n' +
+    'Policy: ' + policy.name + '\nWhy it matters: ' + policy.why + '\n\n' +
+    'Write in plain text with CAPS headings. Include: PURPOSE, SCOPE, POLICY, PROCEDURES (if relevant), REVIEW WITH COUNSEL (state-specific flags). Keep it tight and usable. Under 400 words.';
+
+  try {
+    var response = await fetch('https://tsonsino-backend.vercel.app/api/chat', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({prompt: promptText, maxTokens: 1500})
+    });
+    var data = await response.json();
+    var text = data.text || '';
+    if (!text) throw new Error(data.error || 'No response');
+
+    draftSection.innerHTML =
+      '<div class="draft-header">' +
+      '<div><span class="draft-label">Draft</span> <span class="draft-title">&nbsp;'+policy.name+'</span></div>' +
+      '<button class="btn-sm" onclick="copyDraft()">Copy draft</button>' +
+      '</div>' +
+      '<pre class="draft-box" id="draft-content">'+text+'</pre>' +
+      '<p class="draft-note">This is a starting draft - always review with employment counsel before publishing.</p>';
+
+    window._draftText = text;
+  } catch(e) {
+    draftSection.innerHTML = '<p style="color:#b91c1c;font-size:14px;">Something went wrong drafting this policy. Try again.</p>';
+    console.error(e);
+  }
+}
+
+function copyDraft() {
+  if (!window._draftText) return;
+  var el = document.createElement('textarea');
+  el.value = window._draftText;
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
+}
 </script>
 </body>
 </html>

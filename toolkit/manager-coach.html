@@ -20,7 +20,7 @@ const QUICK_GUIDES=[{id:"first-11",label:"First 1:1 with a new report",emoji:"�
 const iStyle={width:"100%",boxSizing:"border-box",border:"1px solid #e4e4e4",borderRadius:6,padding:"11px 14px",fontSize:14,fontFamily:"inherit",color:"#0f0f0f",outline:"none",background:"#fff"};
 
 function Section({label,content}){if(!content)return null;return <div style={{marginBottom:24}}><div style={{fontSize:11,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",color:FAINT,marginBottom:8}}>{label}</div><p style={{fontSize:14,color:MUTED,lineHeight:1.7,margin:0}}>{content}</p></div>;}
-function SectionList({label,items,numbered,quoted}){if(!items?.length)return null;return <div style={{marginBottom:24}}><div style={{fontSize:11,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",color:FAINT,marginBottom:10}}>{label}</div><div style={{display:"grid",gap:8}}>{items.map((item,i)=><div key={i} style={{fontSize:14,color:MUTED,lineHeight:1.65,padding:quoted?"10px 16px":"0",background:quoted?"#fafafa":"transparent",border:quoted?"1px solid #e4e4e4":"none",borderRadius:quoted?6:0,fontStyle:quoted?"italic":"normal",display:"flex",gap:10}}>{numbered&&<span style={{fontWeight:600,color:INK,flexShrink:0}}>{i+1}.</span>}{!numbered&&!quoted&&<span style={{color:FAINT,flexShrink:0}}>—</span>}<span>{quoted?`"${item}"`:item}</span></div>)}</div></div>;}
+function SectionList({label,items,numbered,quoted}){if(!items?.length)return null;return <div style={{marginBottom:24}}><div style={{fontSize:11,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",color:FAINT,marginBottom:10}}>{label}</div><div style={{display:"grid",gap:8}}>{items.map((item,i)=><div key={i} style={{fontSize:14,color:MUTED,lineHeight:1.65,padding:quoted?"10px 16px":"0",background:quoted?"#fafafa":"transparent",border:quoted?"1px solid #e4e4e4":"none",borderRadius:quoted?6:0,fontStyle:quoted?"italic":"normal",display:"flex",gap:10}}>{numbered&&<span style={{fontWeight:600,color:INK,flexShrink:0}}>{i+1}.</span>}{!numbered&&!quoted&&<span style={{color:FAINT,flexShrink:0}}>-</span>}<span>{quoted?`"${item}"`:item}</span></div>)}</div></div>;}
 
 function App(){
 const [mode,setMode]=useState("coach");
@@ -39,14 +39,14 @@ const d=await r.json();return d.text;}
 
 async function getCoaching(){
 if(!situation.trim())return;setLoading(true);setError(null);setCoaching(null);
-try{const text=await callClaude(`You are an experienced management coach at a fast-scaling company. A manager described a situation and needs practical coaching.\n\nSITUATION: ${situation}\nCONTEXT: ${context||"none"}\n\nFirst screen for escalation: harassment/discrimination allegations, medical/disability disclosures, threats/safety, legal claims, protected leave, pay equity complaints, protected class involvement — these need HR first.\n\nReturn ONLY valid JSON:\n{"escalate":true|false,"escalation_reason":"if true: warm 2-3 sentences on why HR first and what to do now. if false: null","framing":"2-3 sentences reframing what is really going on","steps":["3-5 concrete ordered steps"],"say":["2-4 example phrases they could actually use"],"avoid":["2-4 things NOT to say/do with brief why"],"watch_for":"1-2 sentences on what to pay attention to"}\n\nIf escalate is true, still fill in guidance for the manager role AFTER involving HR. Be practical and direct. No jargon.`);
+try{const text=await callClaude(`You are an experienced management coach at a fast-scaling company. A manager described a situation and needs practical coaching.\n\nSITUATION: ${situation}\nCONTEXT: ${context||"none"}\n\nFirst screen for escalation: harassment/discrimination allegations, medical/disability disclosures, threats/safety, legal claims, protected leave, pay equity complaints, protected class involvement - these need HR first.\n\nReturn ONLY valid JSON:\n{"escalate":true|false,"escalation_reason":"if true: warm 2-3 sentences on why HR first and what to do now. if false: null","framing":"2-3 sentences reframing what is really going on","steps":["3-5 concrete ordered steps"],"say":["2-4 example phrases they could actually use"],"avoid":["2-4 things NOT to say/do with brief why"],"watch_for":"1-2 sentences on what to pay attention to"}\n\nIf escalate is true, still fill in guidance for the manager role AFTER involving HR. Be practical and direct. No jargon.`);
 setCoaching(JSON.parse(text.replace(/```json|```/g,"").trim()));}
 catch(e){setError("Something went wrong. Try again.");}
 setLoading(false);}
 
 async function getGuide(g){
 setGuideTitle(g.label);setLoadingGuide(true);setGuide(null);
-try{const text=await callClaude(`You are an experienced management coach. Write a practical one-page guide for a manager on: "${g.label}".\n\nAudience: first-time or early-career manager at a startup. No jargon — what to actually do.\n\nWrite in plain text with CAPS section headings. Structure:\n1. THE GOAL\n2. BEFORE\n3. THE CONVERSATION (with 2-3 example phrases)\n4. COMMON MISTAKES\n5. AFTER\n\nUnder 500 words. Immediately usable.`,1200);setGuide(text);}
+try{const text=await callClaude(`You are an experienced management coach. Write a practical one-page guide for a manager on: "${g.label}".\n\nAudience: first-time or early-career manager at a startup. No jargon - what to actually do.\n\nWrite in plain text with CAPS section headings. Structure:\n1. THE GOAL\n2. BEFORE\n3. THE CONVERSATION (with 2-3 example phrases)\n4. COMMON MISTAKES\n5. AFTER\n\nUnder 500 words. Immediately usable.`,1200);setGuide(text);}
 catch(e){setGuide("Something went wrong. Try again.");}
 setLoadingGuide(false);}
 
@@ -55,7 +55,7 @@ return <div style={{fontFamily:"Inter,system-ui,sans-serif",background:"#fff",mi
 <div style={{borderBottom:`1px solid ${RULE}`,paddingBottom:20,marginBottom:28}}>
 <div style={{fontSize:11,fontWeight:600,letterSpacing:"0.14em",textTransform:"uppercase",color:FAINT,marginBottom:10}}>HR Toolkit · 02</div>
 <h1 style={{fontFamily:"DM Serif Display,Georgia,serif",fontSize:34,lineHeight:1.15,margin:0}}>Manager Coach</h1>
-<p style={{color:MUTED,fontSize:15,maxWidth:560,lineHeight:1.65,marginTop:12,marginBottom:0}}>Real coaching for real situations. Describe what you're dealing with — get a clear way through it. Some things need HR first; this tool will tell you when.</p>
+<p style={{color:MUTED,fontSize:15,maxWidth:560,lineHeight:1.65,marginTop:12,marginBottom:0}}>Real coaching for real situations. Describe what you're dealing with - get a clear way through it. Some things need HR first; this tool will tell you when.</p>
 </div>
 <div style={{display:"flex",gap:0,marginBottom:28,border:`1px solid ${RULE}`,borderRadius:8,overflow:"hidden",width:"fit-content"}}>
 <button onClick={()=>setMode("coach")} style={{padding:"10px 22px",fontSize:13,fontWeight:500,border:"none",cursor:"pointer",background:mode==="coach"?INK:"#fff",color:mode==="coach"?"#fff":MUTED}}>Coach me through a situation</button>
