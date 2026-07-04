@@ -1,6 +1,6 @@
-# How to get this live on GitHub Pages
+# How to get this live on GitHub Pages 
 
-## One-time setup (~10 minutes)
+## One-time setup (~11 minutes)
 
 ### 1. Create a GitHub account
 Go to github.com and sign up if you don't have one.
