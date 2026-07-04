@@ -2,109 +2,327 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Review Setup · Trinh Sonsino HR Toolkit</title>
+<title>Review Setup - Trinh Sonsino HR Toolkit</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Inter',sans-serif;background:#fff;}.back-link{font-size:13px;color:#555;text-decoration:none;padding:16px 24px;display:inline-flex;align-items:center;gap:6px;border-bottom:1px solid #e4e4e4;width:100%;}.back-link:hover{color:#0f0f0f;}</style>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;background:#fff;color:#0f0f0f;}
+.back-link{font-size:13px;color:#555;text-decoration:none;padding:16px 24px;display:inline-flex;align-items:center;gap:6px;border-bottom:1px solid #e4e4e4;width:100%;}
+.back-link:hover{color:#0f0f0f;}
+.wrap{max-width:760px;margin:0 auto;padding:40px 24px 80px;}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#9a9a9a;margin-bottom:10px;}
+h1{font-family:'DM Serif Display',serif;font-size:34px;line-height:1.15;margin:0;}
+.subtitle{color:#555;font-size:15px;max-width:580px;line-height:1.7;margin-top:12px;}
+.divider{border:none;border-top:1px solid #e4e4e4;margin:24px 0;}
+label{font-size:12px;font-weight:500;color:#555;display:block;margin-bottom:8px;}
+input,textarea{width:100%;box-sizing:border-box;border:1px solid #e4e4e4;border-radius:6px;padding:11px 14px;font-size:14px;font-family:inherit;color:#0f0f0f;outline:none;background:#fff;}
+.mb24{margin-bottom:24px;}
+.btn-primary{background:#0f0f0f;color:#fff;border:none;padding:13px 28px;font-size:14px;font-weight:500;border-radius:4px;cursor:pointer;}
+.btn-primary:disabled{opacity:0.6;cursor:not-allowed;}
+.btn-secondary{background:#fff;color:#555;border:1px solid #ccc;padding:9px 16px;font-size:13px;font-weight:500;border-radius:4px;cursor:pointer;}
+.stage-card{text-align:left;padding:14px 18px;border:1px solid #e4e4e4;border-radius:8px;background:#fff;cursor:pointer;margin-bottom:8px;width:100%;}
+.stage-card.active{border:2px solid #0f0f0f;}
+.stage-top{display:flex;align-items:baseline;gap:10px;margin-bottom:3px;}
+.stage-name{font-weight:600;font-size:14px;}
+.stage-sub{font-size:12px;color:#9a9a9a;}
+.stage-desc{font-size:13px;color:#555;}
+.goal-card{text-align:left;padding:12px 16px;border:1px solid #e4e4e4;border-radius:8px;background:#fff;cursor:pointer;}
+.goal-card.active{border:2px solid #0f0f0f;background:#fafafa;}
+.goal-name{font-weight:600;font-size:13px;margin-bottom:2px;}
+.goal-sub{font-size:12px;color:#9a9a9a;}
+.goals-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:24px;}
+.toggle-row{display:flex;gap:8px;}
+.toggle-btn{flex:1;padding:10px 8px;font-size:12px;font-weight:500;border:1px solid #e4e4e4;border-radius:6px;background:#fff;cursor:pointer;color:#0f0f0f;}
+.toggle-btn.active{border:2px solid #0f0f0f;}
+.tabs{display:flex;gap:0;border:1px solid #e4e4e4;border-radius:8px;overflow:hidden;width:fit-content;margin-bottom:28px;}
+.tab{padding:10px 20px;font-size:13px;font-weight:500;border:none;cursor:pointer;background:#fff;color:#555;}
+.tab.active{background:#0f0f0f;color:#fff;}
+.section-label{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#9a9a9a;margin-bottom:8px;}
+.skip-box{background:#fafafa;border:1px solid #e4e4e4;border-radius:8px;padding:14px 18px;margin-bottom:28px;}
+.headline-quote{font-family:'DM Serif Display',serif;font-size:21px;line-height:1.45;color:#0f0f0f;margin-bottom:16px;font-style:italic;}
+.struct-block{margin-bottom:28px;}
+.struct-title{font-weight:600;font-size:15px;margin-bottom:6px;}
+.rating-def-card{border:1px solid #e4e4e4;border-radius:8px;padding:12px 16px;margin-bottom:8px;}
+.rating-def-label{font-weight:600;font-size:13px;margin-bottom:4px;}
+.rating-def-means{font-size:13px;color:#555;line-height:1.6;}
+.avoid-box{font-size:13px;color:#a16207;background:#fffbeb;border:1px solid #fde68a;border-radius:6px;padding:8px 12px;margin-top:8px;}
+.failure-item{display:flex;gap:10px;margin-bottom:8px;font-size:14px;color:#555;line-height:1.65;}
+.upgrade-box{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:14px 18px;}
+.launch-step{display:flex;gap:14px;align-items:flex-start;padding:14px 16px;border:1px solid #e4e4e4;border-radius:8px;margin-bottom:10px;}
+.step-num{width:26px;height:26px;border-radius:50%;background:#0f0f0f;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;}
+.step-text{font-size:14px;color:#555;line-height:1.65;}
+.explainer-box{background:#fafafa;border:1px solid #e4e4e4;border-radius:8px;padding:24px 28px;font-size:14px;color:#555;line-height:1.8;}
+.copy-btn{border:1px solid #ccc;background:#fff;padding:8px 16px;font-size:13px;font-weight:500;border-radius:4px;cursor:pointer;}
+.error{color:#b91c1c;font-size:13px;margin-top:10px;}
+.footer{margin-top:60px;padding-top:20px;border-top:1px solid #e4e4e4;display:flex;justify-content:space-between;font-size:12px;color:#9a9a9a;}
+</style>
 </head>
 <body>
-<a href="../index.html" class="back-link"><-lt;- Back to Trinh Sonsino</a>
-<div id="root"></div>
-<script type="text/babel">
-const {useState}=React;
-const INK="#0f0f0f",MUTED="#555",FAINT="#9a9a9a",RULE="#e4e4e4";
-const STAGES=[{id:"early",label:"Early stage",sub:"Seed - Series A · 10-40 people",desc:"Moving fast, roles are fluid, everyone wears multiple hats"},{id:"growth",label:"Growth stage",sub:"Series B · 40-100 people",desc:"Starting to specialize, managers emerging, more structure needed"},{id:"scaling",label:"Scaling",sub:"Series C+ · 100-250 people",desc:"Multiple teams, clear levels, consistency matters"}];
-const GOALS=[{id:"retention",label:"Keep good people",sub:"Reduce surprise attrition"},{id:"clarity",label:"Give people clarity",sub:"On how they're doing and what's next"},{id:"performance",label:"Address performance issues",sub:"With a documented, fair process"},{id:"growth",label:"Support career growth",sub:"Promotions, leveling, development"},{id:"culture",label:"Build a feedback culture",sub:"Normalize honest conversations"}];
-const iStyle={width:"100%",boxSizing:"border-box",border:"1px solid #e4e4e4",borderRadius:6,padding:"11px 14px",fontSize:14,fontFamily:"inherit",color:"#0f0f0f",outline:"none",background:"#fff"};
-const lStyle={fontSize:12,fontWeight:500,color:MUTED,display:"block",marginBottom:8};
-const tcColors={disclose_bands:{bg:"#f0fdf4",border:"#bbf7d0",color:"#166534"},partial:{bg:"#fffbeb",border:"#fde68a",color:"#a16207"},internal_only:{bg:"#fafafa",border:"#e4e4e4",color:"#555"}};
+<a href="../index.html" class="back-link">&larr; Back to Trinh Sonsino</a>
+<div class="wrap">
+  <div class="eyebrow">HR Toolkit &middot; 08</div>
+  <h1>Review Setup</h1>
+  <p class="subtitle">For founders, COOs, and operators who have been handed the people function without an HR background. The goal is a minimum viable review process - flexible, light, and honest about what actually matters at your stage. If you are large enough to have a dedicated HR team, you probably do not need this tool.</p>
+  <hr class="divider"/>
 
-function Sublabel({text}){return <div style={{fontSize:11,fontWeight:600,letterSpacing:"0.1em",textTransform:"uppercase",color:FAINT,marginBottom:8}}>{text}</div>;}
-function SBlock({label,title,body}){return <div style={{marginBottom:28}}><Sublabel text={label}/><div style={{fontWeight:600,fontSize:15,marginBottom:6}}>{title}</div><p style={{fontSize:14,color:MUTED,lineHeight:1.7,margin:0}}>{body}</p></div>;}
+  <div id="form-section">
+    <label>What stage is the company?</label>
+    <div id="stages-list" class="mb24"></div>
 
-function App(){
-const [stage,setStage]=useState("");const [headcount,setHeadcount]=useState("");const [goals,setGoals]=useState([]);const [hasLevels,setHasLevels]=useState("");const [hasOKRs,setHasOKRs]=useState("");const [painPoints,setPainPoints]=useState("");
-const [output,setOutput]=useState(null);const [loading,setLoading]=useState(false);const [error,setError]=useState(null);const [activeTab,setActiveTab]=useState("structure");const [copied,setCopied]=useState(null);
-const ready=stage&&goals.length>0;
-function toggleGoal(id){setGoals(g=>g.includes(id)?g.filter(x=>x!==id):[...g,id]);}
+    <div class="mb24">
+      <label>Headcount (optional)</label>
+      <input id="headcount" placeholder="e.g., 35"/>
+    </div>
 
-async function generate(){
-setLoading(true);setError(null);setOutput(null);
-try{
-const stageObj=STAGES.find(s=>s.id===stage);
-const goalLabels=goals.map(g=>GOALS.find(x=>x.id===g)?.label).join(", ");
-const r=await fetch("https://tsonsino-backend.vercel.app/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({maxTokens:2500,prompt:`You are an experienced HR leader advising a founder or operator at a startup who has no HR background but now owns the people function. They need a minimum viable performance review process - not best practice perfection. Something they can actually implement this quarter.\n\nCompany: ${stageObj?.label} (${stageObj?.sub}) - ${stageObj?.desc}\nHeadcount: ${headcount||"not specified"}\nGoals: ${goalLabels}\nJob levels exist: ${hasLevels||"not specified"}\nOKRs exist: ${hasOKRs||"not specified"}\nPain points: ${painPoints||"not specified"}\n\nReturn ONLY valid JSON:\n{"headline":"one plain-English sentence summarizing the right approach","what_to_skip":"2-3 sentences on what NOT to build yet - be direct","structure":{"cadence":{"recommendation":"specific cadence","rationale":"2 sentences on why"},"rating_scale":{"recommendation":"scale with actual labels","rationale":"2 sentences on why","what_each_means":[{"label":"rating","means":"plain-English description specific enough two managers would apply it the same way"}]},"what_to_measure":{"recommendation":"2-3 dimensions max","rationale":"2 sentences","not_this":"one sentence on a common mistake to avoid"},"review_format":{"recommendation":"how to run the review","rationale":"2 sentences"},"who_reviews":{"recommendation":"who reviews at this stage","rationale":"2 sentences including what to add later"}},"how_to_launch":["4-6 specific ordered steps for someone with no HR background - concrete not abstract"],"employee_explainer":"4-6 sentences written TO employees explaining the process - copy-pasteable into Slack or email","watch_for":["3 specific failure modes for a lean team running this for the first time"],"when_to_upgrade":"2 sentences on what signal should prompt building something more formal - specific trigger not generic"}\n\nWrite for a non-HR audience. No jargon. Be honest about what is overkill at this stage.`}))});
-const d=await r.json();const text=d.text;
-setOutput(JSON.parse(text.replace(/```json|```/g,"").trim()));}
-catch(e){setError("Something went wrong. Try again.");}
-setLoading(false);}
+    <label>What are you most trying to accomplish? (pick all that apply)</label>
+    <div class="goals-grid" id="goals-grid"></div>
 
-function copyText(text,key){const el=document.createElement("textarea");el.value=text;document.body.appendChild(el);el.select();document.execCommand("copy");document.body.removeChild(el);setCopied(key);setTimeout(()=>setCopied(null),2000);}
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px;">
+      <div>
+        <label>Job levels or career ladder?</label>
+        <div class="toggle-row" id="levels-toggle"></div>
+      </div>
+      <div>
+        <label>OKRs or goals framework?</label>
+        <div class="toggle-row" id="okrs-toggle"></div>
+      </div>
+    </div>
 
-const TABS=[{id:"structure",label:"Review Structure"},{id:"launch",label:"How to Launch"},{id:"explainer",label:"Employee Explainer"}];
+    <div class="mb24">
+      <label>What is not working right now? (optional - be specific)</label>
+      <textarea id="pain-points" rows="3" placeholder="e.g., Managers are avoiding tough conversations. People do not know where they stand. We lost two people to competitors and did not see it coming."></textarea>
+    </div>
 
-return <div style={{fontFamily:"Inter,system-ui,sans-serif",background:"#fff",minHeight:"100vh",color:INK}}>
-<div style={{maxWidth:760,margin:"0 auto",padding:"40px 24px 80px"}}>
-<div style={{borderBottom:`1px solid ${RULE}`,paddingBottom:20,marginBottom:28}}>
-<div style={{fontSize:11,fontWeight:600,letterSpacing:"0.14em",textTransform:"uppercase",color:FAINT,marginBottom:10}}>HR Toolkit · 08</div>
-<h1 style={{fontFamily:"DM Serif Display,Georgia,serif",fontSize:34,lineHeight:1.15,margin:0}}>Review Setup</h1>
-<p style={{color:MUTED,fontSize:15,maxWidth:580,lineHeight:1.7,marginTop:12,marginBottom:0}}>For founders, COOs, and operators who've been handed the people function without an HR background. The goal is a minimum viable review process - flexible, light, and honest about what actually matters at your stage. If you're large enough to have a dedicated HR team, you probably don't need this tool.</p>
+    <button class="btn-primary" id="build-btn" onclick="buildProcess()" disabled>Build my review process</button>
+    <div id="error-msg" class="error"></div>
+  </div>
+
+  <div id="output-section" style="display:none;"></div>
+
+  <div class="footer">
+    <span>Review Setup &middot; HR Toolkit for lean, scaling teams</span>
+    <span>Built by Trinh Sonsino</span>
+  </div>
 </div>
 
-{!output&&<div>
-<label style={lStyle}>What stage is the company?</label>
-<div style={{display:"grid",gap:8,marginBottom:24}}>{STAGES.map(s=><button key={s.id} onClick={()=>setStage(s.id)} style={{textAlign:"left",padding:"14px 18px",border:stage===s.id?`2px solid ${INK}`:`1px solid ${RULE}`,borderRadius:8,background:"#fff",cursor:"pointer"}}><div style={{display:"flex",alignItems:"baseline",gap:10,marginBottom:3}}><span style={{fontWeight:600,fontSize:14}}>{s.label}</span><span style={{fontSize:12,color:FAINT}}>{s.sub}</span></div><div style={{fontSize:13,color:MUTED}}>{s.desc}</div></button>)}</div>
-<div style={{marginBottom:24}}><label style={lStyle}>Headcount <span style={{color:FAINT,fontWeight:400}}>(optional)</span></label><input value={headcount} onChange={e=>setHeadcount(e.target.value)} placeholder="e.g., 35" style={iStyle}/></div>
-<label style={lStyle}>What are you most trying to accomplish? <span style={{color:FAINT,fontWeight:400}}>(pick all that apply)</span></label>
-<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:24}}>{GOALS.map(g=><button key={g.id} onClick={()=>toggleGoal(g.id)} style={{textAlign:"left",padding:"12px 16px",border:goals.includes(g.id)?`2px solid ${INK}`:`1px solid ${RULE}`,borderRadius:8,background:goals.includes(g.id)?"#fafafa":"#fff",cursor:"pointer"}}><div style={{fontWeight:600,fontSize:13,marginBottom:2}}>{g.label}</div><div style={{fontSize:12,color:FAINT}}>{g.sub}</div></button>)}</div>
-<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:24}}>
-<div><label style={lStyle}>Job levels or career ladder?</label><div style={{display:"flex",gap:8}}>{["Yes","No","Informal/partial"].map(opt=><button key={opt} onClick={()=>setHasLevels(opt)} style={{flex:1,padding:"10px 8px",fontSize:12,fontWeight:500,border:hasLevels===opt?`2px solid ${INK}`:`1px solid ${RULE}`,borderRadius:6,background:"#fff",cursor:"pointer",color:INK}}>{opt}</button>)}</div></div>
-<div><label style={lStyle}>OKRs or goals framework?</label><div style={{display:"flex",gap:8}}>{["Yes","No","Informal"].map(opt=><button key={opt} onClick={()=>setHasOKRs(opt)} style={{flex:1,padding:"10px 8px",fontSize:12,fontWeight:500,border:hasOKRs===opt?`2px solid ${INK}`:`1px solid ${RULE}`,borderRadius:6,background:"#fff",cursor:"pointer",color:INK}}>{opt}</button>)}</div></div>
-</div>
-<div style={{marginBottom:28}}><label style={lStyle}>What's not working right now? <span style={{color:FAINT,fontWeight:400}}>(optional)</span></label><textarea value={painPoints} onChange={e=>setPainPoints(e.target.value)} placeholder="e.g., Managers are avoiding tough conversations. People don't know where they stand." rows={3} style={{...iStyle,resize:"vertical"}}/></div>
-<button onClick={generate} disabled={loading||!ready} style={{background:INK,color:"#fff",border:"none",padding:"13px 28px",fontSize:14,fontWeight:500,borderRadius:4,cursor:loading?"wait":"pointer",opacity:loading||!ready?0.6:1}}>{loading?"Building your review setup...":"Build my review process"}</button>
-{error&&<div style={{color:"#b91c1c",fontSize:13,marginTop:10}}>{error}</div>}
-</div>}
+<script>
+var selectedStage = '';
+var selectedGoals = [];
+var selectedLevels = '';
+var selectedOKRs = '';
+var activeTab = 'structure';
+var outputData = null;
 
-{output&&<div>
-<div style={{fontFamily:"DM Serif Display,Georgia,serif",fontSize:21,lineHeight:1.45,color:INK,marginBottom:16,fontStyle:"italic"}}>"{output.headline}"</div>
-<div style={{background:"#fafafa",border:`1px solid ${RULE}`,borderRadius:8,padding:"14px 18px",marginBottom:28}}><div style={{fontSize:11,fontWeight:600,letterSpacing:"0.1em",textTransform:"uppercase",color:FAINT,marginBottom:8}}>What to skip for now</div><p style={{fontSize:14,color:MUTED,lineHeight:1.7,margin:0}}>{output.what_to_skip}</p></div>
-<div style={{display:"flex",gap:0,marginBottom:28,border:`1px solid ${RULE}`,borderRadius:8,overflow:"hidden",width:"fit-content"}}>{TABS.map(t=><button key={t.id} onClick={()=>setActiveTab(t.id)} style={{padding:"10px 20px",fontSize:13,fontWeight:500,border:"none",cursor:"pointer",background:activeTab===t.id?INK:"#fff",color:activeTab===t.id?"#fff":MUTED}}>{t.label}</button>)}</div>
+var stages = [
+  {id:'early', label:'Early stage', sub:'Seed - Series A / 10-40 people', desc:'Moving fast, roles are fluid, everyone wears multiple hats'},
+  {id:'growth', label:'Growth stage', sub:'Series B / 40-100 people', desc:'Starting to specialize, managers emerging, more structure needed'},
+  {id:'scaling', label:'Scaling', sub:'Series C+ / 100-250 people', desc:'Multiple teams, clear levels, consistency matters'}
+];
 
-{activeTab==="structure"&&<div>
-<SBlock label="Cadence" title={output.structure.cadence.recommendation} body={output.structure.cadence.rationale}/>
-<div style={{marginBottom:28}}><Sublabel text="Rating scale"/><div style={{fontWeight:600,fontSize:15,marginBottom:6}}>{output.structure.rating_scale.recommendation}</div><p style={{fontSize:14,color:MUTED,lineHeight:1.7,marginBottom:14}}>{output.structure.rating_scale.rationale}</p><div style={{display:"grid",gap:8}}>{output.structure.rating_scale.what_each_means?.map((r,i)=><div key={i} style={{border:`1px solid ${RULE}`,borderRadius:8,padding:"12px 16px"}}><div style={{fontWeight:600,fontSize:13,marginBottom:4}}>{r.label}</div><div style={{fontSize:13,color:MUTED,lineHeight:1.6}}>{r.means}</div></div>)}</div></div>
-<div style={{marginBottom:28}}><Sublabel text="What to measure"/><div style={{fontWeight:600,fontSize:15,marginBottom:6}}>{output.structure.what_to_measure.recommendation}</div><p style={{fontSize:14,color:MUTED,lineHeight:1.7,marginBottom:8}}>{output.structure.what_to_measure.rationale}</p><p style={{fontSize:13,color:"#a16207",background:"#fffbeb",border:"1px solid #fde68a",borderRadius:6,padding:"8px 12px",margin:0}}><strong>Avoid:</strong> {output.structure.what_to_measure.not_this}</p></div>
-<SBlock label="Review format" title={output.structure.review_format.recommendation} body={output.structure.review_format.rationale}/>
-<SBlock label="Who reviews" title={output.structure.who_reviews.recommendation} body={output.structure.who_reviews.rationale}/>
-<div style={{marginBottom:28}}><Sublabel text="Common failure modes"/>{output.watch_for.map((w,i)=><div key={i} style={{display:"flex",gap:10,marginBottom:8,fontSize:14,color:MUTED,lineHeight:1.65}}><span style={{color:"#b91c1c",flexShrink:0}}>-</span><span>{w}</span></div>)}</div>
-<div style={{background:"#eff6ff",border:"1px solid #bfdbfe",borderRadius:8,padding:"14px 18px"}}><div style={{fontSize:11,fontWeight:600,letterSpacing:"0.1em",textTransform:"uppercase",color:"#1d4ed8",marginBottom:8}}>When to build something more formal</div><p style={{fontSize:14,color:"#1e3a6e",lineHeight:1.7,margin:0}}>{output.when_to_upgrade}</p></div>
-</div>}
+var goals = [
+  {id:'retention', label:'Keep good people', sub:'Reduce surprise attrition'},
+  {id:'clarity', label:'Give people clarity', sub:'On how they are doing and what is next'},
+  {id:'performance', label:'Address performance issues', sub:'With a documented, fair process'},
+  {id:'growth', label:'Support career growth', sub:'Promotions, leveling, development'},
+  {id:'culture', label:'Build a feedback culture', sub:'Normalize honest conversations'}
+];
 
-{activeTab==="launch"&&<div>
-<p style={{fontSize:14,color:MUTED,lineHeight:1.7,marginBottom:20}}>Step-by-step for running your first review cycle - written for someone doing this for the first time.</p>
-<div style={{display:"grid",gap:10}}>{output.how_to_launch.map((step,i)=><div key={i} style={{display:"flex",gap:14,alignItems:"flex-start",padding:"14px 16px",border:`1px solid ${RULE}`,borderRadius:8}}><span style={{width:26,height:26,borderRadius:"50%",background:INK,color:"#fff",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,fontWeight:600,flexShrink:0}}>{i+1}</span><span style={{fontSize:14,color:MUTED,lineHeight:1.65}}>{step}</span></div>)}</div>
-</div>}
+// Render stages
+var stagesEl = document.getElementById('stages-list');
+stagesEl.innerHTML = stages.map(function(s) {
+  return '<div class="stage-card" id="stage-'+s.id+'" onclick="setStage(\''+s.id+'\')"><div class="stage-top"><span class="stage-name">'+s.label+'</span><span class="stage-sub">'+s.sub+'</span></div><div class="stage-desc">'+s.desc+'</div></div>';
+}).join('');
 
-{activeTab==="explainer"&&<div>
-<div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14,flexWrap:"wrap",gap:10}}>
-<p style={{fontSize:14,color:MUTED,lineHeight:1.7,margin:0,maxWidth:480}}>Ready to copy-paste into a Slack message or email to your team.</p>
-<button onClick={()=>copyText(output.employee_explainer,"explainer")} style={{border:"1px solid #ccc",background:"#fff",padding:"8px 16px",fontSize:13,fontWeight:500,borderRadius:4,cursor:"pointer"}}>{copied==="explainer"?"Copied v":"Copy message"}</button>
-</div>
-<div style={{background:"#fafafa",border:`1px solid ${RULE}`,borderRadius:8,padding:"24px 28px",fontSize:14,color:MUTED,lineHeight:1.8}}>{output.employee_explainer}</div>
-</div>}
+// Render goals
+var goalsEl = document.getElementById('goals-grid');
+goalsEl.innerHTML = goals.map(function(g) {
+  return '<div class="goal-card" id="goal-'+g.id+'" onclick="toggleGoal(\''+g.id+'\')"><div class="goal-name">'+g.label+'</div><div class="goal-sub">'+g.sub+'</div></div>';
+}).join('');
 
-<div style={{marginTop:32}}><button onClick={()=>{setOutput(null);setStage("");setGoals([]);setHasLevels("");setHasOKRs("");setPainPoints("");setHeadcount("");}} style={{border:"1px solid #ccc",background:"#fff",color:MUTED,padding:"11px 22px",fontSize:13,fontWeight:500,borderRadius:4,cursor:"pointer"}}>Start over</button></div>
-</div>}
+// Render toggles
+function renderToggle(containerId, options, selected, setter) {
+  document.getElementById(containerId).innerHTML = options.map(function(opt) {
+    return '<button class="toggle-btn'+(selected===opt?' active':'')+'" onclick="'+setter+'(\''+opt+'\',this)">'+opt+'</button>';
+  }).join('');
+}
+renderToggle('levels-toggle', ['Yes','No','Informal/partial'], selectedLevels, 'setLevels');
+renderToggle('okrs-toggle', ['Yes','No','Informal'], selectedOKRs, 'setOKRs');
 
-<div style={{marginTop:60,paddingTop:20,borderTop:`1px solid ${RULE}`,fontSize:12,color:FAINT,display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:8}}>
-<span>Review Setup · HR Toolkit for lean, scaling teams</span>
-<a href="../index.html" style={{color:FAINT,textDecoration:"none"}}>Built by Trinh Sonsino</a>
-</div>
-</div></div>;}
-ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+function setStage(id) {
+  selectedStage = id;
+  stages.forEach(function(s){ document.getElementById('stage-'+s.id).classList.remove('active'); });
+  document.getElementById('stage-'+id).classList.add('active');
+  checkReady();
+}
+
+function toggleGoal(id) {
+  var el = document.getElementById('goal-'+id);
+  if (selectedGoals.indexOf(id) > -1) {
+    selectedGoals = selectedGoals.filter(function(g){return g!==id;});
+    el.classList.remove('active');
+  } else {
+    selectedGoals.push(id);
+    el.classList.add('active');
+  }
+  checkReady();
+}
+
+function setLevels(val, btn) {
+  selectedLevels = val;
+  document.querySelectorAll('#levels-toggle .toggle-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+}
+
+function setOKRs(val, btn) {
+  selectedOKRs = val;
+  document.querySelectorAll('#okrs-toggle .toggle-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+}
+
+function checkReady() {
+  document.getElementById('build-btn').disabled = !(selectedStage && selectedGoals.length > 0);
+}
+
+async function buildProcess() {
+  var btn = document.getElementById('build-btn');
+  btn.disabled = true;
+  btn.textContent = 'Building your review setup...';
+  document.getElementById('error-msg').textContent = '';
+
+  var stageObj = stages.find(function(s){return s.id===selectedStage;});
+  var goalLabels = selectedGoals.map(function(g){return goals.find(function(x){return x.id===g;}).label;}).join(', ');
+
+  var promptText = 'You are an experienced HR leader advising a founder or operator at a startup who has no HR background but now owns the people function. They need a minimum viable performance review process - not best practice perfection. Something they can actually implement this quarter.\n\n' +
+    'Company: ' + stageObj.label + ' (' + stageObj.sub + ') - ' + stageObj.desc + '\n' +
+    'Headcount: ' + (document.getElementById('headcount').value || 'not specified') + '\n' +
+    'Goals: ' + goalLabels + '\n' +
+    'Job levels exist: ' + (selectedLevels || 'not specified') + '\n' +
+    'OKRs exist: ' + (selectedOKRs || 'not specified') + '\n' +
+    'Pain points: ' + (document.getElementById('pain-points').value || 'not specified') + '\n\n' +
+    'Return ONLY valid JSON:\n' +
+    '{"headline":"one plain-English sentence summarizing the right approach",' +
+    '"what_to_skip":"2-3 sentences on what NOT to build yet - be direct",' +
+    '"structure":{"cadence":{"recommendation":"specific cadence","rationale":"2 sentences on why"},' +
+    '"rating_scale":{"recommendation":"scale with actual labels","rationale":"2 sentences on why","what_each_means":[{"label":"rating","means":"plain-English description"}]},' +
+    '"what_to_measure":{"recommendation":"2-3 dimensions max","rationale":"2 sentences","not_this":"one sentence on a common mistake to avoid"},' +
+    '"review_format":{"recommendation":"how to run the review","rationale":"2 sentences"},' +
+    '"who_reviews":{"recommendation":"who reviews at this stage","rationale":"2 sentences"}},' +
+    '"how_to_launch":["4-6 specific ordered steps for someone with no HR background"],' +
+    '"employee_explainer":"4-6 sentences written TO employees explaining the process - copy-pasteable into Slack or email",' +
+    '"watch_for":["3 specific failure modes for a lean team running this for the first time"],' +
+    '"when_to_upgrade":"2 sentences on what signal should prompt building something more formal"}\n\n' +
+    'Write for a non-HR audience. No jargon. Be honest about what is overkill at this stage.';
+
+  try {
+    var response = await fetch('https://tsonsino-backend.vercel.app/api/chat', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({prompt: promptText, maxTokens: 2500})
+    });
+    var data = await response.json();
+    var text = data.text || '';
+    if (!text) throw new Error(data.error || 'No response');
+    outputData = JSON.parse(text.replace(/```json|```/g,'').trim());
+    renderOutput(outputData);
+  } catch(e) {
+    document.getElementById('error-msg').textContent = 'Something went wrong. Try again.';
+    console.error(e);
+    btn.disabled = false;
+    btn.textContent = 'Build my review process';
+  }
+}
+
+function showTab(tab, btn) {
+  activeTab = tab;
+  document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  document.getElementById('tab-structure').style.display = tab === 'structure' ? 'block' : 'none';
+  document.getElementById('tab-launch').style.display = tab === 'launch' ? 'block' : 'none';
+  document.getElementById('tab-explainer').style.display = tab === 'explainer' ? 'block' : 'none';
+}
+
+function copyExplainer() {
+  if (!outputData) return;
+  var el = document.createElement('textarea');
+  el.value = outputData.employee_explainer;
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
+}
+
+function renderOutput(d) {
+  var html = '';
+  html += '<div class="headline-quote">"' + d.headline + '"</div>';
+  html += '<div class="skip-box"><div class="section-label">What to skip for now</div><p style="font-size:14px;color:#555;line-height:1.7;margin:0;">' + d.what_to_skip + '</p></div>';
+
+  html += '<div class="tabs">';
+  html += '<button class="tab active" onclick="showTab(\'structure\',this)">Review Structure</button>';
+  html += '<button class="tab" onclick="showTab(\'launch\',this)">How to Launch</button>';
+  html += '<button class="tab" onclick="showTab(\'explainer\',this)">Employee Explainer</button>';
+  html += '</div>';
+
+  // Structure tab
+  var s = d.structure;
+  html += '<div id="tab-structure">';
+  html += '<div class="struct-block"><div class="section-label">Cadence</div><div class="struct-title">'+s.cadence.recommendation+'</div><p style="font-size:14px;color:#555;line-height:1.7;">'+s.cadence.rationale+'</p></div>';
+  html += '<div class="struct-block"><div class="section-label">Rating scale</div><div class="struct-title">'+s.rating_scale.recommendation+'</div><p style="font-size:14px;color:#555;line-height:1.7;margin-bottom:14px;">'+s.rating_scale.rationale+'</p>';
+  (s.rating_scale.what_each_means || []).forEach(function(r) {
+    html += '<div class="rating-def-card"><div class="rating-def-label">'+r.label+'</div><div class="rating-def-means">'+r.means+'</div></div>';
+  });
+  html += '</div>';
+  html += '<div class="struct-block"><div class="section-label">What to measure</div><div class="struct-title">'+s.what_to_measure.recommendation+'</div><p style="font-size:14px;color:#555;line-height:1.7;margin-bottom:8px;">'+s.what_to_measure.rationale+'</p><div class="avoid-box"><strong>Avoid:</strong> '+s.what_to_measure.not_this+'</div></div>';
+  html += '<div class="struct-block"><div class="section-label">Review format</div><div class="struct-title">'+s.review_format.recommendation+'</div><p style="font-size:14px;color:#555;line-height:1.7;">'+s.review_format.rationale+'</p></div>';
+  html += '<div class="struct-block"><div class="section-label">Who reviews</div><div class="struct-title">'+s.who_reviews.recommendation+'</div><p style="font-size:14px;color:#555;line-height:1.7;">'+s.who_reviews.rationale+'</p></div>';
+  html += '<div style="margin-bottom:28px;"><div class="section-label">Common failure modes</div>';
+  (d.watch_for || []).forEach(function(w) {
+    html += '<div class="failure-item"><span style="color:#b91c1c;flex-shrink:0;">-</span><span>'+w+'</span></div>';
+  });
+  html += '</div>';
+  html += '<div class="upgrade-box"><div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#1d4ed8;margin-bottom:8px;">When to build something more formal</div><p style="font-size:14px;color:#1e3a6e;line-height:1.7;margin:0;">'+d.when_to_upgrade+'</p></div>';
+  html += '</div>';
+
+  // Launch tab
+  html += '<div id="tab-launch" style="display:none;">';
+  html += '<p style="font-size:14px;color:#555;line-height:1.7;margin-bottom:20px;">Step-by-step for running your first review cycle - written for someone doing this for the first time.</p>';
+  (d.how_to_launch || []).forEach(function(step, i) {
+    html += '<div class="launch-step"><div class="step-num">'+(i+1)+'</div><div class="step-text">'+step+'</div></div>';
+  });
+  html += '</div>';
+
+  // Explainer tab
+  html += '<div id="tab-explainer" style="display:none;">';
+  html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px;">';
+  html += '<p style="font-size:14px;color:#555;line-height:1.7;margin:0;max-width:480px;">Ready to copy-paste into a Slack message or email to your team.</p>';
+  html += '<button class="copy-btn" onclick="copyExplainer()">Copy message</button></div>';
+  html += '<div class="explainer-box">'+d.employee_explainer+'</div>';
+  html += '</div>';
+
+  html += '<div style="margin-top:32px;"><button class="btn-secondary" onclick="resetForm()">Start over</button></div>';
+
+  var out = document.getElementById('output-section');
+  out.innerHTML = html;
+  out.style.display = 'block';
+  document.getElementById('form-section').style.display = 'none';
+}
+
+function resetForm() {
+  selectedStage = '';
+  selectedGoals = [];
+  selectedLevels = '';
+  selectedOKRs = '';
+  outputData = null;
+  stages.forEach(function(s){ document.getElementById('stage-'+s.id).classList.remove('active'); });
+  goals.forEach(function(g){ document.getElementById('goal-'+g.id).classList.remove('active'); });
+  renderToggle('levels-toggle', ['Yes','No','Informal/partial'], '', 'setLevels');
+  renderToggle('okrs-toggle', ['Yes','No','Informal'], '', 'setOKRs');
+  document.getElementById('headcount').value = '';
+  document.getElementById('pain-points').value = '';
+  document.getElementById('build-btn').disabled = true;
+  document.getElementById('build-btn').textContent = 'Build my review process';
+  document.getElementById('output-section').style.display = 'none';
+  document.getElementById('form-section').style.display = 'block';
+}
 </script>
 </body>
 </html>

@@ -2,132 +2,335 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Performance Review · Trinh Sonsino HR Toolkit</title>
+<title>Performance Review - Trinh Sonsino HR Toolkit</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Inter',sans-serif;background:#fff;}.back-link{font-size:13px;color:#555;text-decoration:none;padding:16px 24px;display:inline-flex;align-items:center;gap:6px;border-bottom:1px solid #e4e4e4;width:100%;}.back-link:hover{color:#0f0f0f;}</style>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;background:#fff;color:#0f0f0f;}
+.back-link{font-size:13px;color:#555;text-decoration:none;padding:16px 24px;display:inline-flex;align-items:center;gap:6px;border-bottom:1px solid #e4e4e4;width:100%;}
+.back-link:hover{color:#0f0f0f;}
+.wrap{max-width:760px;margin:0 auto;padding:40px 24px 80px;}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#9a9a9a;margin-bottom:10px;}
+h1{font-family:'DM Serif Display',serif;font-size:34px;line-height:1.15;margin:0;}
+.subtitle{color:#555;font-size:15px;max-width:540px;line-height:1.65;margin-top:12px;}
+.divider{border:none;border-top:1px solid #e4e4e4;margin:24px 0;}
+label{font-size:12px;font-weight:500;color:#555;display:block;margin-bottom:6px;}
+input,textarea{width:100%;box-sizing:border-box;border:1px solid #e4e4e4;border-radius:6px;padding:11px 14px;font-size:14px;font-family:inherit;color:#0f0f0f;outline:none;background:#fff;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+.mb16{margin-bottom:16px;}
+.mb24{margin-bottom:24px;}
+.btn-primary{background:#0f0f0f;color:#fff;border:none;padding:13px 28px;font-size:14px;font-weight:500;border-radius:4px;cursor:pointer;}
+.btn-primary:disabled{opacity:0.6;cursor:not-allowed;}
+.btn-secondary{background:#fff;color:#555;border:1px solid #ccc;padding:9px 16px;font-size:13px;font-weight:500;border-radius:4px;cursor:pointer;}
+.btn-nav{background:#0f0f0f;color:#fff;border:none;padding:11px 24px;font-size:13px;font-weight:500;border-radius:4px;cursor:pointer;}
+.btn-nav:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-back-nav{background:#fff;color:#0f0f0f;border:1px solid #ccc;padding:11px 20px;font-size:13px;font-weight:500;border-radius:4px;cursor:pointer;}
+.rating-card{flex:1 1 160px;text-align:left;padding:14px 18px;border:1px solid #e4e4e4;border-radius:8px;background:#fff;cursor:pointer;}
+.rating-card.active{border:2px solid #0f0f0f;}
+.rating-label{font-weight:600;font-size:15px;margin-bottom:3px;}
+.rating-sub{font-size:12px;color:#9a9a9a;}
+.progress-bar{display:flex;gap:6px;margin-bottom:32px;}
+.progress-seg{flex:1;height:4px;border-radius:2px;cursor:pointer;}
+.prompt-num{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#9a9a9a;margin-bottom:8px;}
+.prompt-q{font-family:'DM Serif Display',serif;font-size:20px;line-height:1.45;color:#0f0f0f;margin-bottom:10px;max-width:580px;}
+.prompt-why{font-size:12px;color:#9a9a9a;line-height:1.55;margin-bottom:18px;}
+.answered-list{margin-top:32px;border-top:1px solid #e4e4e4;padding-top:20px;}
+.answered-label{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#9a9a9a;margin-bottom:12px;}
+.answered-item{display:flex;gap:12px;align-items:flex-start;padding:10px 14px;border-radius:6px;cursor:pointer;margin-bottom:6px;}
+.answered-item.active-item{background:#fafafa;border:1px solid #e4e4e4;}
+.answered-dot{width:20px;height:20px;border-radius:50%;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:600;}
+.answered-title{font-size:13px;font-weight:600;margin-bottom:2px;}
+.answered-preview{font-size:12px;color:#9a9a9a;line-height:1.5;}
+.section-label{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#9a9a9a;margin-bottom:8px;}
+.rating-result-box{border-radius:10px;padding:20px 24px;margin-bottom:24px;}
+.rating-result-label{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;}
+.rating-result-title{font-family:'DM Serif Display',serif;font-size:28px;margin-bottom:8px;}
+.mismatch-box{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:14px 18px;margin-bottom:24px;}
+.mismatch-title{font-weight:600;font-size:13px;color:#a16207;margin-bottom:6px;}
+.mismatch-note{font-size:13px;color:#78350f;line-height:1.65;}
+.review-block{margin-bottom:24px;}
+.flag-item{display:flex;gap:10px;margin-bottom:8px;font-size:13px;color:#555;line-height:1.65;}
+.flag-marker{color:#a16207;flex-shrink:0;}
+.suggestions-box{background:#fafafa;border:1px solid #e4e4e4;border-radius:8px;padding:16px 20px;margin-bottom:24px;}
+.suggestion-item{display:flex;gap:10px;margin-bottom:8px;font-size:13px;color:#555;line-height:1.65;}
+.suggestion-num{font-weight:600;color:#0f0f0f;flex-shrink:0;}
+.warning-box{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:12px 16px;font-size:13px;color:#78350f;line-height:1.6;margin-bottom:24px;}
+.copy-btn{border:1px solid #ccc;background:#fff;padding:7px 14px;font-size:12px;font-weight:500;border-radius:4px;cursor:pointer;}
+.error{color:#b91c1c;font-size:13px;margin-top:12px;}
+.footer{margin-top:60px;padding-top:20px;border-top:1px solid #e4e4e4;display:flex;justify-content:space-between;font-size:12px;color:#9a9a9a;}
+</style>
 </head>
 <body>
-<a href="../index.html" class="back-link"><-lt;- Back to Trinh Sonsino</a>
-<div id="root"></div>
-<script type="text/babel">
-const {useState}=React;
-const INK="#0f0f0f",MUTED="#555",FAINT="#9a9a9a",RULE="#e4e4e4";
-const RATING_SCALE=[{id:"exceeds",label:"Exceeds",sub:"Consistently above the bar"},{id:"meets",label:"Meets",sub:"Solid, reliable performance"},{id:"below",label:"Below",sub:"Not yet meeting expectations"}];
-const PROMPTS=[
-{id:"impact",label:"Impact",question:"What did this person actually deliver this period? Name a specific outcome - not a task, an outcome.",placeholder:"e.g., She rebuilt the onboarding process which cut 60-day attrition by 30%. Not: 'she worked on onboarding.'",why:"Managers default to describing activity. This forces them to describe results."},
-{id:"evidence",label:"Evidence over instinct",question:"What's one moment or situation this period that shaped your view of their performance - positive or concerning?",placeholder:"e.g., When the project hit a blocker in week 3, he figured out a workaround without being asked and kept us on schedule.",why:"Instinct-based ratings often reflect recency or likability. A specific moment anchors the rating in something real."},
-{id:"growth",label:"Growth & gaps",question:"What's one thing they could do differently that would make a material difference to their impact or the team?",placeholder:"e.g., She tends to solve problems alone before looping the team in - getting better at this would multiply her impact.",why:"Good reviews name something real to work on. If you can't name anything, the review isn't honest."},
-{id:"calibration",label:"Calibration check",question:"If you had to rank this person against others at the same level on your team, where do they land - and why?",placeholder:"e.g., Top third. She consistently takes on the harder problems and delivers. The two people ahead of her have more tenure and broader scope.",why:"Forces comparison, which is what calibration is. 'They're great' means nothing without a reference point."},
+<a href="../index.html" class="back-link">&larr; Back to Trinh Sonsino</a>
+<div class="wrap">
+  <div class="eyebrow">HR Toolkit &middot; 03</div>
+  <h1>Performance Review</h1>
+  <p class="subtitle">Not a review writer - a thinking tool. Four sharp prompts that make you slow down and be specific before the words hit the page.</p>
+  <hr class="divider"/>
+
+  <!-- SETUP -->
+  <div id="setup-section">
+    <div class="grid2 mb16">
+      <div><label>Employee name (optional - use initials if preferred)</label><input id="emp-name" placeholder="e.g., J.S. or Jamie"/></div>
+      <div><label>Role</label><input id="emp-role" placeholder="e.g., Senior Engineer"/></div>
+    </div>
+    <div class="mb24"><label>Review period (optional)</label><input id="emp-period" placeholder="e.g., H1 2025, Annual 2024"/></div>
+    <label>Your instinct rating - before you write anything</label>
+    <p style="font-size:12px;color:#9a9a9a;margin-bottom:12px;">We will check this against what you actually describe. Pick honestly.</p>
+    <div style="display:flex;gap:10px;margin-bottom:32px;flex-wrap:wrap;">
+      <div class="rating-card" id="rating-exceeds" onclick="setRating('exceeds',this)"><div class="rating-label">Exceeds</div><div class="rating-sub">Consistently above the bar</div></div>
+      <div class="rating-card" id="rating-meets" onclick="setRating('meets',this)"><div class="rating-label">Meets</div><div class="rating-sub">Solid, reliable performance</div></div>
+      <div class="rating-card" id="rating-below" onclick="setRating('below',this)"><div class="rating-label">Below</div><div class="rating-sub">Not yet meeting expectations</div></div>
+    </div>
+    <button class="btn-primary" id="start-btn" onclick="startPrompts()" disabled>Start the reflection &rarr;</button>
+  </div>
+
+  <!-- PROMPTS -->
+  <div id="prompts-section" style="display:none;"></div>
+
+  <!-- OUTPUT -->
+  <div id="output-section" style="display:none;"></div>
+
+  <div class="footer">
+    <span>Performance Review &middot; HR Toolkit for lean, scaling teams</span>
+    <span>Built by Trinh Sonsino</span>
+  </div>
+</div>
+
+<script>
+var managerRating = '';
+var activePrompt = 0;
+var answers = {impact:'', evidence:'', growth:'', calibration:''};
+
+var prompts = [
+  {id:'impact', label:'Impact', question:'What did this person actually deliver this period? Name a specific outcome - not a task, an outcome.', placeholder:'e.g., She rebuilt the onboarding process which cut 60-day attrition by 30%. Not: she worked on onboarding.', why:'Managers default to describing activity. This forces them to describe results.'},
+  {id:'evidence', label:'Evidence over instinct', question:'What is one moment or situation this period that shaped your view of their performance - positive or concerning?', placeholder:'e.g., When the project hit a blocker in week 3, he figured out a workaround without being asked and kept us on schedule.', why:'Instinct-based ratings often reflect recency or likability. A specific moment anchors the rating in something real.'},
+  {id:'growth', label:'Growth and gaps', question:'What is one thing they could do differently that would make a material difference to their impact or the team?', placeholder:'e.g., She tends to solve problems alone before looping the team in - getting better at this would multiply her impact.', why:'Good reviews name something real to work on. If you cannot name anything, the review is not honest.'},
+  {id:'calibration', label:'Calibration check', question:'If you had to rank this person against others at the same level on your team, where do they land - and why?', placeholder:'e.g., Top third. She consistently takes on the harder problems and delivers. The two people ahead of her have more tenure and broader scope.', why:'Forces comparison, which is what calibration is. They are great means nothing without a reference point.'}
 ];
-const iStyle={width:"100%",boxSizing:"border-box",border:"1px solid #e4e4e4",borderRadius:6,padding:"11px 14px",fontSize:14,fontFamily:"inherit",color:"#0f0f0f",outline:"none",background:"#fff"};
-const lStyle={fontSize:12,fontWeight:500,color:MUTED,display:"block",marginBottom:6};
-const ratingColors={Exceeds:{bg:"#f0fdf4",border:"#bbf7d0",color:"#166534"},Meets:{bg:"#eff6ff",border:"#bfdbfe",color:"#1d4ed8"},Below:{bg:"#fef2f2",border:"#fecaca",color:"#b91c1c"}};
 
-function Block({label,content}){return <div style={{marginBottom:24}}><div style={{fontSize:11,fontWeight:600,letterSpacing:"0.1em",textTransform:"uppercase",color:FAINT,marginBottom:8}}>{label}</div><p style={{fontSize:14,color:MUTED,lineHeight:1.75,margin:0}}>{content}</p></div>;}
+function setRating(val, el) {
+  managerRating = val;
+  document.querySelectorAll('.rating-card').forEach(function(c){c.classList.remove('active');});
+  el.classList.add('active');
+  document.getElementById('start-btn').disabled = false;
+}
 
-function App(){
-const [step,setStep]=useState("setup");
-const [employeeName,setEmployeeName]=useState("");const [role,setRole]=useState("");const [period,setPeriod]=useState("");const [managerRating,setManagerRating]=useState("");
-const [answers,setAnswers]=useState({impact:"",evidence:"",growth:"",calibration:""});
-const [output,setOutput]=useState(null);const [loading,setLoading]=useState(false);const [error,setError]=useState(null);const [copied,setCopied]=useState(false);const [activePrompt,setActivePrompt]=useState(0);
-const setupReady=role.trim()&&managerRating;
-const allAnswered=PROMPTS.every(p=>answers[p.id].trim().length>20);
+function startPrompts() {
+  document.getElementById('setup-section').style.display = 'none';
+  document.getElementById('prompts-section').style.display = 'block';
+  activePrompt = 0;
+  renderPrompt();
+}
 
-async function generateReview(){
-setLoading(true);setError(null);setOutput(null);
-try{
-const ratingLabel=RATING_SCALE.find(r=>r.id===managerRating)?.label||managerRating;
-const answersText=PROMPTS.map(p=>`${p.label}:\nQ: ${p.question}\nA: ${answers[p.id]}`).join("\n\n");
-const r=await fetch("https://tsonsino-backend.vercel.app/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({maxTokens:2000,prompt:`You are an experienced HR leader helping a manager write a fair, objective performance review. Your job is NOT to write a glowing review - structure what the manager actually said into something honest, specific, and defensible.\n\nEmployee: ${employeeName||"Employee"}\nRole: ${role}\nReview period: ${period||"not specified"}\nManager instinct rating: ${ratingLabel}\n\nManager answers:\n${answersText}\n\nReturn ONLY valid JSON:\n{"rating_recommendation":{"rating":"Exceeds|Meets|Below","confidence":"high|moderate|low","rationale":"2-3 sentences based ONLY on what manager described"},"rating_flag":{"mismatch":true|false,"note":"if true: 1-2 sentences on misalignment. if false: null"},"review_draft":{"strengths":"2-3 sentences using specific evidence from manager answers - no generic praise","areas_for_growth":"1-2 sentences on growth area - framed honestly, not softened","overall":"1-2 sentences summarizing rating and basis"},"objectivity_flags":["patterns suggesting bias, vagueness, or lack of evidence - only real patterns, empty array if none"],"suggested_edits":["1-3 specific suggestions to make review more objective"]}\n\nRules: Use ONLY what manager described. Flag mismatch between described performance and proposed rating. No corporate HR language. Plain, specific, honest.`}))});
-const d=await r.json();const text=d.text;
-setOutput(JSON.parse(text.replace(/```json|```/g,"").trim()));setStep("output");}
-catch(e){setError("Something went wrong. Try again.");}
-setLoading(false);}
+function renderPrompt() {
+  var p = prompts[activePrompt];
+  var allAnswered = prompts.every(function(pr){return answers[pr.id].trim().length > 20;});
+  var isLast = activePrompt === prompts.length - 1;
 
-function copyReview(){
-if(!output)return;
-const rv=output.review_draft;
-const text=`PERFORMANCE REVIEW - ${employeeName||"Employee"} (${role})\nRating: ${output.rating_recommendation.rating}\n\nSTRENGTHS\n${rv.strengths}\n\nAREAS FOR GROWTH\n${rv.areas_for_growth}\n\nOVERALL\n${rv.overall}`;
-const el=document.createElement("textarea");el.value=text;document.body.appendChild(el);el.select();document.execCommand("copy");document.body.removeChild(el);setCopied(true);setTimeout(()=>setCopied(false),2000);}
+  var progressHTML = '<div class="progress-bar">';
+  prompts.forEach(function(pr, i) {
+    var bg = answers[pr.id].trim().length > 20 ? '#0f0f0f' : (i === activePrompt ? '#888' : '#e4e4e4');
+    progressHTML += '<div class="progress-seg" style="background:'+bg+'" onclick="goToPrompt('+i+')"></div>';
+  });
+  progressHTML += '</div>';
 
-return <div style={{fontFamily:"Inter,system-ui,sans-serif",background:"#fff",minHeight:"100vh",color:INK}}>
-<div style={{maxWidth:760,margin:"0 auto",padding:"40px 24px 80px"}}>
-<div style={{borderBottom:`1px solid ${RULE}`,paddingBottom:20,marginBottom:28}}>
-<div style={{fontSize:11,fontWeight:600,letterSpacing:"0.14em",textTransform:"uppercase",color:FAINT,marginBottom:10}}>HR Toolkit · 07</div>
-<h1 style={{fontFamily:"DM Serif Display,Georgia,serif",fontSize:34,lineHeight:1.15,margin:0}}>Performance Review</h1>
-<p style={{color:MUTED,fontSize:15,maxWidth:540,lineHeight:1.65,marginTop:12,marginBottom:0}}>Not a review writer - a thinking tool. Four sharp prompts that make you slow down and be specific before the words hit the page.</p>
-</div>
+  var answeredHTML = '<div class="answered-list"><div class="answered-label">Your answers so far</div>';
+  prompts.forEach(function(pr, i) {
+    var done = answers[pr.id].trim().length > 20;
+    var bg = done ? '#0f0f0f' : '#e4e4e4';
+    var isActive = i === activePrompt;
+    answeredHTML += '<div class="answered-item'+(isActive?' active-item':'')+'" onclick="goToPrompt('+i+')">';
+    answeredHTML += '<div class="answered-dot" style="background:'+bg+'">'+(done?'v':(i+1))+'</div>';
+    answeredHTML += '<div><div class="answered-title">'+pr.label+'</div>';
+    if (answers[pr.id].trim()) {
+      answeredHTML += '<div class="answered-preview">'+answers[pr.id].substring(0,80)+(answers[pr.id].length>80?'...':'')+'</div>';
+    } else {
+      answeredHTML += '<div class="answered-preview" style="color:#e4e4e4;">Not answered yet</div>';
+    }
+    answeredHTML += '</div></div>';
+  });
+  answeredHTML += '</div>';
 
-{step==="setup"&&<div>
-<div style={{fontSize:11,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",color:FAINT,marginBottom:14}}>About this review</div>
-<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:14}}>
-<div><label style={lStyle}>Employee name <span style={{color:FAINT,fontWeight:400}}>(optional)</span></label><input value={employeeName} onChange={e=>setEmployeeName(e.target.value)} placeholder="e.g., J.S. or Jamie" style={iStyle}/></div>
-<div><label style={lStyle}>Role</label><input value={role} onChange={e=>setRole(e.target.value)} placeholder="e.g., Senior Engineer" style={iStyle}/></div>
-</div>
-<div style={{marginBottom:24}}><label style={lStyle}>Review period <span style={{color:FAINT,fontWeight:400}}>(optional)</span></label><input value={period} onChange={e=>setPeriod(e.target.value)} placeholder="e.g., H1 2025, Annual 2024" style={iStyle}/></div>
-<label style={lStyle}>Your instinct rating - before you write anything</label>
-<p style={{fontSize:12,color:FAINT,marginBottom:12,lineHeight:1.5}}>We'll check this against what you actually describe. Pick honestly.</p>
-<div style={{display:"flex",gap:10,marginBottom:32,flexWrap:"wrap"}}>
-{RATING_SCALE.map(r=><button key={r.id} onClick={()=>setManagerRating(r.id)} style={{flex:"1 1 160px",textAlign:"left",padding:"14px 18px",border:managerRating===r.id?`2px solid ${INK}`:`1px solid ${RULE}`,borderRadius:8,background:"#fff",cursor:"pointer"}}><div style={{fontWeight:600,fontSize:15,marginBottom:3}}>{r.label}</div><div style={{fontSize:12,color:FAINT}}>{r.sub}</div></button>)}
-</div>
-<button onClick={()=>setStep("prompts")} disabled={!setupReady} style={{background:INK,color:"#fff",border:"none",padding:"13px 28px",fontSize:14,fontWeight:500,borderRadius:4,cursor:setupReady?"pointer":"not-allowed",opacity:setupReady?1:0.5}}>Start the reflection -></button>
-</div>}
+  var navHTML = '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">';
+  navHTML += '<button class="btn-secondary" onclick="backToSetup()">Back to setup</button>';
+  navHTML += '<div style="display:flex;gap:10px;">';
+  if (activePrompt > 0) navHTML += '<button class="btn-back-nav" onclick="goToPrompt('+(activePrompt-1)+'">&larr; Previous</button>';
+  if (!isLast) {
+    navHTML += '<button class="btn-nav" onclick="goToPrompt('+(activePrompt+1)+')" '+(answers[p.id].trim()?'':'disabled')+'>Next &rarr;</button>';
+  } else {
+    navHTML += '<button class="btn-nav" id="generate-btn" onclick="generateReview()" '+(allAnswered?'':'disabled')+'>Generate review &rarr;</button>';
+  }
+  navHTML += '</div></div>';
+  navHTML += '<div id="error-msg" class="error"></div>';
 
-{step==="prompts"&&<div>
-<div style={{display:"flex",gap:6,marginBottom:32}}>
-{PROMPTS.map((p,i)=><div key={p.id} onClick={()=>setActivePrompt(i)} style={{flex:1,height:4,borderRadius:2,cursor:"pointer",background:answers[p.id].trim().length>20?INK:i===activePrompt?"#888":RULE}}/>)}
-</div>
-{PROMPTS.map((p,i)=>i===activePrompt&&<div key={p.id}>
-<div style={{fontSize:11,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",color:FAINT,marginBottom:8}}>{i+1} of {PROMPTS.length} · {p.label}</div>
-<p style={{fontFamily:"DM Serif Display,Georgia,serif",fontSize:20,lineHeight:1.45,color:INK,marginBottom:10,maxWidth:580}}>{p.question}</p>
-<p style={{fontSize:12,color:FAINT,lineHeight:1.55,marginBottom:18}}>{p.why}</p>
-<textarea value={answers[p.id]} onChange={e=>setAnswers(a=>({...a,[p.id]:e.target.value}))} placeholder={p.placeholder} rows={5} style={{...iStyle,resize:"vertical",marginBottom:20}} autoFocus/>
-<div style={{display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:12}}>
-<button onClick={()=>setStep("setup")} style={{border:"none",background:"none",color:FAINT,fontSize:13,cursor:"pointer",textDecoration:"underline"}}><-lt;- Back to setup</button>
-<div style={{display:"flex",gap:10}}>
-{i>0&&<button onClick={()=>setActivePrompt(i-1)} style={{border:"1px solid #ccc",background:"#fff",color:INK,padding:"11px 20px",fontSize:13,fontWeight:500,borderRadius:4,cursor:"pointer"}}><-lt;- Previous</button>}
-{i<PROMPTS.length-1?<button onClick={()=>setActivePrompt(i+1)} disabled={!answers[p.id].trim()} style={{background:INK,color:"#fff",border:"none",padding:"11px 24px",fontSize:13,fontWeight:500,borderRadius:4,cursor:answers[p.id].trim()?"pointer":"not-allowed",opacity:answers[p.id].trim()?1:0.5}}>Next -></button>
-:<button onClick={generateReview} disabled={loading||!allAnswered} style={{background:INK,color:"#fff",border:"none",padding:"11px 24px",fontSize:13,fontWeight:500,borderRadius:4,cursor:loading?"wait":"pointer",opacity:loading||!allAnswered?0.6:1}}>{loading?"Building the review...":"Generate review ->"}</button>}
-</div>
-</div>
-{error&&<div style={{color:"#b91c1c",fontSize:13,marginTop:12}}>{error}</div>}
-</div>)}
-<div style={{marginTop:36,borderTop:`1px solid ${RULE}`,paddingTop:20}}>
-<div style={{fontSize:11,fontWeight:600,letterSpacing:"0.1em",textTransform:"uppercase",color:FAINT,marginBottom:12}}>Your answers so far</div>
-<div style={{display:"grid",gap:8}}>
-{PROMPTS.map((p,i)=><div key={p.id} onClick={()=>setActivePrompt(i)} style={{display:"flex",gap:12,alignItems:"flex-start",padding:"10px 14px",borderRadius:6,cursor:"pointer",background:i===activePrompt?"#fafafa":"transparent",border:i===activePrompt?`1px solid ${RULE}`:"1px solid transparent"}}>
-<span style={{width:20,height:20,borderRadius:"50%",flexShrink:0,marginTop:2,background:answers[p.id].trim().length>20?INK:RULE,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,color:"#fff",fontWeight:600}}>{answers[p.id].trim().length>20?"v":i+1}</span>
-<div><div style={{fontSize:13,fontWeight:600,marginBottom:2}}>{p.label}</div>{answers[p.id].trim()?<div style={{fontSize:12,color:FAINT,lineHeight:1.5}}>{answers[p.id].substring(0,80)}{answers[p.id].length>80?"...":""}</div>:<div style={{fontSize:12,color:RULE}}>Not answered yet</div>}</div>
-</div>)}
-</div>
-</div>
-</div>}
+  document.getElementById('prompts-section').innerHTML =
+    progressHTML +
+    '<div class="prompt-num">'+(activePrompt+1)+' of '+prompts.length+' &middot; '+p.label+'</div>' +
+    '<p class="prompt-q">'+p.question+'</p>' +
+    '<p class="prompt-why">'+p.why+'</p>' +
+    '<textarea rows="5" placeholder="'+p.placeholder+'" style="resize:vertical;margin-bottom:20px;" onchange="updateAnswer(\''+p.id+'\',this.value)" oninput="updateAnswer(\''+p.id+'\',this.value)">'+answers[p.id]+'</textarea>' +
+    navHTML +
+    answeredHTML;
+}
 
-{step==="output"&&output&&<div>
-{(()=>{const rc=ratingColors[output.rating_recommendation.rating]||ratingColors.Meets;return <div style={{background:rc.bg,border:`1px solid ${rc.border}`,borderRadius:10,padding:"20px 24px",marginBottom:24}}><div style={{fontSize:11,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",color:rc.color,marginBottom:6}}>Rating recommendation · {output.rating_recommendation.confidence} confidence</div><div style={{fontFamily:"DM Serif Display,Georgia,serif",fontSize:28,color:rc.color,marginBottom:8}}>{output.rating_recommendation.rating}</div><div style={{fontSize:14,color:INK,lineHeight:1.7}}>{output.rating_recommendation.rationale}</div></div>;})()}
-{output.rating_flag?.mismatch&&<div style={{background:"#fffbeb",border:"1px solid #fde68a",borderRadius:8,padding:"14px 18px",marginBottom:24}}><div style={{fontWeight:600,fontSize:13,color:"#a16207",marginBottom:6}}>⚠ Rating mismatch</div><div style={{fontSize:13,color:"#78350f",lineHeight:1.65}}>{output.rating_flag.note}</div></div>}
-<div style={{borderBottom:`1px solid ${RULE}`,paddingBottom:12,marginBottom:20,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-<div style={{display:"flex",alignItems:"baseline",gap:12}}><span style={{fontSize:11,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",color:FAINT}}>Draft</span><span style={{fontFamily:"DM Serif Display,Georgia,serif",fontSize:20}}>{employeeName||"Employee"} - {RATING_SCALE.find(r=>r.id===managerRating)?.label}</span></div>
-<button onClick={copyReview} style={{border:"1px solid #ccc",background:"#fff",padding:"7px 14px",fontSize:12,fontWeight:500,borderRadius:4,cursor:"pointer"}}>{copied?"Copied v":"Copy draft"}</button>
-</div>
-<Block label="Strengths" content={output.review_draft.strengths}/>
-<Block label="Areas for growth" content={output.review_draft.areas_for_growth}/>
-<Block label="Overall" content={output.review_draft.overall}/>
-{output.objectivity_flags?.length>0&&<div style={{marginBottom:24}}><div style={{fontSize:11,fontWeight:600,letterSpacing:"0.1em",textTransform:"uppercase",color:FAINT,marginBottom:10}}>Objectivity check</div>{output.objectivity_flags.map((f,i)=><div key={i} style={{display:"flex",gap:10,marginBottom:8,fontSize:13,color:MUTED,lineHeight:1.65}}><span style={{color:"#a16207",flexShrink:0}}>-</span><span>{f}</span></div>)}</div>}
-{output.suggested_edits?.length>0&&<div style={{background:"#fafafa",border:`1px solid ${RULE}`,borderRadius:8,padding:"16px 20px",marginBottom:24}}><div style={{fontSize:11,fontWeight:600,letterSpacing:"0.1em",textTransform:"uppercase",color:FAINT,marginBottom:10}}>To strengthen this review</div>{output.suggested_edits.map((s,i)=><div key={i} style={{display:"flex",gap:10,marginBottom:8,fontSize:13,color:MUTED,lineHeight:1.65}}><span style={{color:INK,fontWeight:600,flexShrink:0}}>{i+1}.</span><span>{s}</span></div>)}</div>}
-<div style={{background:"#fffbeb",border:"1px solid #fde68a",borderRadius:8,padding:"12px 16px",fontSize:13,color:"#78350f",lineHeight:1.6,marginBottom:24}}>This is a starting draft based on what you described. Edit it in your own voice before sharing with the employee.</div>
-<button onClick={()=>{setStep("setup");setOutput(null);setAnswers({impact:"",evidence:"",growth:"",calibration:""});setManagerRating("");setActivePrompt(0);}} style={{border:"1px solid #ccc",background:"#fff",color:MUTED,padding:"11px 22px",fontSize:13,fontWeight:500,borderRadius:4,cursor:"pointer"}}>Start a new review</button>
-</div>}
+function updateAnswer(id, val) {
+  answers[id] = val;
+  // Update progress bars
+  var segs = document.querySelectorAll('.progress-seg');
+  prompts.forEach(function(pr, i) {
+    if (segs[i]) segs[i].style.background = answers[pr.id].trim().length > 20 ? '#0f0f0f' : (i === activePrompt ? '#888' : '#e4e4e4');
+  });
+  // Update generate button if on last
+  var genBtn = document.getElementById('generate-btn');
+  if (genBtn) {
+    var allAnswered = prompts.every(function(pr){return answers[pr.id].trim().length > 20;});
+    genBtn.disabled = !allAnswered;
+  }
+  // Update nav button
+  var navBtns = document.querySelectorAll('.btn-nav');
+  navBtns.forEach(function(b){
+    if (b.id !== 'generate-btn' && b.textContent.indexOf('Next') > -1) b.disabled = !val.trim();
+  });
+}
 
-<div style={{marginTop:60,paddingTop:20,borderTop:`1px solid ${RULE}`,fontSize:12,color:FAINT,display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:8}}>
-<span>Performance Review · HR Toolkit for lean, scaling teams</span>
-<a href="../index.html" style={{color:FAINT,textDecoration:"none"}}>Built by Trinh Sonsino</a>
-</div>
-</div></div>;}
-ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+function goToPrompt(i) {
+  activePrompt = i;
+  renderPrompt();
+}
+
+function backToSetup() {
+  document.getElementById('setup-section').style.display = 'block';
+  document.getElementById('prompts-section').style.display = 'none';
+}
+
+async function generateReview() {
+  var btn = document.getElementById('generate-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Building the review...'; }
+
+  var ratingLabel = {exceeds:'Exceeds', meets:'Meets', below:'Below'}[managerRating] || managerRating;
+  var empName = document.getElementById('emp-name').value || 'Employee';
+  var empRole = document.getElementById('emp-role').value || 'not specified';
+  var empPeriod = document.getElementById('emp-period').value || 'not specified';
+
+  var answersText = prompts.map(function(p) {
+    return p.label + ':\nQ: ' + p.question + '\nA: ' + answers[p.id];
+  }).join('\n\n');
+
+  var promptText = 'You are an experienced HR leader helping a manager write a fair, objective performance review. Your job is NOT to write a glowing review - structure what the manager actually said into something honest, specific, and defensible.\n\n' +
+    'Employee: ' + empName + '\nRole: ' + empRole + '\nReview period: ' + empPeriod + '\nManager instinct rating: ' + ratingLabel + '\n\n' +
+    'Manager answers:\n' + answersText + '\n\n' +
+    'Return ONLY valid JSON:\n' +
+    '{"rating_recommendation":{"rating":"Exceeds|Meets|Below","confidence":"high|moderate|low","rationale":"2-3 sentences based ONLY on what manager described"},' +
+    '"rating_flag":{"mismatch":true,"note":"if mismatch: 1-2 sentences on misalignment. Otherwise set mismatch to false and note to null"},' +
+    '"review_draft":{"strengths":"2-3 sentences using specific evidence - no generic praise","areas_for_growth":"1-2 sentences on growth area honestly","overall":"1-2 sentences summarizing rating and basis"},' +
+    '"objectivity_flags":["patterns suggesting bias or vagueness - only real patterns, empty if none"],' +
+    '"suggested_edits":["1-3 specific suggestions to strengthen the review"]}\n\n' +
+    'Use ONLY what manager described. Flag mismatch between described performance and proposed rating. No corporate HR language.';
+
+  try {
+    var response = await fetch('https://tsonsino-backend.vercel.app/api/chat', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({prompt: promptText, maxTokens: 2000})
+    });
+    var data = await response.json();
+    var text = data.text || '';
+    if (!text) throw new Error(data.error || 'No response');
+    var result = JSON.parse(text.replace(/```json|```/g,'').trim());
+    renderOutput(result, empName, ratingLabel);
+  } catch(e) {
+    var errEl = document.getElementById('error-msg');
+    if (errEl) errEl.textContent = 'Something went wrong. Try again.';
+    console.error(e);
+    if (btn) { btn.disabled = false; btn.textContent = 'Generate review →'; }
+  }
+}
+
+function renderOutput(r, empName, instinctRating) {
+  var ratingColors = {
+    Exceeds: {bg:'#f0fdf4', border:'#bbf7d0', color:'#166534'},
+    Meets: {bg:'#eff6ff', border:'#bfdbfe', color:'#1d4ed8'},
+    Below: {bg:'#fef2f2', border:'#fecaca', color:'#b91c1c'}
+  };
+  var rc = ratingColors[r.rating_recommendation.rating] || ratingColors.Meets;
+
+  var html = '';
+
+  // Rating
+  html += '<div class="rating-result-box" style="background:'+rc.bg+';border:1px solid '+rc.border+'">';
+  html += '<div class="rating-result-label" style="color:'+rc.color+'">Rating recommendation &middot; '+r.rating_recommendation.confidence+' confidence</div>';
+  html += '<div class="rating-result-title" style="color:'+rc.color+'">'+r.rating_recommendation.rating+'</div>';
+  html += '<div style="font-size:14px;color:#0f0f0f;line-height:1.7;">'+r.rating_recommendation.rationale+'</div>';
+  html += '</div>';
+
+  // Mismatch flag
+  if (r.rating_flag && r.rating_flag.mismatch) {
+    html += '<div class="mismatch-box"><div class="mismatch-title">Warning - Rating mismatch</div><div class="mismatch-note">'+r.rating_flag.note+'</div></div>';
+  }
+
+  // Draft
+  var draft = r.review_draft;
+  html += '<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #e4e4e4;padding-bottom:12px;margin-bottom:20px;">';
+  html += '<div><span style="font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#9a9a9a;">Draft</span> <span style="font-family:DM Serif Display,serif;font-size:20px;">&nbsp;'+empName+' - '+instinctRating+'</span></div>';
+  html += '<button class="copy-btn" onclick="copyDraft()">Copy draft</button></div>';
+
+  html += '<div class="review-block"><div class="section-label">Strengths</div><p style="font-size:14px;color:#555;line-height:1.75;">'+draft.strengths+'</p></div>';
+  html += '<div class="review-block"><div class="section-label">Areas for growth</div><p style="font-size:14px;color:#555;line-height:1.75;">'+draft.areas_for_growth+'</p></div>';
+  html += '<div class="review-block"><div class="section-label">Overall</div><p style="font-size:14px;color:#555;line-height:1.75;">'+draft.overall+'</p></div>';
+
+  // Objectivity flags
+  if (r.objectivity_flags && r.objectivity_flags.length > 0) {
+    html += '<div style="margin-bottom:24px;"><div class="section-label">Objectivity check</div>';
+    r.objectivity_flags.forEach(function(f) {
+      html += '<div class="flag-item"><span class="flag-marker">-</span><span>'+f+'</span></div>';
+    });
+    html += '</div>';
+  }
+
+  // Suggested edits
+  if (r.suggested_edits && r.suggested_edits.length > 0) {
+    html += '<div class="suggestions-box"><div class="section-label">To strengthen this review</div>';
+    r.suggested_edits.forEach(function(s, i) {
+      html += '<div class="suggestion-item"><span class="suggestion-num">'+(i+1)+'.</span><span>'+s+'</span></div>';
+    });
+    html += '</div>';
+  }
+
+  html += '<div class="warning-box">This is a starting draft based on what you described. Edit it in your own voice before sharing with the employee.</div>';
+  html += '<button class="btn-secondary" onclick="resetAll()">Start a new review</button>';
+
+  // Store draft for copying
+  window._reviewDraft = 'PERFORMANCE REVIEW - ' + empName + '\nRating: ' + r.rating_recommendation.rating + '\n\nSTRENGTHS\n' + draft.strengths + '\n\nAREAS FOR GROWTH\n' + draft.areas_for_growth + '\n\nOVERALL\n' + draft.overall;
+
+  var out = document.getElementById('output-section');
+  out.innerHTML = html;
+  out.style.display = 'block';
+  document.getElementById('prompts-section').style.display = 'none';
+}
+
+function copyDraft() {
+  if (!window._reviewDraft) return;
+  var el = document.createElement('textarea');
+  el.value = window._reviewDraft;
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
+}
+
+function resetAll() {
+  managerRating = '';
+  activePrompt = 0;
+  answers = {impact:'', evidence:'', growth:'', calibration:''};
+  document.querySelectorAll('.rating-card').forEach(function(c){c.classList.remove('active');});
+  document.getElementById('start-btn').disabled = true;
+  document.getElementById('emp-name').value = '';
+  document.getElementById('emp-role').value = '';
+  document.getElementById('emp-period').value = '';
+  document.getElementById('output-section').style.display = 'none';
+  document.getElementById('setup-section').style.display = 'block';
+}
 </script>
 </body>
 </html>
