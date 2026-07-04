@@ -222,7 +222,15 @@ async function buildProcess() {
     var data = await response.json();
     var text = data.text || '';
     if (!text) throw new Error(data.error || 'No response');
-    outputData = JSON.parse(text.replace(/```json|```/g,'').trim());
+        var cleaned = text.replace(/```json|```/g,'').trim();
+    try { JSON.parse(cleaned); } catch(e) {
+      var opens=0,openArr=0;
+      for(var i=0;i<cleaned.length;i++){if(cleaned[i]==='{')opens++;else if(cleaned[i]==='}')opens--;else if(cleaned[i]==='[')openArr++;else if(cleaned[i]===']')openArr--;}
+      if(cleaned.match(/"[^"]*$/))cleaned+='"';
+      while(openArr>0){cleaned+=']';openArr--;}
+      while(opens>0){cleaned+='}';opens--;}
+    }
+    outputData = JSON.parse(cleaned);
     renderOutput(outputData);
   } catch(e) {
     document.getElementById('error-msg').textContent = 'Something went wrong. Try again.';

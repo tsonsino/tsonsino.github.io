@@ -189,6 +189,7 @@ async function analyze() {
     var text = data.text || '';
     if (!text) { throw new Error(data.error || 'No response from API'); }
     var clean = text.replace(/```json|```/g, '').trim();
+    try{JSON.parse(clean);}catch(e){var o=0,a=0;for(var i=0;i<clean.length;i++){if(clean[i]==='{')o++;else if(clean[i]==='}')o--;else if(clean[i]==='[')a++;else if(clean[i]===']')a--;}if(clean.match(/"[^"]*$/))clean+='"';while(a>0){clean+=']';a--;}while(o>0){clean+='}';o--;}}
     var result = JSON.parse(clean);
     renderOutput(result);
   } catch(e) {
