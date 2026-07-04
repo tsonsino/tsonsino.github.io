@@ -10,7 +10,7 @@
 <style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Inter',sans-serif;background:#fff;}.back-link{font-size:13px;color:#555;text-decoration:none;padding:16px 24px;display:inline-flex;align-items:center;gap:6px;border-bottom:1px solid #e4e4e4;width:100%;}.back-link:hover{color:#0f0f0f;}</style>
 </head>
 <body>
-<a href="../index.html" class="back-link">←lt;- Back to Trinh Sonsino</a>
+<a href="../index.html" class="back-link"><-lt;- Back to Trinh Sonsino</a>
 <div id="root"></div>
 <script type="text/babel">
 const {useState}=React;
@@ -64,13 +64,13 @@ return <div style={{fontFamily:"Inter,system-ui,sans-serif",background:"#fff",mi
 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10,marginBottom:10}}>
 <input value={p.name} onChange={e=>updateP(p.id,"name",e.target.value)} placeholder="Initials / Person A" style={iStyle}/>
 <input value={p.role} onChange={e=>updateP(p.id,"role",e.target.value)} placeholder="Role" style={iStyle}/>
-<select value={p.rating} onChange={e=>updateP(p.id,"rating",e.target.value)} style={{...iStyle,height:42}}><option value="">Proposed rating…</option>{scale.map(s=><option key={s}>{s}</option>)}</select>
+<select value={p.rating} onChange={e=>updateP(p.id,"rating",e.target.value)} style={{...iStyle,height:42}}><option value="">Proposed rating...</option>{scale.map(s=><option key={s}>{s}</option>)}</select>
 </div>
-<textarea value={p.justification} onChange={e=>updateP(p.id,"justification",e.target.value)} placeholder="Paste the manager's justification…" rows={3} style={{...iStyle,resize:"vertical"}}/>
+<textarea value={p.justification} onChange={e=>updateP(p.id,"justification",e.target.value)} placeholder="Paste the manager's justification..." rows={3} style={{...iStyle,resize:"vertical"}}/>
 </div>)}
 <div style={{display:"flex",gap:12,marginBottom:36,flexWrap:"wrap"}}>
 <button onClick={()=>setPeople(ps=>[...ps,{id:Date.now(),name:"",role:"",rating:"",justification:""}])} style={{border:"1px solid #ccc",background:"#fff",color:INK,padding:"10px 18px",fontSize:13,fontWeight:500,borderRadius:4,cursor:"pointer"}}>+ Add person</button>
-<button onClick={analyze} disabled={loading||filled.length<2} style={{background:INK,color:"#fff",border:"none",padding:"11px 26px",fontSize:14,fontWeight:500,borderRadius:4,cursor:loading?"wait":"pointer",opacity:loading||filled.length<2?0.6:1}}>{loading?"Analyzing…":`Analyze${filled.length>=2?` (${filled.length} people)`:""}`}</button>
+<button onClick={analyze} disabled={loading||filled.length<2} style={{background:INK,color:"#fff",border:"none",padding:"11px 26px",fontSize:14,fontWeight:500,borderRadius:4,cursor:loading?"wait":"pointer",opacity:loading||filled.length<2?0.6:1}}>{loading?"Analyzing...":`Analyze${filled.length>=2?` (${filled.length} people)`:""}`}</button>
 </div>
 {error&&<div style={{color:"#b91c1c",fontSize:13,marginBottom:20}}>{error}</div>}
 

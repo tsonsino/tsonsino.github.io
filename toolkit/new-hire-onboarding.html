@@ -10,7 +10,7 @@
 <style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Inter',sans-serif;background:#fff;}.back-link{font-size:13px;color:#555;text-decoration:none;padding:16px 24px;display:inline-flex;align-items:center;gap:6px;border-bottom:1px solid #e4e4e4;width:100%;}.back-link:hover{color:#0f0f0f;}</style>
 </head>
 <body>
-<a href="../index.html" class="back-link">←lt;- Back to Trinh Sonsino</a>
+<a href="../index.html" class="back-link"><-lt;- Back to Trinh Sonsino</a>
 <div id="root"></div>
 <script type="text/babel">
 const {useState}=React;
@@ -23,7 +23,7 @@ const lStyle={fontSize:12,fontWeight:500,color:MUTED,display:"block",marginBotto
 const subLabel={fontSize:11,fontWeight:600,letterSpacing:"0.1em",textTransform:"uppercase",color:FAINT,marginBottom:10};
 
 function Block({title,items,accent}){return <div style={{marginBottom:22}}><div style={subLabel}>{title}</div><div style={{display:"grid",gap:7}}>{items.map((item,i)=><div key={i} style={{fontSize:14,color:MUTED,lineHeight:1.65,padding:accent?"10px 14px":"0",background:accent?"#fafafa":"transparent",border:accent?"1px solid #e4e4e4":"none",borderRadius:accent?6:0,display:"flex",gap:10,alignItems:"flex-start"}}>{!accent&&<span style={{color:FAINT,flexShrink:0,marginTop:2}}>-</span>}<span>{item}</span></div>)}</div></div>;}
-function List({items,check}){return <div style={{display:"grid",gap:7}}>{items.map((item,i)=><div key={i} style={{display:"flex",gap:8,alignItems:"flex-start",fontSize:14,color:MUTED,lineHeight:1.6}}><span style={{flexShrink:0,marginTop:2,color:FAINT}}>{check?"☐":"·"}</span><span>{item}</span></div>)}</div>;}
+function List({items,check}){return <div style={{display:"grid",gap:7}}>{items.map((item,i)=><div key={i} style={{display:"flex",gap:8,alignItems:"flex-start",fontSize:14,color:MUTED,lineHeight:1.6}}><span style={{flexShrink:0,marginTop:2,color:FAINT}}>{check?"[ ]":"·"}</span><span>{item}</span></div>)}</div>;}
 
 function App(){
 const [hirerName,setHirerName]=useState("");const [role,setRole]=useState("");const [hireType,setHireType]=useState("ic");const [remoteType,setRemoteType]=useState("hybrid");const [startDate,setStartDate]=useState("");const [teamContext,setTeamContext]=useState("");const [topPriorities,setTopPriorities]=useState("");const [knownChallenges,setKnownChallenges]=useState("");const [successLooks,setSuccessLooks]=useState("");const [tools,setTools]=useState("");
@@ -43,9 +43,9 @@ setLoading(false);}
 
 function copyTab(){
 if(!output)return;let text="";
-if(activeTab==="plan"){const p=output.plan_30_60_90;["day_30","day_60","day_90"].forEach((d,i)=>{const ph=p[d];text+=`${["30","60","90"][i]}-DAY: ${ph.theme}\n\nGoals:\n${ph.goals.map(g=>`• ${g}`).join("\n")}\n\nMilestones:\n${ph.milestones.map(m=>`• ${m}`).join("\n")}\n\nWatch for: ${ph.watch_for}\n\n`;});}
-else if(activeTab==="week1"){const w=output.week_one;text+=`BEFORE DAY ONE\n${w.before_day_one.map(i=>`• ${i}`).join("\n")}\n\nDAY ONE\n${w.day_one.map(i=>`• ${i}`).join("\n")}\n\nDAYS 2-5\n${w.days_2_5.map(i=>`• ${i}`).join("\n")}\n\nEND OF WEEK\n${w.end_of_week_checklist.map(i=>`☐ ${i}`).join("\n")}`;}
-else{const m=output.manager_prep;text+=`BEFORE THEY ARRIVE\n${m.before_they_arrive.map(i=>`• ${i}`).join("\n")}\n\nKEY CONVERSATIONS\n${m.conversations_to_have.map(c=>`${c.timing}: ${c.topic}`).join("\n")}\n\nCOMMON MISTAKES\n${m.common_manager_mistakes.map(i=>`• ${i}`).join("\n")}`;}
+if(activeTab==="plan"){const p=output.plan_30_60_90;["day_30","day_60","day_90"].forEach((d,i)=>{const ph=p[d];text+=`${["30","60","90"][i]}-DAY: ${ph.theme}\n\nGoals:\n${ph.goals.map(g=>`* ${g}`).join("\n")}\n\nMilestones:\n${ph.milestones.map(m=>`* ${m}`).join("\n")}\n\nWatch for: ${ph.watch_for}\n\n`;});}
+else if(activeTab==="week1"){const w=output.week_one;text+=`BEFORE DAY ONE\n${w.before_day_one.map(i=>`* ${i}`).join("\n")}\n\nDAY ONE\n${w.day_one.map(i=>`* ${i}`).join("\n")}\n\nDAYS 2-5\n${w.days_2_5.map(i=>`* ${i}`).join("\n")}\n\nEND OF WEEK\n${w.end_of_week_checklist.map(i=>`[ ] ${i}`).join("\n")}`;}
+else{const m=output.manager_prep;text+=`BEFORE THEY ARRIVE\n${m.before_they_arrive.map(i=>`* ${i}`).join("\n")}\n\nKEY CONVERSATIONS\n${m.conversations_to_have.map(c=>`${c.timing}: ${c.topic}`).join("\n")}\n\nCOMMON MISTAKES\n${m.common_manager_mistakes.map(i=>`* ${i}`).join("\n")}`;}
 const el=document.createElement("textarea");el.value=text;document.body.appendChild(el);el.select();document.execCommand("copy");document.body.removeChild(el);setCopied(true);setTimeout(()=>setCopied(false),2000);}
 
 return <div style={{fontFamily:"Inter,system-ui,sans-serif",background:"#fff",minHeight:"100vh",color:INK}}>
@@ -79,7 +79,7 @@ return <div style={{fontFamily:"Inter,system-ui,sans-serif",background:"#fff",mi
 <textarea value={successLooks} onChange={e=>setSuccessLooks(e.target.value)} placeholder="e.g., Shipping independently, relationships established with 3 main stakeholders" rows={2} style={{...iStyle,resize:"vertical",marginBottom:14}}/>
 <label style={lStyle}>Key tools / systems they'll need <span style={{color:FAINT,fontWeight:400}}>(optional)</span></label>
 <input value={tools} onChange={e=>setTools(e.target.value)} placeholder="e.g., GitHub, Notion, Figma, Salesforce" style={{...iStyle,marginBottom:24}}/>
-<button onClick={generate} disabled={loading||!ready} style={{background:INK,color:"#fff",border:"none",padding:"13px 28px",fontSize:14,fontWeight:500,borderRadius:4,cursor:loading?"wait":"pointer",opacity:loading||!ready?0.6:1}}>{loading?"Building the onboarding plan…":"Generate onboarding package"}</button>
+<button onClick={generate} disabled={loading||!ready} style={{background:INK,color:"#fff",border:"none",padding:"13px 28px",fontSize:14,fontWeight:500,borderRadius:4,cursor:loading?"wait":"pointer",opacity:loading||!ready?0.6:1}}>{loading?"Building the onboarding plan...":"Generate onboarding package"}</button>
 {error&&<div style={{color:"#b91c1c",fontSize:13,marginTop:10}}>{error}</div>}
 </div>}
 
@@ -88,7 +88,7 @@ return <div style={{fontFamily:"Inter,system-ui,sans-serif",background:"#fff",mi
 <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20,flexWrap:"wrap",gap:10}}>
 <div style={{display:"flex",gap:0,border:`1px solid ${RULE}`,borderRadius:8,overflow:"hidden"}}>{TABS.map(t=><button key={t.id} onClick={()=>setActiveTab(t.id)} style={{padding:"10px 18px",fontSize:13,fontWeight:500,border:"none",cursor:"pointer",background:activeTab===t.id?INK:"#fff",color:activeTab===t.id?"#fff":MUTED}}>{t.label}</button>)}</div>
 <div style={{display:"flex",gap:10}}>
-<button onClick={copyTab} style={{border:"1px solid #ccc",background:"#fff",padding:"9px 16px",fontSize:13,fontWeight:500,borderRadius:4,cursor:"pointer"}}>{copied?"Copied ✓":"Copy this section"}</button>
+<button onClick={copyTab} style={{border:"1px solid #ccc",background:"#fff",padding:"9px 16px",fontSize:13,fontWeight:500,borderRadius:4,cursor:"pointer"}}>{copied?"Copied v":"Copy this section"}</button>
 <button onClick={()=>{setOutput(null);setError(null);}} style={{border:"1px solid #ccc",background:"#fff",padding:"9px 16px",fontSize:13,fontWeight:500,borderRadius:4,cursor:"pointer",color:MUTED}}>Start over</button>
 </div>
 </div>
@@ -98,8 +98,8 @@ return <div style={{fontFamily:"Inter,system-ui,sans-serif",background:"#fff",mi
 {activeTab==="week1"&&<div>
 <Block title="Before day one" items={output.week_one.before_day_one} accent/>
 <Block title="Day one" items={output.week_one.day_one}/>
-<Block title="Days 2–5" items={output.week_one.days_2_5}/>
-<div style={{marginTop:20}}><div style={subLabel}>End of week one - verify these are true</div>{output.week_one.end_of_week_checklist.map((item,i)=><div key={i} style={{display:"flex",alignItems:"flex-start",gap:10,marginBottom:10,fontSize:14,color:MUTED,lineHeight:1.6}}><span style={{fontSize:16,flexShrink:0,marginTop:1}}>☐</span><span>{item}</span></div>)}</div>
+<Block title="Days 2-5" items={output.week_one.days_2_5}/>
+<div style={{marginTop:20}}><div style={subLabel}>End of week one - verify these are true</div>{output.week_one.end_of_week_checklist.map((item,i)=><div key={i} style={{display:"flex",alignItems:"flex-start",gap:10,marginBottom:10,fontSize:14,color:MUTED,lineHeight:1.6}}><span style={{fontSize:16,flexShrink:0,marginTop:1}}>[ ]</span><span>{item}</span></div>)}</div>
 </div>}
 
 {activeTab==="manager"&&<div>
