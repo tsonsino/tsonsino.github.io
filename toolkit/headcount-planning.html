@@ -340,7 +340,7 @@ function openModal(id) {
   var deleteBtn = document.getElementById('delete-btn');
 
   if (id) {
-    var r = roles.find(function(x){return x.id===id;});
+    var r = roles.find(function(x){return x.id==id;});
     title.textContent = 'Edit role';
     saveBtn.textContent = 'Save changes';
     deleteBtn.style.display = 'block';
@@ -400,7 +400,7 @@ function saveRole() {
   };
 
   if (editingId) {
-    roles = roles.map(function(r){return r.id===editingId?role:r;});
+    roles = roles.map(function(r){return r.id==editingId?role:r;});
   } else {
     roles.push(role);
   }
@@ -411,7 +411,7 @@ function saveRole() {
 
 function deleteRole() {
   if (!editingId) return;
-  roles = roles.filter(function(r){return r.id!==editingId;});
+  roles = roles.filter(function(r){return r.id!=editingId;});
   closeModal();
   render();
 }
