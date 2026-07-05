@@ -446,23 +446,27 @@ function copyPlan() {
 }
 
 async function callAPI(prompt, maxTokens) {
-  var response = await fetch('https://tsonsino-backend.vercel.app/api/chat', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({prompt: prompt, maxTokens: maxTokens || 2000})
-  });
-  var data = await response.json();
-  if (data.error) throw new Error(data.error);
-  if (!data.text) throw new Error('No response');
-  var cleaned = data.text.replace(/```json|```/g,'').trim();
-  try { JSON.parse(cleaned); } catch(e) {
-    var o=0,a=0;
-    for(var i=0;i<cleaned.length;i++){if(cleaned[i]==='{')o++;else if(cleaned[i]==='}')o--;else if(cleaned[i]==='[')a++;else if(cleaned[i]===']')a--;}
-    if(cleaned.match(/"[^"]*$/))cleaned+='"';
-    while(a>0){cleaned+=']';a--;}
-    while(o>0){cleaned+='}';o--;}
+  try {
+    var response = await fetch('https://tsonsino-backend.vercel.app/api/chat', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({prompt: prompt, maxTokens: maxTokens || 2000})
+    });
+    var data = await response.json();
+    if (data.error) return {};
+    if (!data.text) return {};
+    var cleaned = data.text.replace(/```json|```/g,'').trim();
+    try { return JSON.parse(cleaned); } catch(e) {
+      var o=0,a=0;
+      for(var i=0;i<cleaned.length;i++){if(cleaned[i]==='{')o++;else if(cleaned[i]==='}')o--;else if(cleaned[i]==='[')a++;else if(cleaned[i]===']')a--;}
+      if(cleaned.match(/"[^"]*$/))cleaned+='"';
+      while(a>0){cleaned+=']';a--;}
+      while(o>0){cleaned+='}';o--;}
+      try { return JSON.parse(cleaned); } catch(e2) { return {}; }
+    }
+  } catch(e) {
+    return {};
   }
-  return JSON.parse(cleaned);
 }
 
 async function getAnalysis() {
@@ -483,17 +487,22 @@ async function getAnalysis() {
   var context = 'Company: '+(company||'not specified')+'\nCurrent HC: '+(hc||'not specified')+'\nRevenue goal '+year+': '+(goal||'not specified')+'\nTotal roles: '+roles.length+'\nBase: $'+Math.round(totalBase())+'k\nTrue first-year cost: $'+Math.round(totalCost())+'k\n\nPlan:\n'+planSummary;
 
   try {
-    // Call 1: Overall read + flags
-    var prompt1 = 'You are an HR and finance advisor reviewing this headcount plan. Be direct and specific.\n\n' + context + '\n\nReturn ONLY valid JSON:\n{"overall_read":"3-4 honest sentences on whether this plan is realistic, aggressive, or conservative and why","flags":[{"role":"role title","type":"weak_justification|timing_risk|cost_concern|dependency|missing_role|priority_question","note":"1-2 sentences on the specific concern"}]}\n\nFlag every role with weak justification. Be specific, not generic.';
+    // Call 1: Overall read + flags only
+    var prompt1 = 'You are an HR and finance advisor. Review this headcount plan and return ONLY valid JSON:\n{"overall_read":"3-4 sentences on whether this plan is realistic or aggressive and why","flags":[{"role":"role title","type":"weak_justification|timing_risk|cost_concern|dependency|missing_role|priority_question","note":"1-2 sentences on the concern"}]}\n\nPlan:\n' + context + '\n\nFlag every role with a weak or missing justification. Be specific.';
 
-    // Call 2: Questions + green lights
-    var prompt2 = 'You are an HR and finance advisor reviewing this headcount plan.\n\n' + context + '\n\nReturn ONLY valid JSON:\n{"financial_reality":"2-3 sentences on what this truly costs vs what it looks like on paper","sequencing_advice":"2-3 sentences on whether the quarterly timing makes sense","missing_roles":"1-2 sentences on obvious gaps, or null if none","questions_for_leadership":["3-4 specific questions leadership would ask before approving this plan"],"green_lights":["1-2 specific things that look well-thought-out - empty array if nothing stands out"]}\n\nQuestions must be specific to THIS plan, not generic headcount planning questions.';
+    // Call 2: Cost + sequencing
+    var prompt2 = 'You are an HR and finance advisor. Review this headcount plan and return ONLY valid JSON:\n{"financial_reality":"2-3 sentences on the true cost vs what it looks like on paper","sequencing_advice":"2-3 sentences on whether the quarterly hiring order makes strategic sense"}\n\nPlan:\n' + context;
 
-    var result1 = await callAPI(prompt1, 3000);
-    var result2 = await callAPI(prompt2, 2000);
+    // Call 3: Questions + gaps + green lights
+    var prompt3 = 'You are an HR and finance advisor. Review this headcount plan and return ONLY valid JSON:\n{"missing_roles":"1-2 sentences on obvious gaps given the business context, or null","questions_for_leadership":["3-4 specific questions leadership would ask before approving this plan"]}\n\nPlan:\n' + context + '\n\nQuestions must be specific to THIS plan.';
 
-    // Merge results
-    var result = Object.assign({}, result1, result2);
+    var result1 = await callAPI(prompt1, 2500);
+    var result2 = await callAPI(prompt2, 1500);
+    var result3 = await callAPI(prompt3, 1500);
+
+    // Merge results - use whatever succeeded
+    var result = Object.assign({}, result1 || {}, result2 || {}, result3 || {});
+    if (Object.keys(result).length === 0) throw new Error('All calls failed');
     renderAnalysis(result);
   } catch(e) {
     document.getElementById('error-msg').textContent = e.message && e.message.includes('high demand') ? 'Gemini is experiencing high demand right now. Wait a few seconds and try again.' : 'Something went wrong. Try again.';
@@ -530,11 +539,7 @@ function renderAnalysis(r) {
     html += '</div>';
   }
 
-  if (r.green_lights && r.green_lights.length > 0) {
-    html += '<div class="green-box"><div class="section-label" style="color:#166534;margin-bottom:10px;">What looks solid</div>';
-    r.green_lights.forEach(function(g){ html += '<div class="green-item"><span>v</span><span>'+g+'</span></div>'; });
-    html += '</div>';
-  }
+
 
   var out = document.getElementById('analysis-output');
   out.innerHTML = html;
