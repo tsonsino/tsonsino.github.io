@@ -1,4 +1,4 @@
-# How to get this live on GitHub Pages
+# How to get this live on GitHub Pages 
 
 ## One-time setup (~10 minutes)
 
