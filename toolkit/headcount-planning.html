@@ -438,6 +438,26 @@ function copyPlan() {
   setTimeout(function(){ btn.textContent = 'Copy plan'; }, 2000);
 }
 
+async function callAPI(prompt, maxTokens) {
+  var response = await fetch('https://tsonsino-backend.vercel.app/api/chat', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({prompt: prompt, maxTokens: maxTokens || 2000})
+  });
+  var data = await response.json();
+  if (data.error) throw new Error(data.error);
+  if (!data.text) throw new Error('No response');
+  var cleaned = data.text.replace(/```json|```/g,'').trim();
+  try { JSON.parse(cleaned); } catch(e) {
+    var o=0,a=0;
+    for(var i=0;i<cleaned.length;i++){if(cleaned[i]==='{')o++;else if(cleaned[i]==='}')o--;else if(cleaned[i]==='[')a++;else if(cleaned[i]===']')a--;}
+    if(cleaned.match(/"[^"]*$/))cleaned+='"';
+    while(a>0){cleaned+=']';a--;}
+    while(o>0){cleaned+='}';o--;}
+  }
+  return JSON.parse(cleaned);
+}
+
 async function getAnalysis() {
   var btn = document.querySelector('#analysis-section .btn-analyze') || document.querySelector('.btn-analyze');
   if (btn) { btn.disabled=true; btn.textContent='Analyzing the plan...'; }
@@ -450,40 +470,23 @@ async function getAnalysis() {
 
   var planSummary = roles.map(function(r){
     var c = calcCost(parseFloat(r.base), r.level);
-    return r.quarter+' - '+r.title+' ('+r.function+', '+r.level+') | Priority: '+r.priority+' | Base: $'+(r.base||'?')+'k | First-year true cost: $'+(c?Math.round(c.firstYear)+'k':'unknown')+' | Business goal: '+(r.goal||'not specified')+' | Impact if not hired: '+(r.impact||'not specified');
+    return r.quarter+' - '+r.title+' ('+r.function+', '+r.level+') | Priority: '+r.priority+' | Base: $'+(r.base||'?')+'k | First-year cost: $'+(c?Math.round(c.firstYear)+'k':'unknown')+' | Goal: '+(r.goal||'not specified')+' | If not hired: '+(r.impact||'not specified');
   }).join('\n');
 
-  var promptText = 'You are an experienced HR and finance advisor reviewing a startup annual headcount plan. Give honest, specific feedback - flag risks, spot gaps, challenge weak justifications.\n\n' +
-    'Company: '+(company||'not specified')+'\nCurrent HC: '+(hc||'not specified')+'\nRevenue goal '+year+': '+(goal||'not specified')+'\nTotal roles: '+roles.length+'\nBase commitment: $'+Math.round(totalBase())+'k\nFirst-year true cost: $'+Math.round(totalCost())+'k\n\n' +
-    'Plan:\n'+planSummary+'\n\n' +
-    'Return ONLY valid JSON:\n' +
-    '{"overall_read":"2 sentences max","financial_reality":"2 sentences max",' +
-    '"flags":[{"role":"role title","type":"weak_justification|timing_risk|cost_concern|dependency|missing_role|priority_question","note":"1 sentence"}],' +
-    '"sequencing_advice":"1 sentence",' +
-    '"missing_roles":"1 sentence or null",' +
-    '"questions_for_leadership":["2 questions max"],' +
-    '"green_lights":["1 thing max - empty if nothing stands out"]}\n\n' +
-    'Be direct. Weak justifications must be flagged. Q1 hire with 3-month ramp does not contribute until Q2. Keep ALL text fields to 2 sentences max. Total response under 800 tokens.';
+  var context = 'Company: '+(company||'not specified')+'\nCurrent HC: '+(hc||'not specified')+'\nRevenue goal '+year+': '+(goal||'not specified')+'\nTotal roles: '+roles.length+'\nBase: $'+Math.round(totalBase())+'k\nTrue first-year cost: $'+Math.round(totalCost())+'k\n\nPlan:\n'+planSummary;
 
   try {
-    var response = await fetch('https://tsonsino-backend.vercel.app/api/chat', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({prompt: promptText, maxTokens: 3500})
-    });
-    var data = await response.json();
-    var text = data.text || '';
-    if (data.error) throw new Error(data.error);
-    if (!text) throw new Error(data.error || 'No response');
-        var cleaned = text.replace(/```json|```/g,'').trim();
-    try { JSON.parse(cleaned); } catch(e) {
-      var opens=0,openArr=0;
-      for(var i=0;i<cleaned.length;i++){if(cleaned[i]==='{')opens++;else if(cleaned[i]==='}')opens--;else if(cleaned[i]==='[')openArr++;else if(cleaned[i]===']')openArr--;}
-      if(cleaned.match(/"[^"]*$/))cleaned+='"';
-      while(openArr>0){cleaned+=']';openArr--;}
-      while(opens>0){cleaned+='}';opens--;}
-    }
-    var result = JSON.parse(cleaned);
+    // Call 1: Overall read + flags
+    var prompt1 = 'You are an HR and finance advisor reviewing this headcount plan. Be direct and specific.\n\n' + context + '\n\nReturn ONLY valid JSON:\n{"overall_read":"3-4 honest sentences on whether this plan is realistic, aggressive, or conservative and why","financial_reality":"2-3 sentences on what this truly costs vs what it looks like on paper","flags":[{"role":"role title","type":"weak_justification|timing_risk|cost_concern|dependency|missing_role|priority_question","note":"2 sentences on the specific concern for this role"}],"sequencing_advice":"2-3 sentences on whether the quarterly timing makes sense"}\n\nFlag every role with weak justification. Be specific, not generic.';
+
+    // Call 2: Questions + green lights
+    var prompt2 = 'You are an HR and finance advisor reviewing this headcount plan.\n\n' + context + '\n\nReturn ONLY valid JSON:\n{"missing_roles":"2 sentences on obvious gaps given the business context, or null if none","questions_for_leadership":["4-5 sharp, specific questions a CFO or board would ask about this specific plan before approving it"],"green_lights":["2-3 specific things that look well-thought-out about this plan - empty array if nothing stands out"]}\n\nQuestions must be specific to THIS plan, not generic headcount planning questions.';
+
+    var result1 = await callAPI(prompt1, 3000);
+    var result2 = await callAPI(prompt2, 2000);
+
+    // Merge results
+    var result = Object.assign({}, result1, result2);
     renderAnalysis(result);
   } catch(e) {
     document.getElementById('error-msg').textContent = e.message && e.message.includes('high demand') ? 'Gemini is experiencing high demand right now. Wait a few seconds and try again.' : 'Something went wrong. Try again.';
