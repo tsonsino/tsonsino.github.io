@@ -158,6 +158,7 @@ input,select,textarea{width:100%;box-sizing:border-box;border:1px solid #e4e4e4;
         <div class="modal-grid2">
           <div><label>Target quarter</label><div class="quarter-btns" id="quarter-btns"></div></div>
           <div><label>Base salary ($k)</label><input id="m-base" placeholder="e.g., 160"/></div>
+          <div><label>Quantity</label><input id="m-qty" type="number" min="1" max="10" value="1" placeholder="1"/></div>
         </div>
         <div><label>Priority</label><div class="priority-options" id="priority-options"></div></div>
         <div><label>What business goal does this role support?</label><textarea id="m-goal" rows="2" placeholder="e.g., Hit $3M ARR by Q3 - this role owns the mid-market sales pipeline we do not currently have capacity for."></textarea></div>
@@ -362,6 +363,7 @@ function openModal(id) {
     document.getElementById('m-base').value = '';
     document.getElementById('m-goal').value = '';
     document.getElementById('m-impact').value = '';
+    document.getElementById('m-qty').value = '1';
     selectedQuarter = 'Q1';
     selectedPriority = 'important';
   }
@@ -387,8 +389,10 @@ function saveRole() {
   var func = document.getElementById('m-function').value;
   if (!title || !func) return;
 
-  var role = {
-    id: editingId || ++roleCount,
+  var qty = parseInt(document.getElementById('m-qty').value) || 1;
+  if (editingId) qty = 1; // editing always updates single role
+
+  var baseRole = {
     title: title,
     function: func,
     level: document.getElementById('m-level').value,
@@ -400,9 +404,12 @@ function saveRole() {
   };
 
   if (editingId) {
+    var role = Object.assign({id: editingId}, baseRole);
     roles = roles.map(function(r){return r.id==editingId?role:r;});
   } else {
-    roles.push(role);
+    for (var q = 0; q < qty; q++) {
+      roles.push(Object.assign({id: ++roleCount}, baseRole));
+    }
   }
 
   closeModal();
@@ -477,10 +484,10 @@ async function getAnalysis() {
 
   try {
     // Call 1: Overall read + flags
-    var prompt1 = 'You are an HR and finance advisor reviewing this headcount plan. Be direct and specific.\n\n' + context + '\n\nReturn ONLY valid JSON:\n{"overall_read":"3-4 honest sentences on whether this plan is realistic, aggressive, or conservative and why","financial_reality":"2-3 sentences on what this truly costs vs what it looks like on paper","flags":[{"role":"role title","type":"weak_justification|timing_risk|cost_concern|dependency|missing_role|priority_question","note":"2 sentences on the specific concern for this role"}],"sequencing_advice":"2-3 sentences on whether the quarterly timing makes sense"}\n\nFlag every role with weak justification. Be specific, not generic.';
+    var prompt1 = 'You are an HR and finance advisor reviewing this headcount plan. Be direct and specific.\n\n' + context + '\n\nReturn ONLY valid JSON:\n{"overall_read":"3-4 honest sentences on whether this plan is realistic, aggressive, or conservative and why","flags":[{"role":"role title","type":"weak_justification|timing_risk|cost_concern|dependency|missing_role|priority_question","note":"1-2 sentences on the specific concern"}],"sequencing_advice":"2-3 sentences on whether the quarterly timing makes sense"}\n\nFlag every role with weak justification. Be specific, not generic.';
 
     // Call 2: Questions + green lights
-    var prompt2 = 'You are an HR and finance advisor reviewing this headcount plan.\n\n' + context + '\n\nReturn ONLY valid JSON:\n{"missing_roles":"2 sentences on obvious gaps given the business context, or null if none","questions_for_leadership":["4-5 sharp, specific questions a CFO or board would ask about this specific plan before approving it"],"green_lights":["2-3 specific things that look well-thought-out about this plan - empty array if nothing stands out"]}\n\nQuestions must be specific to THIS plan, not generic headcount planning questions.';
+    var prompt2 = 'You are an HR and finance advisor reviewing this headcount plan.\n\n' + context + '\n\nReturn ONLY valid JSON:\n{"financial_reality":"2-3 sentences on what this truly costs vs what it looks like on paper","missing_roles":"1-2 sentences on obvious gaps, or null if none","questions_for_leadership":["3-4 specific questions leadership would ask before approving this plan"],"green_lights":["1-2 specific things that look well-thought-out - empty array if nothing stands out"]}\n\nQuestions must be specific to THIS plan, not generic headcount planning questions.';
 
     var result1 = await callAPI(prompt1, 3000);
     var result2 = await callAPI(prompt2, 2000);
@@ -518,7 +525,7 @@ function renderAnalysis(r) {
   if (r.missing_roles) html += '<div class="analysis-block"><div class="section-label">Potential gaps</div><p style="font-size:14px;color:#555;line-height:1.75;">'+r.missing_roles+'</p></div>';
 
   if (r.questions_for_leadership && r.questions_for_leadership.length > 0) {
-    html += '<div class="analysis-block"><div class="section-label">Questions before board approval</div>';
+    html += '<div class="analysis-block"><div class="section-label">Questions before leadership approval</div>';
     r.questions_for_leadership.forEach(function(q){ html += '<div class="q-card">'+q+'</div>'; });
     html += '</div>';
   }
