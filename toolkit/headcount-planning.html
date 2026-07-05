@@ -457,12 +457,12 @@ async function getAnalysis() {
     'Company: '+(company||'not specified')+'\nCurrent HC: '+(hc||'not specified')+'\nRevenue goal '+year+': '+(goal||'not specified')+'\nTotal roles: '+roles.length+'\nBase commitment: $'+Math.round(totalBase())+'k\nFirst-year true cost: $'+Math.round(totalCost())+'k\n\n' +
     'Plan:\n'+planSummary+'\n\n' +
     'Return ONLY valid JSON:\n' +
-    '{"overall_read":"3-4 sentences honest assessment - realistic, aggressive, conservative?","financial_reality":"2-3 sentences on what this truly costs vs what it looks like on paper",' +
-    '"flags":[{"role":"role title","type":"weak_justification|timing_risk|cost_concern|dependency|missing_role|priority_question","note":"1-2 sentences on specific concern"}],' +
-    '"sequencing_advice":"2-3 sentences on quarterly sequencing",' +
-    '"missing_roles":"1-2 sentences on obvious gaps - only if genuinely obvious",' +
-    '"questions_for_leadership":["3-5 questions leadership should answer before board approval - specific to THIS plan"],' +
-    '"green_lights":["1-3 things that look well-thought-out - empty array if nothing stands out"]}\n\n' +
+    '{"overall_read":"2 sentences max","financial_reality":"2 sentences max",' +
+    '"flags":[{"role":"role title","type":"weak_justification|timing_risk|cost_concern|dependency|missing_role|priority_question","note":"1 sentence"}],' +
+    '"sequencing_advice":"1 sentence",' +
+    '"missing_roles":"1 sentence or null",' +
+    '"questions_for_leadership":["2 questions max"],' +
+    '"green_lights":["1 thing max - empty if nothing stands out"]}\n\n' +
     'Be direct. Weak justifications must be flagged. Q1 hire with 3-month ramp does not contribute until Q2. Keep ALL text fields to 2 sentences max. Total response under 800 tokens.';
 
   try {
