@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -488,7 +488,7 @@ async function getAnalysis() {
 
   try {
     // Call 1: Overall read + flags only
-    var prompt1 = 'You are an HR and finance advisor. Review this headcount plan and return ONLY valid JSON:\n{"overall_read":"3-4 sentences on whether this plan is realistic or aggressive and why","flags":[{"role":"role title","type":"weak_justification|timing_risk|cost_concern|dependency|missing_role|priority_question","note":"1-2 sentences on the concern"}]}\n\nPlan:\n' + context + '\n\nFlag every role with a weak or missing justification. Be specific.';
+    var prompt1 = 'You are an HR and finance advisor. Review this headcount plan and return ONLY valid JSON:\n{"overall_read":"2-3 sentences on whether this plan is realistic or aggressive and why","flags":[{"role":"role title","type":"weak_justification|timing_risk|cost_concern|dependency|missing_role|priority_question","note":"1-2 sentences on the concern"}]}\n\nPlan:\n' + context + '\n\nFlag every role with a weak or missing justification. Be specific.';
 
     // Call 2: Cost + sequencing
     var prompt2 = 'You are an HR and finance advisor. Review this headcount plan and return ONLY valid JSON:\n{"financial_reality":"2-3 sentences on the true cost vs what it looks like on paper","sequencing_advice":"2-3 sentences on whether the quarterly hiring order makes strategic sense"}\n\nPlan:\n' + context;
@@ -496,9 +496,9 @@ async function getAnalysis() {
     // Call 3: Questions + gaps + green lights
     var prompt3 = 'You are an HR and finance advisor. Review this headcount plan and return ONLY valid JSON:\n{"missing_roles":"1-2 sentences on obvious gaps given the business context, or null","questions_for_leadership":["3-4 specific questions leadership would ask before approving this plan"]}\n\nPlan:\n' + context + '\n\nQuestions must be specific to THIS plan.';
 
-    var result1 = await callAPI(prompt1, 2500);
+    var result1 = await callAPI(prompt1, 4000);
     var result2 = await callAPI(prompt2, 1500);
-    var result3 = await callAPI(prompt3, 1500);
+    var result3 = await callAPI(prompt3, 2500);
 
     // Merge results - use whatever succeeded
     var result = Object.assign({}, result1 || {}, result2 || {}, result3 || {});
