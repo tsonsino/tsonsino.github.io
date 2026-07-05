@@ -420,7 +420,7 @@ function copyPlan() {
   var year = document.getElementById('plan-year').value;
   var lines = ['HEADCOUNT PLAN '+year,
     'Company: '+(document.getElementById('company').value||'-')+' | HC: '+(document.getElementById('current-hc').value||'-')+' | Goal: '+(document.getElementById('revenue-goal').value||'-'),
-    'Total roles: '+roles.length+' | Base: $'+Math.round(totalBase())+'k | First-year true cost: $'+Math.round(totalCost()/1000)+'k',''];
+    'Total roles: '+roles.length+' | Base: $'+Math.round(totalBase())+'k | First-year true cost: $'+Math.round(totalCost())+'k',''];
   quarters.forEach(function(q){
     var qr = roles.filter(function(r){return r.quarter===q;});
     if (qr.length===0) return;
@@ -530,7 +530,8 @@ function renderAnalysis(r) {
   out.innerHTML = html;
   out.style.display = 'block';
   out.scrollIntoView({behavior:'smooth', block:'start'});
-  render(); // re-render plan to ensure roles remain clickable
+  render();
+}
 
 // Initial render
 render();
