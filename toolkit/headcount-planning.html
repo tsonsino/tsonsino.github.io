@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -454,7 +454,7 @@ async function getAnalysis() {
   }).join('\n');
 
   var promptText = 'You are an experienced HR and finance advisor reviewing a startup annual headcount plan. Give honest, specific feedback - flag risks, spot gaps, challenge weak justifications.\n\n' +
-    'Company: '+(company||'not specified')+'\nCurrent HC: '+(hc||'not specified')+'\nRevenue goal '+year+': '+(goal||'not specified')+'\nTotal roles: '+roles.length+'\nBase commitment: $'+Math.round(totalBase())+'k\nFirst-year true cost: $'+Math.round(totalCost()/1000)+'k\n\n' +
+    'Company: '+(company||'not specified')+'\nCurrent HC: '+(hc||'not specified')+'\nRevenue goal '+year+': '+(goal||'not specified')+'\nTotal roles: '+roles.length+'\nBase commitment: $'+Math.round(totalBase())+'k\nFirst-year true cost: $'+Math.round(totalCost())+'k\n\n' +
     'Plan:\n'+planSummary+'\n\n' +
     'Return ONLY valid JSON:\n' +
     '{"overall_read":"3-4 sentences honest assessment - realistic, aggressive, conservative?","financial_reality":"2-3 sentences on what this truly costs vs what it looks like on paper",' +
