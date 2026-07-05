@@ -484,10 +484,10 @@ async function getAnalysis() {
 
   try {
     // Call 1: Overall read + flags
-    var prompt1 = 'You are an HR and finance advisor reviewing this headcount plan. Be direct and specific.\n\n' + context + '\n\nReturn ONLY valid JSON:\n{"overall_read":"3-4 honest sentences on whether this plan is realistic, aggressive, or conservative and why","flags":[{"role":"role title","type":"weak_justification|timing_risk|cost_concern|dependency|missing_role|priority_question","note":"1-2 sentences on the specific concern"}],"sequencing_advice":"2-3 sentences on whether the quarterly timing makes sense"}\n\nFlag every role with weak justification. Be specific, not generic.';
+    var prompt1 = 'You are an HR and finance advisor reviewing this headcount plan. Be direct and specific.\n\n' + context + '\n\nReturn ONLY valid JSON:\n{"overall_read":"3-4 honest sentences on whether this plan is realistic, aggressive, or conservative and why","flags":[{"role":"role title","type":"weak_justification|timing_risk|cost_concern|dependency|missing_role|priority_question","note":"1-2 sentences on the specific concern"}]}\n\nFlag every role with weak justification. Be specific, not generic.';
 
     // Call 2: Questions + green lights
-    var prompt2 = 'You are an HR and finance advisor reviewing this headcount plan.\n\n' + context + '\n\nReturn ONLY valid JSON:\n{"financial_reality":"2-3 sentences on what this truly costs vs what it looks like on paper","missing_roles":"1-2 sentences on obvious gaps, or null if none","questions_for_leadership":["3-4 specific questions leadership would ask before approving this plan"],"green_lights":["1-2 specific things that look well-thought-out - empty array if nothing stands out"]}\n\nQuestions must be specific to THIS plan, not generic headcount planning questions.';
+    var prompt2 = 'You are an HR and finance advisor reviewing this headcount plan.\n\n' + context + '\n\nReturn ONLY valid JSON:\n{"financial_reality":"2-3 sentences on what this truly costs vs what it looks like on paper","sequencing_advice":"2-3 sentences on whether the quarterly timing makes sense","missing_roles":"1-2 sentences on obvious gaps, or null if none","questions_for_leadership":["3-4 specific questions leadership would ask before approving this plan"],"green_lights":["1-2 specific things that look well-thought-out - empty array if nothing stands out"]}\n\nQuestions must be specific to THIS plan, not generic headcount planning questions.';
 
     var result1 = await callAPI(prompt1, 3000);
     var result2 = await callAPI(prompt2, 2000);
