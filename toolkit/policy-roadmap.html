@@ -158,6 +158,7 @@ async function buildRoadmap() {
     });
     var data = await response.json();
     var text = data.text || '';
+    if (data.error) throw new Error(data.error);
     if (!text) throw new Error(data.error || 'No response');
     var cleaned = text.replace(/```json|```/g,'').trim();
     try { JSON.parse(cleaned); } catch(e) {
@@ -254,6 +255,7 @@ async function draftPolicy(encodedPolicy) {
     });
     var data = await response.json();
     var text = data.text || '';
+    if (data.error) throw new Error(data.error);
     if (!text) throw new Error(data.error || 'No response');
 
     draftSection.innerHTML =

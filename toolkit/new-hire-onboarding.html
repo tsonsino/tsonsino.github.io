@@ -278,6 +278,7 @@ async function generate() {
     });
     var data = await response.json();
     var text = data.text || '';
+    if (data.error) throw new Error(data.error);
     var clean = text.replace(/```json|```/g, '').trim();
     var repairedClean2=clean;try{JSON.parse(repairedClean2);}catch(e){var o2=0,a2=0;for(var i2=0;i2<repairedClean2.length;i2++){if(repairedClean2[i2]==="{")o2++;else if(repairedClean2[i2]==="}") o2--;else if(repairedClean2[i2]==="[")a2++;else if(repairedClean2[i2]==="]")a2--;}if(repairedClean2.match(/"[^"]*$/))repairedClean2+='"';while(a2>0){repairedClean2+="]";a2--;}while(o2>0){repairedClean2+="}";o2--;}}var parsed=JSON.parse(repairedClean2);
 
