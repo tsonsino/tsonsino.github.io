@@ -160,19 +160,19 @@ async function buildOffer() {
     'Internal team base range: ' + (document.getElementById('team-range').value || 'not provided') + '\n' +
     'Notes: ' + (document.getElementById('notes').value || 'none') + '\n\n' +
     'Return ONLY valid JSON. Keep all text SHORT - 1-2 sentences max:\n' +
-    '{"base_band":{"low":0,"mid":0,"high":0,"recommendation":0,"rationale":"1 sentence"},' +
-    '"equity_analysis":{"internal_equity":"1-2 sentences on fit within team range","risks":["1-2 specific risks if any"]},' +
-    '"total_comp":{"base":0,"equity_note":"1 sentence on equity package","bonus_note":"1 sentence or null"},' +
-    '"candidate_pitch":"2-3 sentences positioning the offer",' +
-    '"finance_ask":"2-3 sentences - business case for finance approval",' +
-    '"watch_for":["1-2 things to monitor after offer"]}\n\n' +
-    'All dollar values in thousands. Be specific. Total response under 600 tokens.';
+    '{"base_band":{"low":0,"mid":0,"high":0,"recommendation":0,"rationale":"2-3 sentences explaining the band and why this fits the candidate situation"},' +
+    '"equity_analysis":{"internal_equity":"2-3 sentences on how this fits team range and any equity concerns","risks":["1-2 specific risks if any"]},' +
+    '"total_comp":{"base":0,"equity_note":"2 sentences on equity package and how to position it","bonus_note":"1 sentence or null"},' +
+    '"candidate_pitch":"3-4 sentences positioning the offer - what makes it compelling beyond the number",' +
+    '"finance_ask":"3-4 sentences - specific business case for finance approval including ROI angle",' +
+    '"watch_for":["2-3 things to monitor after offer with brief explanation each"]}\n\n' +
+    'All dollar values in thousands. For each field, give specific reasoning - not just numbers but why. Total response under 1200 tokens.';
 
   try {
     var response = await fetch('https://tsonsino-backend.vercel.app/api/chat', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({prompt: prompt, maxTokens: 2000})
+      body: JSON.stringify({prompt: prompt, maxTokens: 3000})
     });
     var data = await response.json();
     if (!data.text) throw new Error(data.error || 'No response'); if (data.error && data.error.includes('high demand')) throw new Error(data.error);
