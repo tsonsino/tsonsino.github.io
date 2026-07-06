@@ -505,10 +505,10 @@ async function getAnalysis() {
 
   try {
     // Call 1: Overall read + flags only
-    var prompt1 = 'You are an HR and finance advisor. Review this headcount plan and return ONLY valid JSON:\n{"overall_read":"2-3 sentences on whether this plan is realistic or aggressive and why","flags":[{"role":"role title","type":"weak_justification|timing_risk|cost_concern|dependency|missing_role|priority_question","note":"1-2 sentences on the concern"}]}\n\nPlan:\n' + context + '\n\nFlag every role with a weak or missing justification. Be specific.';
+    var prompt1 = 'You are an HR and finance advisor. Review this headcount plan and return ONLY valid JSON:\n{"overall_read":"2-3 sentences on whether this plan is realistic or aggressive and why","flags":[{"role":"role title (if multiple of same role, combine into one flag e.g. 2x Senior Engineer)","type":"weak_justification|timing_risk|cost_concern|dependency|missing_role|priority_question","note":"1-2 sentences on the concern"}]}\n\nPlan:\n' + context + '\n\nImportant: if the same role appears multiple times (shown as 2x, 3x), treat them as ONE flag entry. Flag roles with weak or missing justification. Be specific.';
 
     // Call 2: Cost + sequencing
-    var prompt2 = 'You are an HR and finance advisor. Review this headcount plan and return ONLY valid JSON:\n{"financial_reality":"2-3 sentences on the true cost vs what it looks like on paper"}\n\nPlan:\n' + context;
+    var prompt2 = 'You are an HR and finance advisor. Review this headcount plan and return ONLY valid JSON:\n{"financial_reality":"1-2 sentences only: the single most important cost insight for this specific plan"}\n\nPlan:\n' + context + '\n\nBe extremely concise. One paragraph max.';
 
     // Call 3: Questions + gaps + green lights
     var prompt3 = 'You are an HR and finance advisor. Review this headcount plan and return ONLY valid JSON:\n{"sequencing_advice":"2-3 sentences on whether the quarterly hiring order makes strategic sense","missing_roles":"1-2 sentences on obvious gaps, or null","questions_for_leadership":["3-4 specific questions leadership would ask before approving this plan"]}\n\nPlan:\n' + context + '\n\nQuestions must be specific to THIS plan.';
