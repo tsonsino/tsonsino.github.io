@@ -453,8 +453,8 @@ async function callAPI(prompt, maxTokens) {
       body: JSON.stringify({prompt: prompt, maxTokens: maxTokens || 2000})
     });
     var data = await response.json();
-    if (data.error) return {};
-    if (!data.text) return {};
+    if (data.error) { console.error('Gemini error:', data.error); return {}; }
+    if (!data.text) { console.error('Empty response'); return {}; }
     var cleaned = data.text.replace(/```json|```/g,'').trim();
     try { return JSON.parse(cleaned); } catch(e) {
       var o=0,a=0;
@@ -462,9 +462,10 @@ async function callAPI(prompt, maxTokens) {
       if(cleaned.match(/"[^"]*$/))cleaned+='"';
       while(a>0){cleaned+=']';a--;}
       while(o>0){cleaned+='}';o--;}
-      try { return JSON.parse(cleaned); } catch(e2) { return {}; }
+      try { return JSON.parse(cleaned); } catch(e2) { console.error('JSON parse failed:', e2); return {}; }
     }
   } catch(e) {
+    console.error('callAPI error:', e);
     return {};
   }
 }
@@ -479,9 +480,25 @@ async function getAnalysis() {
   var hc = document.getElementById('current-hc').value;
   var goal = document.getElementById('revenue-goal').value;
 
-  var planSummary = roles.map(function(r){
-    var c = calcCost(parseFloat(r.base), r.level);
-    return r.quarter+' - '+r.title+' ('+r.function+', '+r.level+') | Priority: '+r.priority+' | Base: $'+(r.base||'?')+'k | First-year cost: $'+(c?Math.round(c.firstYear)+'k':'unknown')+' | Goal: '+(r.goal||'not specified')+' | If not hired: '+(r.impact||'not specified');
+  // Group identical roles (same title, function, level, quarter) to avoid redundant flags
+  var groupedRoles = [];
+  roles.forEach(function(r) {
+    var key = r.title + '|' + r.function + '|' + r.level + '|' + r.quarter;
+    var existing = groupedRoles.find(function(g){ return g.key === key; });
+    if (existing) {
+      existing.count++;
+      existing.totalCost += calcCost(parseFloat(r.base), r.level) ? calcCost(parseFloat(r.base), r.level).firstYear : 0;
+    } else {
+      var c = calcCost(parseFloat(r.base), r.level);
+      groupedRoles.push({key: key, r: r, count: 1, totalCost: c ? c.firstYear : 0});
+    }
+  });
+
+  var planSummary = groupedRoles.map(function(g){
+    var r = g.r;
+    var countLabel = g.count > 1 ? g.count + 'x ' : '';
+    var costLabel = g.count > 1 ? '$' + Math.round(g.totalCost) + 'k total first-year cost (' + g.count + ' hires)' : (g.totalCost ? '$' + Math.round(g.totalCost) + 'k first-year cost' : 'unknown cost');
+    return r.quarter + ' - ' + countLabel + r.title + ' (' + r.function + ', ' + r.level + ') | Priority: ' + r.priority + ' | Base: $' + (r.base||'?') + 'k each | ' + costLabel + ' | Goal: ' + (r.goal||'not specified') + ' | If not hired: ' + (r.impact||'not specified');
   }).join('\n');
 
   var context = 'Company: '+(company||'not specified')+'\nCurrent HC: '+(hc||'not specified')+'\nRevenue goal '+year+': '+(goal||'not specified')+'\nTotal roles: '+roles.length+'\nBase: $'+Math.round(totalBase())+'k\nTrue first-year cost: $'+Math.round(totalCost())+'k\n\nPlan:\n'+planSummary;
@@ -491,17 +508,17 @@ async function getAnalysis() {
     var prompt1 = 'You are an HR and finance advisor. Review this headcount plan and return ONLY valid JSON:\n{"overall_read":"2-3 sentences on whether this plan is realistic or aggressive and why","flags":[{"role":"role title","type":"weak_justification|timing_risk|cost_concern|dependency|missing_role|priority_question","note":"1-2 sentences on the concern"}]}\n\nPlan:\n' + context + '\n\nFlag every role with a weak or missing justification. Be specific.';
 
     // Call 2: Cost + sequencing
-    var prompt2 = 'You are an HR and finance advisor. Review this headcount plan and return ONLY valid JSON:\n{"financial_reality":"2-3 sentences on the true cost vs what it looks like on paper","sequencing_advice":"2-3 sentences on whether the quarterly hiring order makes strategic sense"}\n\nPlan:\n' + context;
+    var prompt2 = 'You are an HR and finance advisor. Review this headcount plan and return ONLY valid JSON:\n{"financial_reality":"2-3 sentences on the true cost vs what it looks like on paper"}\n\nPlan:\n' + context;
 
     // Call 3: Questions + gaps + green lights
-    var prompt3 = 'You are an HR and finance advisor. Review this headcount plan and return ONLY valid JSON:\n{"missing_roles":"1-2 sentences on obvious gaps given the business context, or null","questions_for_leadership":["3-4 specific questions leadership would ask before approving this plan"]}\n\nPlan:\n' + context + '\n\nQuestions must be specific to THIS plan.';
+    var prompt3 = 'You are an HR and finance advisor. Review this headcount plan and return ONLY valid JSON:\n{"sequencing_advice":"2-3 sentences on whether the quarterly hiring order makes strategic sense","missing_roles":"1-2 sentences on obvious gaps, or null","questions_for_leadership":["3-4 specific questions leadership would ask before approving this plan"]}\n\nPlan:\n' + context + '\n\nQuestions must be specific to THIS plan.';
 
-    var result1 = await callAPI(prompt1, 4000);
-    var result2 = await callAPI(prompt2, 1500);
-    var result3 = await callAPI(prompt3, 2500);
-
-    // Merge results - use whatever succeeded
-    var result = Object.assign({}, result1 || {}, result2 || {}, result3 || {});
+    var results = await Promise.all([
+      callAPI(prompt1, 4000),
+      callAPI(prompt2, 2000),
+      callAPI(prompt3, 3000)
+    ]);
+    var result = Object.assign({}, results[0] || {}, results[1] || {}, results[2] || {});
     if (Object.keys(result).length === 0) throw new Error('All calls failed');
     renderAnalysis(result);
   } catch(e) {
