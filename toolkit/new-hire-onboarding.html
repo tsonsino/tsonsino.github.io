@@ -263,12 +263,12 @@ async function generate() {
     '"plan_30_60_90":{"day_30":{"theme":"short theme","goals":["3-4 specific role-relevant goals"],"milestones":["2-3 concrete verifiable milestones"],"watch_for":"one sentence failure mode"},' +
     '"day_60":{"theme":"...","goals":[...],"milestones":[...],"watch_for":"..."},' +
     '"day_90":{"theme":"...","goals":[...],"milestones":[...],"watch_for":"..."}},' +
-    '"week_one":{"before_day_one":["3-5 specific things manager does BEFORE hire starts"],"day_one":["4-5 specific ordered activities"],"days_2_5":["4-6 activities for days 2-5"],"end_of_week_checklist":["3-4 things to verify true by end of week one"]},' +
-    '"manager_prep":{"before_they_arrive":["4-6 concrete prep items with specifics"],' +
-    '"conversations_to_have":[{"timing":"Day 1","topic":"what to cover","why":"why early"},{"timing":"End of week 1","topic":"...","why":"..."},{"timing":"30-day check-in","topic":"...","why":"..."},{"timing":"60-day check-in","topic":"...","why":"..."}],' +
-    '"common_manager_mistakes":["3-4 specific mistakes for this hire type"],' +
+    '"week_one":{"before_day_one":["3 specific things manager does BEFORE hire starts - one sentence each"],"day_one":["3 specific ordered activities - one sentence each"],"days_2_5":["3 activities for days 2-5 - one sentence each"],"end_of_week_checklist":["3 things to verify by end of week one - one sentence each"]},' +
+    '"manager_prep":{"before_they_arrive":["3 concrete prep items - one sentence each"],' +
+    '"conversations_to_have":[{"timing":"Day 1","topic":"one sentence","why":"one sentence"},{"timing":"End of week 1","topic":"one sentence","why":"one sentence"},{"timing":"30-day check-in","topic":"one sentence","why":"one sentence"}],' +
+    '"common_manager_mistakes":["3 specific mistakes - one sentence each"],' +
     '"remote_specific":' + (remoteType === 'remote' ? '"3-4 specific remote onboarding actions"' : 'null') + '}}' +
-    '}\n\nEvery item must be specific to THIS role. First-in-function hires need explicit callout. Be direct and actionable.';
+    '}\n\nEvery item must be specific to THIS role. First-in-function hires need explicit callout. Be direct and actionable. Keep every bullet to one sentence. Max 3 items per array field.';
 
   try {
     var response = await fetch('https://tsonsino-backend.vercel.app/api/chat', {
