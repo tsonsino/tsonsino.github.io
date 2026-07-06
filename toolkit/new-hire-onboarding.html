@@ -246,41 +246,37 @@ async function generate() {
   var hireTypeLabel = {ic:'Individual contributor',lead:'Team lead / manager',exec:'Senior leader / exec',first:'First in this function'}[hireType];
   var remoteLabel = {onsite:'On-site',hybrid:'Hybrid',remote:'Fully remote'}[remoteType];
 
-  var promptText = 'You are an experienced HR leader helping a manager onboard a new hire well. Generic onboarding fails - build a specific, practical onboarding package.\n\n' +
-    'HIRE PROFILE:\n' +
-    '- Role: ' + role + '\n' +
-    '- Type: ' + hireTypeLabel + '\n' +
-    '- Work model: ' + remoteLabel + '\n' +
-    '- Start date: ' + (document.getElementById('startdate').value || 'not specified') + '\n' +
-    '- Manager: ' + (document.getElementById('manager').value || 'not specified') + '\n' +
-    '- Team context: ' + (document.getElementById('teamctx').value || 'not provided') + '\n' +
-    '- Top 3 priorities: ' + priorities + '\n' +
-    '- Known challenges: ' + (document.getElementById('challenges').value || 'none') + '\n' +
-    '- Success at 90 days: ' + (document.getElementById('success').value || 'not specified') + '\n' +
-    '- Key tools: ' + (document.getElementById('tools').value || 'not specified') + '\n\n' +
-    'Return ONLY valid JSON:\n' +
-    '{"summary":"2 sentences on the most important thing to get right",' +
-    '"plan_30_60_90":{"day_30":{"theme":"short theme","goals":["3-4 specific role-relevant goals"],"milestones":["2-3 concrete verifiable milestones"],"watch_for":"one sentence failure mode"},' +
-    '"day_60":{"theme":"...","goals":[...],"milestones":[...],"watch_for":"..."},' +
-    '"day_90":{"theme":"...","goals":[...],"milestones":[...],"watch_for":"..."}},' +
-    '"week_one":{"before_day_one":["3 specific things manager does BEFORE hire starts - one sentence each"],"day_one":["3 specific ordered activities - one sentence each"],"days_2_5":["3 activities for days 2-5 - one sentence each"],"end_of_week_checklist":["3 things to verify by end of week one - one sentence each"]},' +
-    '"manager_prep":{"before_they_arrive":["3 concrete prep items - one sentence each"],' +
-    '"conversations_to_have":[{"timing":"Day 1","topic":"one sentence","why":"one sentence"},{"timing":"End of week 1","topic":"one sentence","why":"one sentence"},{"timing":"30-day check-in","topic":"one sentence","why":"one sentence"}],' +
-    '"common_manager_mistakes":["3 specific mistakes - one sentence each"],' +
-    '"remote_specific":' + (remoteType === 'remote' ? '"3-4 specific remote onboarding actions"' : 'null') + '}}' +
-    '}\n\nEvery item must be specific to THIS role. First-in-function hires need explicit callout. Be direct and actionable. Keep every bullet to one sentence. Max 3 items per array field.';
+  var hireContext = 'HIRE PROFILE:\n- Role: ' + role + '\n- Type: ' + hireTypeLabel + '\n- Work model: ' + remoteLabel + '\n- Start date: ' + (document.getElementById('startdate').value || 'not specified') + '\n- Manager: ' + (document.getElementById('manager').value || 'not specified') + '\n- Team context: ' + (document.getElementById('teamctx').value || 'not provided') + '\n- Top 3 priorities: ' + priorities + '\n- Known challenges: ' + (document.getElementById('challenges').value || 'none') + '\n- Success at 90 days: ' + (document.getElementById('success').value || 'not specified') + '\n- Key tools: ' + (document.getElementById('tools').value || 'not specified');
 
-  try {
-    var response = await fetch('https://tsonsino-backend.vercel.app/api/chat', {
+  var prompt1 = 'You are an experienced HR leader. Build a specific onboarding plan for this hire.\n\n' + hireContext + '\n\nReturn ONLY valid JSON. Every item must be specific to THIS role. Max 3 items per array. One sentence per item:\n{"summary":"2 sentences on the most important thing to get right","plan_30_60_90":{"day_30":{"theme":"short theme","goals":["3 role-specific goals"],"milestones":["2 concrete milestones"],"watch_for":"one sentence"},"day_60":{"theme":"short theme","goals":["3 goals"],"milestones":["2 milestones"],"watch_for":"one sentence"},"day_90":{"theme":"short theme","goals":["3 goals"],"milestones":["2 milestones"],"watch_for":"one sentence"}}}';
+
+  var prompt2 = 'You are an experienced HR leader. Build a specific onboarding plan for this hire.\n\n' + hireContext + '\n\nReturn ONLY valid JSON. Every item specific to THIS role. Max 3 items per array. One sentence per item:\n{"week_one":{"before_day_one":["3 things manager does BEFORE hire starts"],"day_one":["3 specific day one activities"],"days_2_5":["3 activities for days 2-5"],"end_of_week_checklist":["3 things to verify by end of week one"]},"manager_prep":{"before_they_arrive":["3 concrete prep items"],"conversations_to_have":[{"timing":"Day 1","topic":"one sentence","why":"one sentence"},{"timing":"End of week 1","topic":"one sentence","why":"one sentence"},{"timing":"30-day check-in","topic":"one sentence","why":"one sentence"}],"common_manager_mistakes":["3 specific mistakes for this hire type"]' + (remoteType === 'remote' ? ',"remote_specific":"3 specific remote onboarding actions"' : '') + '}}';
+
+  function callOnboardingAPI(prompt, maxTokens) {
+    return fetch('https://tsonsino-backend.vercel.app/api/chat', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({prompt: promptText, maxTokens: 3000})
+      body: JSON.stringify({prompt: prompt, maxTokens: maxTokens})
+    }).then(function(r){ return r.json(); }).then(function(data) {
+      if (data.error) throw new Error(data.error);
+      var clean = (data.text || '').replace(/```json|```/g,'').trim();
+      try { return JSON.parse(clean); } catch(e) {
+        var o=0,a=0;
+        for(var i=0;i<clean.length;i++){if(clean[i]==='{')o++;else if(clean[i]==='}')o--;else if(clean[i]==='[')a++;else if(clean[i]===']')a--;}
+        if(clean.match(/"[^"]*$/))clean+='"';
+        while(a>0){clean+=']';a--;}
+        while(o>0){clean+='}';o--;}
+        return JSON.parse(clean);
+      }
     });
-    var data = await response.json();
-    var text = data.text || '';
-    if (data.error) throw new Error(data.error);
-    var clean = text.replace(/```json|```/g, '').trim();
-    var repairedClean2=clean;try{JSON.parse(repairedClean2);}catch(e){var o2=0,a2=0;for(var i2=0;i2<repairedClean2.length;i2++){if(repairedClean2[i2]==="{")o2++;else if(repairedClean2[i2]==="}") o2--;else if(repairedClean2[i2]==="[")a2++;else if(repairedClean2[i2]==="]")a2--;}if(repairedClean2.match(/"[^"]*$/))repairedClean2+='"';while(a2>0){repairedClean2+="]";a2--;}while(o2>0){repairedClean2+="}";o2--;}}var parsed=JSON.parse(repairedClean2);
+  }
+
+  try {
+    var results = await Promise.all([
+      callOnboardingAPI(prompt1, 3000),
+      callOnboardingAPI(prompt2, 3000)
+    ]);
+    var parsed = Object.assign({}, results[0], results[1]);
 
     document.getElementById('summary-box').innerHTML = '<strong>The most important thing:</strong> ' + parsed.summary;
     document.getElementById('tab-plan').innerHTML = renderPlan(parsed.plan_30_60_90 || {});
