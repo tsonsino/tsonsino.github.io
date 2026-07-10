@@ -218,25 +218,38 @@ var cleaned = text.replace(/```json|```/g,'').trim();
 var firstBrace = cleaned.indexOf('{');
 if (firstBrace > 0) cleaned = cleaned.substring(firstBrace);
 try { JSON.parse(cleaned); } catch(e) {
-var opens=0,openArr=0,inStr=false,esc=false;
+var stack=[],inStr=false,esc=false;
 for(var i=0;i<cleaned.length;i++){
 var ch=cleaned[i];
 if(esc){esc=false;continue;}
 if(ch==='\\'){esc=true;continue;}
 if(ch==='"'){inStr=!inStr;continue;}
 if(inStr)continue;
-if(ch==='{')opens++;else if(ch==='}')opens--;
-else if(ch==='[')openArr++;else if(ch===']')openArr--;
+if(ch==='{')stack.push('}');else if(ch==='}')stack.pop();
+else if(ch==='[')stack.push(']');else if(ch===']')stack.pop();
 }
 if(inStr)cleaned+='"';
-while(openArr>0){cleaned+=']';openArr--;}
-while(opens>0){cleaned+='}';opens--;}
+while(stack.length)cleaned+=stack.pop();
 }
 var result = JSON.parse(cleaned);
+if (!result.rating_recommendation || !result.rating_recommendation.rating || !result.review_draft || !result.review_draft.strengths || !result.review_draft.areas_for_growth || !result.review_draft.overall) {
+  throw new Error('Response was incomplete. Try again, or shorten your answers slightly.');
+}
+if (!result.objectivity_flags) result.objectivity_flags = [];
+if (!result.suggested_edits) result.suggested_edits = [];
+if (!result.rating_flag) result.rating_flag = {mismatch:false, note:null};
 renderOutput(result, empName, ratingLabel);
 } catch(e) {
 var errEl = document.getElementById('error-msg');
-if (errEl) errEl.textContent = e.message && e.message.includes('high demand') ? 'Gemini is experiencing high demand right now. Wait a few seconds and try again.' : 'Something went wrong. Try again.';
+if (errEl) {
+  if (e.message && e.message.includes('high demand')) {
+    errEl.textContent = 'Gemini is experiencing high demand right now. Wait a few seconds and try again.';
+  } else if (e.message && e.message.includes('incomplete')) {
+    errEl.textContent = e.message;
+  } else {
+    errEl.textContent = 'Something went wrong. Try again.';
+  }
+}
 console.error(e);
 if (btn) { btn.disabled = false; btn.textContent = 'Generate review →'; }
 }
